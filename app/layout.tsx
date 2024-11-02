@@ -2,10 +2,8 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import FontAwesomeConfig from "@/fontawesome";
-import Navbar from './components/Navbar';
-import  Sidebar  from "./components/SideBar";
-
-
+import Navbar from "./components/Navbar";
+import Sidebar from "./components/SideBar";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -28,66 +26,24 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-
-
-
-  
-
-
   return (
-
-
-
-
-
     <html lang="en">
       <head>
-        <FontAwesomeConfig/>
+        <FontAwesomeConfig />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-      
-{ 
- <div className="flex h-screen">
-      <Sidebar />
-      <div className="flex-1 flex flex-col">
-        <Navbar title="Dashboard" />
-        <div className="flex-1 overflow-auto">
-          {children}
-        </div>
-      </div>
-    </div> }
-
-
-
-
-      
-         
-        
-       
+        {
+          <div className="flex h-screen">
+            <Sidebar />
+            <div className="flex-1 flex flex-col">
+              <Navbar title="Dashboard" />
+              <div className="flex-1 overflow-auto">{children}</div>
+            </div>
+          </div>
+        }
       </body>
     </html>
   );
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
