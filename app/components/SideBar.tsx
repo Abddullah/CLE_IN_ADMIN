@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHome, faUser, faClipboard, faBriefcase, faGear, faClipboardList, faList, faBars } from '@fortawesome/free-solid-svg-icons';
@@ -12,12 +12,10 @@ const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const sidebarRef = useRef<HTMLDivElement>(null);
 
-  
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
   };
 
-  
   const handleClickOutside = (event: MouseEvent) => {
     if (sidebarRef.current && !sidebarRef.current.contains(event.target as Node)) {
       setIsOpen(false);
@@ -38,9 +36,11 @@ const Sidebar = () => {
 
   return (
     <div className="flex relative">
-      
-      <button onClick={toggleSidebar} className="md:hidden p-4">
-        <FontAwesomeIcon icon={faBars} className="text-gray-600" />
+      <button
+        onClick={toggleSidebar}
+        className={`md:hidden fixed top-1 left-1 p-4 z-30 ${isOpen ? 'hidden' : ''}`}
+      >
+        <FontAwesomeIcon icon={faBars} className="text-gray-600 text-xl" />
       </button>
 
       <div
@@ -48,7 +48,6 @@ const Sidebar = () => {
         className={`bg-white shadow-md h-screen w-64 transition-transform duration-300 ease-in-out transform ${isOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0 fixed md:relative z-20 top-0`}
       >
         <div className="flex items-center p-4">
-          
           <Image
             src={logo}
             alt="Logo"
@@ -78,9 +77,12 @@ const Sidebar = () => {
         </nav>
       </div>
 
-      
+
       {isOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 z-10 md:hidden" onClick={() => setIsOpen(false)}></div>
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 z-10 md:hidden"
+          onClick={() => setIsOpen(false)}
+        ></div>
       )}
     </div>
   );
