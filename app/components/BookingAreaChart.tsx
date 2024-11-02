@@ -20,17 +20,24 @@ import {
 export const description = "A simple area chart";
 
 const chartData = [
-  { month: "January", desktop: 186 },
-  { month: "February", desktop: 305 },
-  { month: "March", desktop: 237 },
+  { month: "January", desktop: 60 },
+  { month: "February", desktop: 80 },
+  { month: "March", desktop: 120 },
   { month: "April", desktop: 73 },
-  { month: "May", desktop: 209 },
-  { month: "June", desktop: 214 },
+  { month: "May", desktop: 28 },
+  { month: "July", desktop: 98 },
+  { month: "August", desktop: 98 },
+  { month: "September", desktop: 98 },
+  { month: "October", desktop: 43 },
+  { month: "November", desktop: 96 },
+  { month: "December", desktop: 66 },
+  { month: "January", desktop: 39 },
+  { month: "February", desktop: 77 },
 ];
 
 const chartConfig = {
   desktop: {
-    label: "Desktop",
+    label: "Bookings",
     color: "hsl(var(--chart-1))",
   },
 } satisfies ChartConfig;
