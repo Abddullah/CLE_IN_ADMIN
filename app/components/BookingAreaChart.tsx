@@ -1,58 +1,53 @@
-"use client";
-
-import { Area, AreaChart, CartesianGrid, XAxis } from "recharts";
+"use client"
+import { Area, AreaChart, CartesianGrid, XAxis } from "recharts"
 
 import {
   Card,
   CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+ 
+} from "@/components/ui/card"
 import {
   ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
-} from "@/components/ui/chart";
+} from "@/components/ui/chart"
 
-export const description = "A simple area chart";
+export const description = "An area chart with gradient fill"
 
 const chartData = [
-  { month: "January", desktop: 60 },
-  { month: "February", desktop: 80 },
-  { month: "March", desktop: 120 },
-  { month: "April", desktop: 73 },
-  { month: "May", desktop: 28 },
-  { month: "July", desktop: 98 },
-  { month: "August", desktop: 98 },
-  { month: "September", desktop: 98 },
-  { month: "October", desktop: 43 },
-  { month: "November", desktop: 96 },
-  { month: "December", desktop: 66 },
-  { month: "January", desktop: 39 },
-  { month: "February", desktop: 77 },
-];
+  { month: "January", desktop: 186, mobile: 80 },
+  { month: "February", desktop: 305, mobile: 200 },
+  { month: "March", desktop: 237, mobile: 120 },
+  { month: "April", desktop: 73, mobile: 190 },
+  { month: "May", desktop: 209, mobile: 130 },
+  { month: "June", desktop: 214, mobile: 140 },
+  { month: "June", desktop: 214, mobile: 140 },
+  { month: "June", desktop: 214, mobile: 140 },
+  { month: "June", desktop: 214, mobile: 140 },
+  { month: "June", desktop: 214, mobile: 140 },
+]
 
 const chartConfig = {
-  desktop: {
-    label: "Bookings",
-    color: "hsl(var(--chart-1))",
+  mobile: {
+    label: "Mobile",
+    color: "#00BFFF",
   },
-} satisfies ChartConfig;
+} satisfies ChartConfig
 
 export function ComponentAreaChart() {
   return (
-    <Card>
+    <Card className="h-[225px]">
       <CardContent>
-        <ChartContainer config={chartConfig}>
+        <ChartContainer className="h-[200px] w-[100%]" config={chartConfig}>
           <AreaChart
             accessibilityLayer
             data={chartData}
             margin={{
               left: 12,
               right: 12,
+              top: 30,
+              bottom: 0,
             }}
           >
             <CartesianGrid vertical={false} />
@@ -60,24 +55,52 @@ export function ComponentAreaChart() {
               dataKey="month"
               tickLine={false}
               axisLine={false}
-              tickMargin={8}
+              tickMargin={1}
               tickFormatter={(value) => value.slice(0, 3)}
             />
-            <ChartTooltip
-              cursor={false}
-              content={<ChartTooltipContent indicator="line" />}
-            />
+            <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
+            <defs>
+              <linearGradient id="fillDesktop" x1="0" y1="0" x2="0" y2="1">
+                <stop
+                  offset="5%"
+                  stopColor="var(--color-desktop)"
+                  stopOpacity={0.8}
+                />
+                <stop
+                  offset="95%"
+                  stopColor="var(--color-desktop)"
+                  stopOpacity={0.1}
+                />
+              </linearGradient>
+              <linearGradient id="fillMobile" x1="0" y1="0" x2="0" y2="1">
+                <stop
+                  offset="5%"
+                  stopColor="var(--color-mobile)"
+                  stopOpacity={0.8}
+                />
+                <stop
+                  offset="95%"
+                  stopColor="var(--color-mobile)"
+                  stopOpacity={0.1}
+                />
+              </linearGradient>
+            </defs>
             <Area
-              dataKey="desktop"
+              dataKey="mobile"
               type="natural"
-              fill="#2D60FF"
-              fillOpacity={0.4}
-              stroke="#00BFFF"
+              fill="url(#fillMobile)"
+              fillOpacity={0.2}
+              stroke="var(--color-mobile)"
+              strokeWidth={6} 
+              stackId="a"
             />
           </AreaChart>
         </ChartContainer>
       </CardContent>
-      <CardFooter></CardFooter>
     </Card>
-  );
+  )
 }
+
+
+
+
