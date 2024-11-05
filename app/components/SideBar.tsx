@@ -80,7 +80,7 @@ const Sidebar = () => {
             {[
               { icon: homeIcon, label: "Dashboard", link: "/" },
               { icon: listIcon, label: "Categories", link: "/categories" },
-              { icon: userIcon, label: "User", link: "/users" },
+              { icon: userIcon, label: "Users", link: "/users" },
               { icon: bookingIcon, label: "Booking", link: "/booking" },
               { icon: servicesIcon, label: "Services", link: "/services" },
               { icon: jobsIcon, label: "Jobs", link: "/jobs" },

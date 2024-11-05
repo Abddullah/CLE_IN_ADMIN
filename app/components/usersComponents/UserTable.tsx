@@ -143,19 +143,22 @@ import {
               </TableRow>
             ))}
           </TableBody>
-          <TableFooter>
-            <TableRow>
-              <TableCell colSpan={2} className="p-2 text-right font-semibold text-xs md:text-sm lg:text-base">
-                Total
-              </TableCell>
-              <TableCell colSpan={5} className="p-2 text-right text-xs md:text-sm lg:text-base">$1,750.00</TableCell>
-            </TableRow>
-          </TableFooter>
         </Table>
       </div>
     );
   }
   
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -24,6 +24,6 @@ const UploadButton: React.FC = () => {
       </button>
     </div>
   );
-};
+}; 
 
 export default UploadButton;

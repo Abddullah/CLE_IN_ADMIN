@@ -12,7 +12,7 @@ function page() {
             className="border-[#4BB1D3] w-[80px] h-[40px] mt-5 mr-3 text-white bg-[#00BFFF] rounded-lg outline-none hover:bg-[#00BFFF] 
       sm:w-[100px] sm:h-[45px]"
           >
-            <Link href={"categories/add"}>ADD</Link>
+            <Link href={"users/addUser"}>ADD</Link>
           </Button>
         </div>
 

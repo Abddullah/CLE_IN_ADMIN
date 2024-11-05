@@ -1,6 +1,10 @@
+"use client";
+
 import Image from "next/image";
-import React from "react";
+import React, { useState } from "react";
 import dots from "../../../assets/categoriesIcons/dots.svg";
+import editIcon from "../../../assets/categoriesIcons/edit.svg";
+import deleteIcon from "../../../assets/categoriesIcons/delete.svg";
 
 interface Props {
   title: string;
@@ -8,15 +12,48 @@ interface Props {
 }
 
 const CleaningCards: React.FC<Props> = ({ title, image }) => {
+  const [showOptions, setShowOptions] = useState(false);
+
+  const handleToggleOptions = () => {
+    setShowOptions(!showOptions);
+  };
+
   return (
     <>
       <div className="relative w-[203px] rounded-3xl border border-6 top-9 border-[#00BFFF] shadow-lg bg-transparent p-4 hover:shadow-xl transition-shadow duration-300 ease-in-out">
         <div className="absolute top-3 right-3 flex flex-col space-y-1 cursor-pointer">
           <Image
             src={dots}
-            alt="Image 1"
+            alt="Options"
             className="w-6 h-6 transition-all duration-300 ease-in-out transform hover:scale-125"
+            onClick={handleToggleOptions}
           />
+
+          
+          {showOptions && (
+            <div className="absolute right-0 top-8 w-32 bg-white border border-gray-200 rounded-lg shadow-md z-10">
+              <button
+                className="flex items-center w-full p-2 hover:bg-gray-100"
+                onClick={() => {
+                  console.log("Edit clicked");
+                  setShowOptions(false);
+                }}
+              >
+                <Image src={editIcon} alt="Edit" className="w-4 h-4 mr-2" />
+                <span>Edit</span>
+              </button>
+              <button
+                className="flex items-center w-full p-2 hover:bg-gray-100"
+                onClick={() => {
+                  console.log("Delete clicked");
+                  setShowOptions(false);
+                }}
+              >
+                <Image src={deleteIcon} alt="Delete" className="w-4 h-4 mr-2" />
+                <span>Delete</span>
+              </button>
+            </div>
+          )}
         </div>
 
         <div className="flex flex-col items-center mb-4">
