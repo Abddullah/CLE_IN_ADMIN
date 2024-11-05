@@ -116,9 +116,6 @@ import {
     return (
       <div className="overflow-x-auto p-4">
         <Table className="min-w-full border border-gray-200 rounded-lg shadow-md">
-          <TableCaption className="text-gray-600 text-sm py-2">
-            A list of recent employee records.
-          </TableCaption>
           <TableHeader>
             <TableRow className="bg-gray-100">
               <TableHead className="p-2 text-left text-xs md:text-sm lg:text-base">Name</TableHead>
