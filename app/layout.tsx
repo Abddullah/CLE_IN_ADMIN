@@ -5,16 +5,21 @@ import FontAwesomeConfig from "@/fontawesome";
 import Navbar from "./components/Navbar";
 import Sidebar from "./components/SideBar";
 
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
+
+
+const latoBlack = localFont({
+  src: "./fonts/Lato-Black.ttf",
+  variable: "--font-lato-black",
   weight: "100 900",
 });
-const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
-  variable: "--font-geist-mono",
+const latoRegular = localFont({
+  src: "./fonts/Lato-Regular.ttf",
+  variable: "--font-lato-regular",
   weight: "100 900",
 });
+
+
+
 
 export const metadata: Metadata = {
   title: "CLE IN",
@@ -32,7 +37,7 @@ export default function RootLayout({
         <FontAwesomeConfig />
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${latoBlack.variable} ${latoRegular.variable} antialiased`}
       >
         {
           <div className="flex h-screen">

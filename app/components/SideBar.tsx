@@ -15,6 +15,9 @@ import logoutIcon from "../../assets/SideBarIcons/logout icon.png";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars } from "@fortawesome/free-solid-svg-icons";
+import Link from "next/link";
+
+
 
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -75,26 +78,30 @@ const Sidebar = () => {
         <nav className="mt-4 ml-8">
           <ul className="space-y-2">
             {[
-              { icon: homeIcon, label: "Dashboard" },
-              { icon: listIcon, label: "Categories" },
-              { icon: userIcon, label: "User" },
-              { icon: bookingIcon, label: "Booking" },
-              { icon: servicesIcon, label: "Services" },
-              { icon: jobsIcon, label: "Jobs" },
-              { icon: settingsIcon, label: "Settings" },
-            ].map(({ icon, label }) => (
+              { icon: homeIcon, label: "Dashboard", link: "/" },
+              { icon: listIcon, label: "Categories", link: "/categories" },
+              { icon: userIcon, label: "User", link: "/users" },
+              { icon: bookingIcon, label: "Booking", link: "/booking" },
+              { icon: servicesIcon, label: "Services", link: "/services" },
+              { icon: jobsIcon, label: "Jobs", link: "/jobs" },
+              { icon: settingsIcon, label: "Settings", link: "/settings" },
+            ].map(({ icon, label, link }) => (
               <li
                 key={label}
                 className="flex items-center p-2 hover:bg-gray-100 rounded cursor-pointer"
               >
-                <Image
-                  src={icon}
-                  alt={label}
-                  width={24}
-                  height={24}
-                  className="text-gray-400 mr-6"
-                />
-                <span className="text-gray-500">{label}</span>
+                <Link href={link} passHref>
+                  <p className="flex items-center">
+                    <Image
+                      src={icon}
+                      alt={label}
+                      width={24}
+                      height={24}
+                      className="text-gray-400 mr-6"
+                    />
+                    <span className="text-gray-500">{label}</span>
+                  </p>
+                </Link>
               </li>
             ))}
           </ul>
@@ -102,14 +109,18 @@ const Sidebar = () => {
 
         <div className="absolute bottom-4 left-0 w-full px-9">
           <button className="flex items-center w-full p-2 hover:bg-red-100 rounded cursor-pointer">
-            <Image
-              src={logoutIcon}
-              alt="Logout"
-              width={24}
-              height={24}
-              className="text-gray-400 mr-2"
-            />
-            <span className="text-gray-500 mt-2">Logout</span>
+            <Link href="/logout" passHref>
+              <p className="flex items-center">
+                <Image
+                  src={logoutIcon}
+                  alt="Logout"
+                  width={24}
+                  height={24}
+                  className="text-gray-400 mr-2"
+                />
+                <span className="text-gray-500 mt-2">Logout</span>
+              </p>
+            </Link>
           </button>
         </div>
       </div>
@@ -125,3 +136,6 @@ const Sidebar = () => {
 };
 
 export default Sidebar;
+
+
+

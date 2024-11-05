@@ -4,10 +4,6 @@ import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
 import {
   ChartConfig,
   ChartContainer,
-  ChartLegend,
-  ChartLegendContent,
-  ChartTooltip,
-  ChartTooltipContent,
 } from "@/components/ui/chart";
 
 const chartData = [
@@ -49,8 +45,6 @@ export function Component() {
           axisLine={false}
           tickFormatter={(value) => value.slice(0, 3)}
         />
-        <ChartTooltip content={<ChartTooltipContent />} />
-        <ChartLegend content={<ChartLegendContent />} />
         <Bar dataKey="desktop" fill="var(--color-desktop)" radius={15} barSize={15} />
         <Bar dataKey="mobile" fill="var(--color-mobile)" radius={15} barSize={15} />
       </BarChart>

@@ -1,27 +1,34 @@
-import Image from 'next/image'
-import React from 'react'
-import cardImage from '../../assets/categoriesIcons/Vector.svg'
-
+import React from "react";
+import CleaningCards from "../components/categoriesComponents/CleaningCards";
+import house from "../../assets/categoriesIcons/Vector.svg";
+import company from "../../assets/categoriesIcons/company.svg";
+import hospital from "../../assets/categoriesIcons/hospital.svg";
+import factory from "../../assets/categoriesIcons/Factory.svg";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 function page() {
   return (
-    <div>
-        <>
+    <>
+      <div className="bg-[#F5F7FA] h-full w-full">
+        <div className="flex justify-end">
+          <Button
+            className="border-[#4BB1D3] w-[80px] h-[40px] mt-5 mr-3 text-white bg-[#00BFFF] rounded-lg outline-none hover:bg-[#00BFFF] 
+      sm:w-[100px] sm:h-[45px]"
+          >
+            <Link href={"categories/add"}>ADD</Link>
+          </Button>
+        </div>
 
-        <div className="max-w-[200px] rounded-xl border-2 border-blue-500 shadow-lg bg-white p-2">
-      <div className="flex flex-col items-center mb-2">
-        <Image src={cardImage} className='w-28 h-28 object-cover rounded-full mb-4' alt='dhdhdh'/>
-        <h2 className="text-lg font-bold">Cleaning of Home</h2>
-        <p className="text-gray-600 mt-2">...</p> {/* Three dots below the text */}
+        <div className="flex justify-evenly flex-wrap gap-5">
+          <CleaningCards title="Cleaning at house" image={house} />
+          <CleaningCards title="Cleaning at Company" image={company} />
+          <CleaningCards title="Cleaning at hospital" image={hospital} />
+          <CleaningCards title="Cleaning at Factory" image={factory} />
+        </div>
       </div>
-    </div>
-
-
-
-
-        </>
-    </div>
-  )
+    </>
+  );
 }
 
-export default page
+export default page;

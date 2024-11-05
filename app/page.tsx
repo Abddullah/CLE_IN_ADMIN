@@ -8,12 +8,10 @@ import {
 import { Component } from "./components/IncomeBarChart";
 import { ComponentAreaChart } from "./components/BookingAreaChart";
 
-
-
 const page = () => {
   return (
     <>
-      <div className="flex items-center justify-center mt-3 flex-wrap gap-5 px-6 ">
+      <div className="flex items-center justify-center mt-3 flex-wrap gap-5 px-4 md:px-[66px]">
         <div className="mt-1">
           <BookingCard
             title="Total Booking"
@@ -48,7 +46,7 @@ const page = () => {
         </div>
       </div>
 
-      <div className="bg-white m-4 p-5 flex flex-col gap-3 mt-8 my-4 h-[315px]">
+      <div className="bg-white m-4 p-1 flex flex-col gap-3 mt-16 my-4 h-[315px]">
         <p className="text-2xl font-semibold text-left md:text-3xl lg:text-2xl">
           Total Income
         </p>
@@ -56,32 +54,16 @@ const page = () => {
         <Component />
       </div>
 
-
-      <div className="bg-white m-3 p-4 flex flex-col gap-3 mt-1 my-4">
+      <div className="bg-white m-4 p-1 flex flex-col gap-3 mt-1 my-4">
         <p className="text-2xl font-semibold text-left md:text-3xl lg:text-2xl">
           Total Booking
         </p>
-<div>
-  
-<ComponentAreaChart />
-</div>
+        <div>
+          <ComponentAreaChart />
+        </div>
       </div>
-
-
-
-
-
-
-
     </>
   );
 };
 
 export default page;
-
-
-
-
-
-
-

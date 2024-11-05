@@ -5,8 +5,7 @@ import { faBell, faSearch } from "@fortawesome/free-solid-svg-icons";
 import Image from "next/image";
 import { useState, useEffect, useRef } from "react";
 import profileImage from "../../assets/Mask Group.png";
-import { Button } from "@/components/ui/button"
-
+import { Button } from "@/components/ui/button";
 
 interface TitleProps {
   title: string;
@@ -47,7 +46,7 @@ const Navbar: React.FC<TitleProps> = ({ title }) => {
         {title}
       </div>
 
-      <div className="flex-1 gap-3 max-w-full sm:max-w-xs md:max-w-md relative mx-9">
+      <div className="flex-1 gap-3 max-w-[75%] sm:max-w-[50%] md:max-w-[40%] lg:max-w-[30%] relative ml-auto sm:mr-4 md:mr-9 px-2">
         <input
           type="text"
           value={searchTerm}
@@ -57,15 +56,12 @@ const Navbar: React.FC<TitleProps> = ({ title }) => {
         />
         <FontAwesomeIcon
           icon={faSearch}
-          className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+          className="absolute left-5 top-1/2 transform -translate-y-1/2 text-gray-400 "
         />
       </div>
 
       <div className="flex items-center space-x-3 sm:space-x-4 relative">
-        <div
-          className="relative cursor-pointer"
-          onClick={toggleNotifications}
-        >
+        <div className="relative cursor-pointer" onClick={toggleNotifications}>
           <FontAwesomeIcon
             icon={faBell}
             className="text-gray-600 text-lg sm:text-xl"
@@ -88,7 +84,7 @@ const Navbar: React.FC<TitleProps> = ({ title }) => {
         {isNotificationsOpen && (
           <div
             ref={notificationsRef}
-            className="absolute right-0 top-12 w-80 bg-white border border-gray-200 rounded-lg shadow-lg z-50 overflow-y-auto max-h-80" // Adjusted top position
+            className="absolute right-0 top-12 w-80 bg-white border border-gray-200 rounded-lg shadow-lg z-50 overflow-y-auto max-h-80"
           >
             <div className="p-4">
               <h3 className="text-lg font-semibold text-gray-800">
@@ -116,16 +112,16 @@ const Navbar: React.FC<TitleProps> = ({ title }) => {
                         Lorem ipsum dolor sit amet, consectetur adipiscing elit.
                       </p>
                     </div>
-
                   </div>
-                    
                 ))}
                 <div className="items-center text-center">
-  <Button variant="outline" className="border-[#4BB1D3] w-[150px] text-blue-500 hover:bg-blue-500 hover:text-white">
-    Show all
-  </Button>
-</div>
-
+                  <Button
+                    variant="outline"
+                    className="border-[#4BB1D3] w-[150px] text-blue-500 hover:bg-blue-500 hover:text-white"
+                  >
+                    Show all
+                  </Button>
+                </div>
               </div>
             </div>
           </div>
