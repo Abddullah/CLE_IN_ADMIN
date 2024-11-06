@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 function page() {
   return (
     <>
-      <div className="bg-[#F5F7FA] h-full pt-6 w-full flex items-start justify-start">
+     <div className="bg-[#F5F7FA] min-h-screen w-full flex items-start justify-start pt-8">
         <div className="w-full max-w-md px-4 sm:px-8 md:px-12 lg:px-16">
           <h1 className="text-2xl font-bold mt-2">Add Users</h1>
 
