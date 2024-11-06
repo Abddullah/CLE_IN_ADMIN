@@ -22,12 +22,13 @@ function page() {
         </div>
         </Link>
 
-        <div className="flex justify-evenly flex-wrap gap-5">
-          <CleaningCards title="Cleaning at house" image={house} />
-          <CleaningCards title="Cleaning at Company" image={company} />
-          <CleaningCards title="Cleaning at hospital" image={hospital} />
-          <CleaningCards title="Cleaning at Factory" image={factory} />
-        </div>
+<div className="flex justify-center sm:justify-start flex-wrap gap-5 px-6">
+  <CleaningCards title="Cleaning at house" image={house} />
+  <CleaningCards title="Cleaning at Company" image={company} />
+  <CleaningCards title="Cleaning at hospital" image={hospital} />
+  <CleaningCards title="Cleaning at Factory" image={factory} />
+</div>
+
       </div>
     </>
   );

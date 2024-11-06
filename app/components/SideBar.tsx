@@ -79,7 +79,7 @@ const Sidebar = () => {
               { icon: homeIcon, label: "Dashboard", link: "/" },
               { icon: listIcon, label: "Categories", link: "/categories" },
               { icon: userIcon, label: "Users", link: "/users" },
-              { icon: bookingIcon, label: "Booking", link: "/booking" },
+              { icon: bookingIcon, label: "Booking", link: "/bookings" },
               { icon: servicesIcon, label: "Services", link: "/services" },
               { icon: jobsIcon, label: "Jobs", link: "/jobs" },
               { icon: settingsIcon, label: "Settings", link: "/settings" },

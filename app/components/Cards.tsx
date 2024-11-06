@@ -34,6 +34,20 @@ const BookingCard: React.FC<BookingCardProps> = ({
 
 
 
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
     
 
 
