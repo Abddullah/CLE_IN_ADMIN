@@ -11,8 +11,8 @@ import { ComponentAreaChart } from "./components/BookingAreaChart";
 const page = () => {
   return (
     <>
-      <div className="flex items-center justify-center mt-3 flex-wrap gap-5 px-4 md:px-[66px]">
-        <div className="mt-1">
+      <div className="flex items-center mt-10 gap-6 flex-wrap justify-center px-4 md:px-6 lg:px-8 xl:px-2 max-w-full lg:max-w-[90%] xl:max-w-[95%] mx-auto">
+        <div className="mt-1 w-full sm:w-[48%] lg:w-[28%] xl:w-[22%]">
           <BookingCard
             title="Total Booking"
             totalBookings={10}
@@ -20,7 +20,7 @@ const page = () => {
             bgColor="bg-[#C8E7F8]"
           />
         </div>
-        <div className="mt-1">
+        <div className="mt-1 w-full sm:w-[48%] lg:w-[28%] xl:w-[22%]">
           <BookingCard
             title="Total Income"
             totalBookings={18}
@@ -28,7 +28,7 @@ const page = () => {
             bgColor="bg-[#BBD4E2]"
           />
         </div>
-        <div className="mt-1">
+        <div className="mt-1 w-full sm:w-[48%] lg:w-[28%] xl:w-[22%]">
           <BookingCard
             title="Total Users"
             totalBookings={18}
@@ -36,7 +36,7 @@ const page = () => {
             bgColor="bg-[#C8E7F8]"
           />
         </div>
-        <div className="mt-1">
+        <div className="mt-1 w-full sm:w-[48%] lg:w-[28%] xl:w-[22%]">
           <BookingCard
             title="Total Provider"
             totalBookings={18}

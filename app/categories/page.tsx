@@ -11,14 +11,16 @@ function page() {
   return (
     <>
       <div className="bg-[#F5F7FA] h-full w-full">
+      <Link href={"categories/add"}>
         <div className="flex justify-end">
           <Button
             className="border-[#4BB1D3] w-[80px] h-[40px] mt-5 mr-3 text-white bg-[#00BFFF] rounded-lg outline-none hover:bg-[#00BFFF] 
       sm:w-[100px] sm:h-[45px]"
           >
-            <Link href={"categories/add"}>ADD</Link>
+            ADD
           </Button>
         </div>
+        </Link>
 
         <div className="flex justify-evenly flex-wrap gap-5">
           <CleaningCards title="Cleaning at house" image={house} />

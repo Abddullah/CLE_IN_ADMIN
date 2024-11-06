@@ -13,14 +13,14 @@ const UploadButton: React.FC = () => {
   };
 
   return (
-    <div>
+    <div className="grid w-full max-w-sm items-center gap-1.5">
       <input type="file" id="file-input" className="hidden" accept="image/*" />
       <button
         onClick={handleFileInputClick}
-        className="flex items-center justify-center p-4 border border-blue-400 rounded-xl hover:bg-gray-100 transition"
+        className="flex items-center justify-center p-3 border border-blue-400 rounded-lg hover:bg-gray-100 transition"
       >
-        <Image className="w-6 h-6 mr-2" src={uploadIcon} alt="upload icon" />
-        <span>Choose a File</span>
+        <Image className="w-6 h-6 mr-3" src={uploadIcon} alt="upload icon" />
+        <span className="mt-1">Choose a File</span>
       </button>
     </div>
   );

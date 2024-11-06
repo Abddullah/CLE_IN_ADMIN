@@ -64,9 +64,9 @@ const Navbar: React.FC<TitleProps> = ({ title }) => {
         <div className="relative cursor-pointer" onClick={toggleNotifications}>
           <FontAwesomeIcon
             icon={faBell}
-            className="text-gray-600 text-lg sm:text-xl"
+            className="text-gray-600 text-lg sm:text-xl mt-2"
           />
-          <span className="absolute top-0 right-0 bg-red-500 text-white text-xs rounded-full w-4 h-4 sm:w-5 sm:h-5 flex items-center justify-center transform translate-x-1/2 -translate-y-1/2">
+          <span className="absolute top-0 right-0 bg-red-500 text-white text-xs rounded-full w-4 h-4 sm:w-5 sm:h-5 flex items-center justify-center transform translate-x-1/2 -translate-y-1/2 mt-2">
             3
           </span>
         </div>
@@ -84,7 +84,7 @@ const Navbar: React.FC<TitleProps> = ({ title }) => {
         {isNotificationsOpen && (
           <div
             ref={notificationsRef}
-            className="absolute right-0 top-12 w-80 bg-white border border-gray-200 rounded-lg shadow-lg z-50 overflow-y-auto max-h-80"
+            className="absolute right-0 top-12 w-80 bg-white border border-gray-200 rounded-lg shadow-lg z-50 overflow-y-auto max-h-90"
           >
             <div className="p-4">
               <h3 className="text-lg font-semibold text-gray-800">
@@ -132,3 +132,45 @@ const Navbar: React.FC<TitleProps> = ({ title }) => {
 };
 
 export default Navbar;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -16,7 +16,7 @@ const BookingCard: React.FC<BookingCardProps> = ({
 }) => {
   return (
     <div
-      className={`${bgColor} rounded-lg shadow-xl h-32 w-56 mx-auto transition duration-200 ease-in-out hover:shadow-xl flex flex-col justify-center items-center`}
+      className={`${bgColor} rounded-lg shadow-xl h-32 w-56 mx-auto transition duration-200 ease-in-out   hover:shadow-xl flex flex-col justify-center items-center`}
     >
       <div className="flex items-center gap-3">
       <h2 className="text-lg font-semibold text-black mb-2 text-center truncate mt-2">
@@ -28,6 +28,21 @@ const BookingCard: React.FC<BookingCardProps> = ({
       </div>
         <p className="text-4xl font-bold text-black mr-4">{totalBookings}</p>
     </div>
+
+
+
+
+
+
+    
+
+
+
+
+
+    
+    
+
   );
 };
 

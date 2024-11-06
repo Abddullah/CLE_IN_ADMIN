@@ -17,8 +17,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars } from "@fortawesome/free-solid-svg-icons";
 import Link from "next/link";
 
-
-
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const sidebarRef = useRef<HTMLDivElement>(null);
@@ -86,11 +84,13 @@ const Sidebar = () => {
               { icon: jobsIcon, label: "Jobs", link: "/jobs" },
               { icon: settingsIcon, label: "Settings", link: "/settings" },
             ].map(({ icon, label, link }) => (
-              <li
+              <Link
+                href={link}
+                passHref
                 key={label}
                 className="flex items-center p-2 hover:bg-gray-100 rounded cursor-pointer"
               >
-                <Link href={link} passHref>
+                <li>
                   <p className="flex items-center">
                     <Image
                       src={icon}
@@ -101,8 +101,8 @@ const Sidebar = () => {
                     />
                     <span className="text-gray-500">{label}</span>
                   </p>
-                </Link>
-              </li>
+                </li>
+              </Link>
             ))}
           </ul>
         </nav>
@@ -136,6 +136,3 @@ const Sidebar = () => {
 };
 
 export default Sidebar;
-
-
-
