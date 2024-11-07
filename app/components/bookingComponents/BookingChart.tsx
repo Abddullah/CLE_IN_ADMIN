@@ -7,7 +7,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import Image from "next/image";
-import profile from "../../../assets/bookingsIcon/buttonProfile.svg";
+import clockIcon from "../../../assets/bookingsIcon/clock.svg";
+import BookingCard from "./UserDetails";
 
 const timeSlots = [
   "8:00 am to 10:00 am",
@@ -24,12 +25,18 @@ const timeSlots = [
   "6:00 am to 8:00 pm",
 ];
 
+
 export function BookingTable() {
   return (
     <div className="bg-white p-6 rounded-md">
+      <div>
+
+<span className="text-lg mb-3">September 18, 2024</span>
+</div>
       <Table>
+      
         <TableHeader>
-          <p className="text-lg mb-3 ">September 18,2024</p>
+          
           <TableRow>
             <TableHead>Bookings</TableHead>
           </TableRow>
@@ -37,15 +44,24 @@ export function BookingTable() {
         <TableBody>
           {timeSlots.map((slot, index) => (
             <TableRow key={index}>
-              <TableCell className="font-medium">{slot}</TableCell>
+              <TableCell className="flex items-center gap-4 font-medium">
+              
+                <Image
+                  src={clockIcon}
+                  alt="Clock Icon"
+                  width={16}
+                  height={16}
+                />
+                <span>{slot}</span>
+              </TableCell>
 
-              <TableCell>
-                <button className="bg-[#00BFFF] flex gap-2 w-[120px] text-white px-2 py-2 rounded-lg hover:bg-[#00BFFF]">
-                  <span>
-                    <Image src={profile} alt="profile" />
-                  </span>
-                  <span className="mt-1">Helina</span>
-                </button>
+              <TableCell className="flex justify-around items-center h-[20px]">
+                {index === 0 || index === 1 ? (
+                  <div className=" ml-[220px] mb-9 sm:mb-9 md:mb-9 lg:mb-9">
+                   
+                    <BookingCard name="Ashar"/>
+                  </div>
+                ) : null}
               </TableCell>
             </TableRow>
           ))}
@@ -54,3 +70,6 @@ export function BookingTable() {
     </div>
   );
 }
+
+
+
