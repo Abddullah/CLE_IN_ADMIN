@@ -4,20 +4,27 @@ import Image from "next/image";
 import { useState, useEffect, useRef } from "react";
 
 import logo from "../../assets/Logo.png";
-import homeIcon from "../../assets/SideBarIcons/home icon.png";
-import listIcon from "../../assets/SideBarIcons/categories icon.png";
-import userIcon from "../../assets/SideBarIcons/user icon.png";
-import bookingIcon from "../../assets/SideBarIcons/bookings icon.png";
-import servicesIcon from "../../assets/SideBarIcons/service icon.png";
-import jobsIcon from "../../assets/SideBarIcons/job icon.png";
-import settingsIcon from "../../assets/SideBarIcons/settings icon.png";
-import logoutIcon from "../../assets/SideBarIcons/logout icon.png";
+//
+
+import {
+  faBars,
+  faHome,
+  faList,
+  faUser,
+  faCalendarAlt,
+  faGear,
+  faSuitcase,
+  faSignOutAlt,
+} from "@fortawesome/free-solid-svg-icons";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBars } from "@fortawesome/free-solid-svg-icons";
+
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 const Sidebar = () => {
+  const path = usePathname();
+
   const [isOpen, setIsOpen] = useState(false);
   const sidebarRef = useRef<HTMLDivElement>(null);
 
@@ -26,10 +33,7 @@ const Sidebar = () => {
   };
 
   const handleClickOutside = (event: MouseEvent) => {
-    if (
-      sidebarRef.current &&
-      !sidebarRef.current.contains(event.target as Node)
-    ) {
+    if (sidebarRef.current) {
       setIsOpen(false);
     }
   };
@@ -63,6 +67,7 @@ const Sidebar = () => {
           isOpen ? "translate-x-0" : "-translate-x-full"
         } md:translate-x-0 fixed md:relative z-20 top-0`}
       >
+        <Link href={'/'}>
         <div className="flex items-center p-4">
           <Image
             src={logo}
@@ -73,16 +78,17 @@ const Sidebar = () => {
           />
           <h1 className="text-2xl font-bold text-[#343C6A]">CLE IN</h1>
         </div>
+        </Link>
         <nav className="mt-4 ml-8">
           <ul className="space-y-2">
             {[
-              { icon: homeIcon, label: "Dashboard", link: "/" },
-              { icon: listIcon, label: "Categories", link: "/categories" },
-              { icon: userIcon, label: "Users", link: "/users" },
-              { icon: bookingIcon, label: "Booking", link: "/bookings" },
-              { icon: servicesIcon, label: "Services", link: "/services" },
-              { icon: jobsIcon, label: "Jobs", link: "/jobs" },
-              { icon: settingsIcon, label: "Settings", link: "/settings" },
+              { icon: faHome, label: "Dashboard", link: "/" },
+              { icon: faList, label: "Categories", link: "/categories" },
+              { icon: faUser, label: "Users", link: "/users" },
+              { icon: faCalendarAlt, label: "Bookings", link: "/bookings" },
+              { icon: faSuitcase, label: "Services", link: "/services" },
+              { icon: faSuitcase, label: "Jobs", link: "/jobs" },
+              { icon: faGear, label: "Settings", link: "/settings" },
             ].map(({ icon, label, link }) => (
               <Link
                 href={link}
@@ -92,14 +98,22 @@ const Sidebar = () => {
               >
                 <li>
                   <p className="flex items-center">
-                    <Image
-                      src={icon}
-                      alt={label}
-                      width={24}
-                      height={24}
-                      className="text-gray-400 mr-6"
+                    <FontAwesomeIcon
+                      icon={icon}
+                      className={`mr-6 text-xl ${
+                        path === link
+                          ? "text-[#00BFFF] font-semibold"
+                          : "text-gray-400"
+                      }`}
                     />
-                    <span className="text-gray-500">{label}</span>
+
+                    <span
+                      className={`mr-6 ${
+                        path === link ? "text-[#00BFFF] " : "text-gray-400"
+                      }`}
+                    >
+                      {label}
+                    </span>
                   </p>
                 </li>
               </Link>
@@ -111,13 +125,11 @@ const Sidebar = () => {
           <button className="flex items-center w-full p-2 hover:bg-red-100 rounded cursor-pointer">
             <Link href="/logout" passHref>
               <p className="flex items-center">
-                <Image
-                  src={logoutIcon}
-                  alt="Logout"
-                  width={24}
-                  height={24}
-                  className="text-gray-400 mr-2"
+                <FontAwesomeIcon
+                  icon={faSignOutAlt}
+                  className="text-gray-400 mr-2 mt-2"
                 />
+
                 <span className="text-gray-500 mt-2">Logout</span>
               </p>
             </Link>
@@ -136,27 +148,3 @@ const Sidebar = () => {
 };
 
 export default Sidebar;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

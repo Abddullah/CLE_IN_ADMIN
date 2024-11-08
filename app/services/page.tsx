@@ -11,9 +11,14 @@ import remove from "../../assets/categoriesIcons/delete.svg";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
+
 function page() {
   return (
     <>
+
+    
+    
+        <div className="bg-[#F5F7FA] min-h-screen w-full">
       <div className="flex justify-end">
         <Link href={'services/addService'}>
         <Button
@@ -37,7 +42,7 @@ function page() {
         </button>
       </div>
 
-      <div className="flex flex-wrap justify-between w-full px-4 sm:px-8 md:px-12 lg:px-10 mt-4">
+      <div className="flex flex-wrap justify-center gap-3 w-full px-4 sm:px-8 md:px-12 lg:px-10 mt-4">
         {/* Card 1 */}
         <Card
           price="3400"
@@ -103,6 +108,7 @@ function page() {
           editIcon={edit}
           deleteIcon={remove}
         />
+      </div>
       </div>
     </>
   );

@@ -3,8 +3,11 @@ import UploadButton from "@/app/components/categoriesComponents/addCategoryPage/
 import React from "react";
 import { Button } from "@/components/ui/button";
 
+
 function page() {
   return (
+    <>
+    
     <div className="bg-[#F5F7FA] min-h-screen w-full flex items-start justify-start pt-8">
       {" "}
       
@@ -29,6 +32,7 @@ function page() {
         </div>
       </div>
     </div>
+    </>
   );
 }
 

@@ -7,9 +7,11 @@ import factory from "../../assets/categoriesIcons/Factory.svg";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
+
 function page() {
   return (
     <>
+    
       <div className="bg-[#F5F7FA] h-full w-full">
       <Link href={"categories/add"}>
         <div className="flex justify-end">

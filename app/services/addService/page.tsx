@@ -10,9 +10,11 @@ import hospital from "../../../assets/servicesIcons/hospital.svg";
 import factory from "../../../assets/servicesIcons/factory.svg";
 import Link from "next/link";
 
+
 function page() {
   return (
     <>
+   
       <div className="bg-[#F5F7FA] min-h-screen w-full flex items-start justify-start pt-2">
         <div className="w-full max-w-7xl px-8 lg:px-16 mt-6">
           <h1 className="text-2xl font-bold mt-2">Add Services</h1>

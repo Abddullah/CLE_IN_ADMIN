@@ -4,9 +4,11 @@ import map from '../../../assets/bookingsIcon/map.svg'
 import serviceImage from '../../../assets/bookingsIcon/room.svg'
 import { Button } from '@/components/ui/button'
 
+
 function page() {
   return (
     <>
+   
     <div className="bg-[#F5F7FA] min-h-screen w-full flex items-start justify-start pt-2">
     <div className="w-full max-w-7xl px-8 lg:px-16 mt-6">
 
