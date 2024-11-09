@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useState, useEffect, useRef } from "react";
 
 import logo from "../../assets/Logo.png";
-//
+
 
 import {
   faBars,
@@ -58,7 +58,7 @@ const Sidebar = () => {
           isOpen ? "hidden" : ""
         }`}
       >
-        <FontAwesomeIcon icon={faBars} className="text-gray-600 text-xl" />
+        <FontAwesomeIcon icon={faBars} className="text-gray-600 text-xl mt-3.5" />
       </button>
 
       <div
@@ -68,15 +68,15 @@ const Sidebar = () => {
         } md:translate-x-0 fixed md:relative z-20 top-0`}
       >
         <Link href={'/'}>
-        <div className="flex items-center p-4">
+        <div className="flex items-center p-4 ml-1 mb-5 mt-1 ">
           <Image
             src={logo}
             alt="Logo"
-            width={35}
-            height={35}
-            className="mr-2 ml-4 mt-4"
+            width={38}
+            height={388}
+            className="mr-2 ml-4 mt-1"
           />
-          <h1 className="text-2xl font-bold text-[#343C6A]">CLE IN</h1>
+          <h1 className="text-xl font-bold text-[#343C6A] mt-2 ml-2">Pulizie Di Casa</h1>
         </div>
         </Link>
         <nav className="mt-4 ml-8">
@@ -94,7 +94,7 @@ const Sidebar = () => {
                 href={link}
                 passHref
                 key={label}
-                className="flex items-center p-2 hover:bg-gray-100 rounded cursor-pointer"
+                className="flex items-center p-2 hover:bg-gray-100 rounded cursor-pointer ml-1"
               >
                 <li>
                   <p className="flex items-center">
@@ -148,3 +148,38 @@ const Sidebar = () => {
 };
 
 export default Sidebar;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

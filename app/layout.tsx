@@ -4,7 +4,7 @@ import "./globals.css";
 import FontAwesomeConfig from "@/fontawesome";
 import Navbar from "./components/Navbar";
 import Sidebar from "./components/SideBar";
-import { usePathname } from "next/navigation";
+
 
 
 
@@ -53,3 +53,19 @@ export default function RootLayout({
     </html>
   );
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

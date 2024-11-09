@@ -1,3 +1,4 @@
+'use client'
 import React from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -9,47 +10,114 @@ import office from "../../../assets/servicesIcons/office.svg";
 import hospital from "../../../assets/servicesIcons/hospital.svg";
 import factory from "../../../assets/servicesIcons/factory.svg";
 import Link from "next/link";
-
+import { useState } from "react";
 
 function page() {
+
+  const [selectedCategory, setSelectedCategory] = useState<string>("");
+  const [subCategories, setSubCategories] = useState<string[]>([])
+  // Category options and their corresponding subcategories
+  const categories: { [key: string]: string[] } = {
+    "Cleaning and Hygiene Services": [
+      "Office Cleaning",
+      "Room Cleaning",
+      "Pest Control Service",
+      "Laundry Service",
+    ],
+    "Home Maintenance Services": [
+      "Electrician",
+      "Plumber",
+      "Mason/Bricklayer",
+      "Carpenter",
+      "Painter",
+    ],
+    "Installation Services": [
+      "Air Conditioning Installer",
+      "Alarm System Installer",
+      "Solar Panel Installer",
+      "Door and Window Installer",
+    ],
+    "Renovation Services": [
+      "Architect",
+      "Interior Designer",
+      "Building Contractor",
+      "Floor Layer",
+    ],
+  };
+
+  const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const selected = e.target.value;
+    setSelectedCategory(selected);
+    setSubCategories(categories[selected] || []);
+  };
   return (
     <>
-   
       <div className="bg-[#F5F7FA] min-h-screen w-full flex items-start justify-start pt-2">
         <div className="w-full max-w-7xl px-8 lg:px-16 mt-6">
           <h1 className="text-2xl font-bold mt-2">Add Services</h1>
 
           <div className="grid w-full items-center gap-1.5 mt-6">
-            <Input
-              type="text"
-              className="w-full h-[55px] rounded-lg border-[#4BB1D3] focus:border-blue-500 focus:outline-none"
-              placeholder="Provider Name"
-              id="name"
-            />
+            <select
+              className="w-full h-[55px] rounded-lg border border-[#4BB1D3] bg-gray-50 outline-[#4BB1D3] focus:border-[#4BB1D3] focus:outline-none"
+              id="providerName"
+            >
+              <option value="" disabled selected>
+                Select Provider Name
+              </option>
+              <option value="Muzammil">Muzammil</option>
+              <option value="Abdullah">Abdullah</option>
+              <option value="Haider Ali">Haider Ali</option>
+              <option value="Ashar">Ashar</option>
+              <option value="Ahmed">Ahmed</option>
+            </select>
           </div>
 
-          <div className="grid w-full items-center gap-1.5 mt-3">
-            <p className="text-xl font-semibold mt-6 mb-4">Select Category</p>
-            <Label className="text-md font-semibold" htmlFor="email">
-              Category
-            </Label>
-            <Input
-              type="text"
-              className="w-full h-[50px] rounded-lg border-[#4BB1D3] focus:border-blue-500 focus:outline-none"
-              id="category"
-            />
-          </div>
+          
 
-          <div className="grid w-full items-center gap-1.5 mt-3">
-            <Label className="text-md font-semibold" htmlFor="password">
-              Sub Category
-            </Label>
-            <Input
-              type="text"
-              className="w-full h-[50px] rounded-lg border-[#4BB1D3] focus:border-blue-500 focus:outline-none"
-              id="sub-category"
-            />
-          </div>
+
+<div className="grid w-full items-center gap-1.5 mt-3">
+      
+      <p className="text-xl font-semibold mt-6 mb-4">Select Category</p>
+      <label className="text-md font-semibold" htmlFor="category">
+        Category
+      </label>
+      <select
+        className="w-full h-[50px] rounded-lg border border-[#4BB1D3] bg-gray-50 outline-[#4BB1D3] focus:border-blue-500 focus:outline-none"
+        id="category"
+        onChange={handleCategoryChange}
+      >
+        <option value="" disabled selected>
+          Select Category
+        </option>
+        {Object.keys(categories).map((category) => (
+          <option key={category} value={category}>
+            {category}
+          </option>
+        ))}
+      </select>
+
+      
+      {subCategories.length > 0 && (
+        <div className="grid w-full items-center gap-1.5 mt-4">
+          <label className="text-md font-semibold" htmlFor="subCategory">
+            Subcategory
+          </label>
+          <select
+            className="w-full h-[50px] rounded-lg border border-[#4BB1D3] bg-gray-50 outline-[#4BB1D3] focus:border-blue-500 focus:outline-none"
+            id="subCategory"
+          >
+            <option value="" disabled selected>
+              Select Subcategory
+            </option>
+            {subCategories.map((subCategory) => (
+              <option key={subCategory} value={subCategory}>
+                {subCategory}
+              </option>
+            ))}
+          </select>
+        </div>
+      )}
+    </div>
 
           <div className="grid w-full items-center gap-1.5 mt-3">
             <Label className="text-md font-semibold" htmlFor="confirmPassword">
@@ -153,14 +221,11 @@ function page() {
           </div>
 
           <div className="mt-6 flex justify-center items-center">
-
-            <Link href={'/services/reviewService'}>
-           
-            <Button className="w-[200px] h-[45px] text-white bg-[#00BFFF] rounded-lg outline-none hover:bg-[#00A0E0] transition duration-200 ease-in-out">
-              <span>Next</span>
-            </Button>
+            <Link href={"/services/reviewService"}>
+              <Button className="w-[200px] h-[45px] mb-6 mt-2 text-white bg-[#00BFFF] rounded-lg outline-none hover:bg-[#00A0E0] transition duration-200 ease-in-out">
+                <span>Next</span>
+              </Button>
             </Link>
-            
           </div>
         </div>
       </div>

@@ -87,7 +87,7 @@ export function TableDemo() {
   };
 
   return (
-    <div className="overflow-x-auto p-4 relative"> 
+    <div className="overflow-x-auto p-8 relative"> 
       <Table className="min-w-full border border-gray-200 rounded-lg shadow-md">
         <TableHeader>
           <TableRow className="bg-gray-100">

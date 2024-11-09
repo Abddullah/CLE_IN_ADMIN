@@ -4,14 +4,16 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 
 
+
 function page() {
   return (
     <>
-    
-    <div className="bg-[#F5F7FA] min-h-screen w-full flex items-start justify-start pt-8">
+
+
+<div className="bg-[#F5F7FA] min-h-screen w-full flex items-start justify-start pt-8">
       {" "}
       
-      <div className="w-full max-w-md px-4 sm:px-8 md:px-12 lg:px-16">
+      <div className="w-full max-w-md overflow-hidden px-4 sm:px-8 md:px-12 lg:px-16">
         <h1 className="text-2xl font-bold mb-4">Add Category</h1>
 
         <div className="mt-8">
@@ -32,6 +34,9 @@ function page() {
         </div>
       </div>
     </div>
+    
+    
+   
     </>
   );
 }

@@ -5,11 +5,14 @@ import Image from "next/image";
 import loader from "../../assets/bookingsIcon/loader.svg";
 
 
+
 function page() {
   return (
     <>
-   
-      <div className="bg-[#F5F7FA] min-h-screen w-full items-start justify-start pt-7">
+
+    
+
+<div className="bg-[#F5F7FA] min-h-screen w-full items-start justify-start pt-7">
         <div className="w-full px-6  sm:px-8 md:px-12 lg:px-16 flex justify-between items-start">
           <div className="flex flex-col flex-1">
             <p className="text-lg font-semibold">Booking Calendar</p>
@@ -35,6 +38,9 @@ function page() {
           <BookingTable />
         </div>
       </div>
+   
+   
+      
     </>
   );
 }
