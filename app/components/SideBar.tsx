@@ -80,9 +80,9 @@ const Sidebar = () => {
         </div>
         </Link>
         <nav className="mt-4 ml-8">
-          <ul className="space-y-2">
+          <ul className="space-y-2 mr-2">
             {[
-              { icon: faHome, label: "Dashboard", link: "/" },
+              { icon: faHome, label: "Dashboard", link: "/"  },
               { icon: faList, label: "Categories", link: "/categories" },
               { icon: faUser, label: "Users", link: "/users" },
               { icon: faCalendarAlt, label: "Bookings", link: "/bookings" },
@@ -100,7 +100,7 @@ const Sidebar = () => {
                   <p className="flex items-center">
                     <FontAwesomeIcon
                       icon={icon}
-                      className={`mr-6 text-xl ${
+                      className={`mr-8 text-xl ${
                         path === link
                           ? "text-[#00BFFF] font-semibold"
                           : "text-gray-400"
@@ -148,6 +148,17 @@ const Sidebar = () => {
 };
 
 export default Sidebar;
+
+
+
+
+
+
+
+
+
+
+
 
 
 

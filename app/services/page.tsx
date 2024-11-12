@@ -31,7 +31,7 @@ function page() {
         </Link>
       </div>
       {/* Button Section */}
-      <div className="flex justify-between w-full px-4 sm:px-8 md:px-12 lg:px-14 space-x-4 mt-6">
+      <div className="flex justify-between w-full px-4 sm:px-8 md:px-12 lg:px-9 space-x-4 mt-6">
         <button className="flex-1 py-3 text-white bg-[#00BFFF] hover:bg-[#00BFFF]">
           Active
         </button>
@@ -43,9 +43,9 @@ function page() {
         </button>
       </div>
 
-      <div className="flex flex-wrap justify-start gap-12 w-full px-4 sm:px-8 md:px-12 lg:px-10 mt-4">
+      <div className="flex flex-wrap justify-center lg:justify-start gap-12 w-full px-4 sm:px-8 md:px-14 lg:px-10 mt-4">
   {/* Card 1 */}
-  <div className="w-[300px]">
+  <div className="w-[310px]">
   <Card
     price="3400"
     title="Cleaning at home"
@@ -60,7 +60,7 @@ function page() {
   </div>
 
   {/* Card 2 */}
-  <div className="w-[300px]">
+  <div className="w-[310px]">
   <Card
     price="3400"
     title="Cleaning at company"
@@ -75,7 +75,7 @@ function page() {
   </div>
 
   {/* Card 3 */}
-  <div className="w-[300px]">
+  <div className="w-[310px]">
   <Card
     price="3400"
     title="Cleaning at Hospital"
@@ -90,7 +90,7 @@ function page() {
   </div>
 
   {/* Card 4 */}
-  <div className="w-[300px]">
+  <div className="w-[310px]">
   <Card
     price="$30/hr"
     title="Cleaning at Office"
@@ -105,7 +105,7 @@ function page() {
   </div>
 
   {/* Card 5 */}
-  <div className="w-[400px]">
+  <div className="w-[310px]">
   <Card
     price="$30/hr"
     title="Cleaning at Factory"

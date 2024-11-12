@@ -42,7 +42,8 @@ function page() {
         </button>
       </div>
 
-      <div className="flex flex-wrap justify-start gap-12 w-full px-4 sm:px-8 md:px-12 lg:px-10 mt-4">
+      
+      <div className="flex flex-wrap justify-center lg:justify-start gap-12 w-full px-4 sm:px-8 md:px-14 lg:px-10 mt-4">
   {/* Card 1 */}
   <div className="w-[300px]">
   <Card

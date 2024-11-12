@@ -15,7 +15,7 @@ const page = () => {
     <>
     
      <div className="bg-white m-4 p-1 flex flex-wrap justify-start gap-4 mt-6 my-2 ">
-        <div className="mt-1 w-full sm:w-[48%] lg:w-[28%] xl:w-[22%]">
+        <div className="mt-1 w-full sm:w-[48%] lg:w-[28%] xl:w-[20%]">
           <BookingCard
             title="Total Booking"
             totalBookings={10}
@@ -23,7 +23,7 @@ const page = () => {
             bgColor="bg-[#C8E7F8]"
           />
         </div>
-        <div className="mt-1 w-full sm:w-[48%] lg:w-[28%] xl:w-[22%]">
+        <div className="mt-1 w-full sm:w-[48%] lg:w-[28%] xl:w-[20%]">
           <BookingCard
             title="Total Income"
             totalBookings={18}
@@ -31,7 +31,7 @@ const page = () => {
             bgColor="bg-[#BBD4E2]"
           />
         </div>
-        <div className="mt-1 w-full sm:w-[48%] lg:w-[28%] xl:w-[22%]">
+        <div className="mt-1 w-full sm:w-[48%] lg:w-[28%] xl:w-[20%] ">
           <BookingCard
             title="Total Users"
             totalBookings={18}
@@ -39,7 +39,7 @@ const page = () => {
             bgColor="bg-[#C8E7F8]"
           />
         </div>
-        <div className="mt-1 w-full sm:w-[48%] lg:w-[28%] xl:w-[22%]">
+        <div className="mt-1 w-full sm:w-[48%] lg:w-[28%] xl:w-[20%]">
           <BookingCard
             title="Total Provider"
             totalBookings={18}

@@ -6,6 +6,8 @@ import closeIcon from "../../../assets/bookingsIcon/closeIcon.svg";
 import bookingImage from "../../../assets/bookingsIcon/room.svg";
 import profile from "../../../assets/servicesIcons/profile.svg";
 import profile2 from "../../../assets/servicesIcons/profile2.svg";
+import editIcon from "../../../assets/categoriesIcons/edit.svg";
+import deleteIcon from "../../../assets/categoriesIcons/delete.svg"
 
 // Define the props for the Card component
 interface CardProps {
@@ -36,6 +38,9 @@ const Card: React.FC<CardProps> = ({
   const handleClose = () => setIsVisible(false);
   const handleOpen = () => setIsVisible(true);
 
+  const [showOptions , setShowOptions] = useState(false);
+
+
   const bookingData = {
     name: "John Doe",
     date: "September 18, 2024",
@@ -59,7 +64,7 @@ const Card: React.FC<CardProps> = ({
   return (
     <>
       <div onClick={handleOpen} className="cursor-pointer">
-        <div className="bg-white rounded-lg shadow-lg overflow-hidden p-4 w-80">
+        <div className="bg-white rounded-lg shadow-lg overflow-hidden p-4 w-80 z-10">
           <Image
             src={imageUrl}
             alt={title}
@@ -68,16 +73,49 @@ const Card: React.FC<CardProps> = ({
             className="w-full h-48 object-cover"
           />
           <div className="p-4">
-            <div className="flex justify-between items-center">
-              <h2 className="text-md font-semibold text-[#00BFFF]">{price}</h2>
-              <Image
-                src={dotsIcon}
-                alt="options"
-                width={20}
-                height={20}
-                className="cursor-pointer"
-              />
-            </div>
+          <div className="flex justify-between items-center relative">
+      <h2 className="text-md font-semibold text-[#00BFFF]">{price}</h2>
+      
+      {/* Dots Icon to toggle the menu */}
+      <Image
+        src={dotsIcon}
+        alt="options"
+        width={20}
+        height={20}
+        className="cursor-pointer"
+        onClick={(event) => {
+          event.stopPropagation() 
+          setShowOptions(!showOptions)
+
+        }}
+      />
+      
+      
+      {showOptions && (
+        <div className="absolute right-0 top-8 w-32 bg-white border border-gray-200 rounded-lg shadow-md z-10">
+          <button
+            className="flex items-center w-full p-2 hover:bg-gray-100"
+            onClick={() => {
+              console.log("Edit clicked");
+              setShowOptions(false);
+            }}
+          >
+            <Image src={editIcon} alt="Edit" width={16} height={16} className="mr-2" />
+            <span>Edit</span>
+          </button>
+          <button
+            className="flex items-center w-full p-2 hover:bg-gray-100"
+            onClick={() => {
+              console.log("Delete clicked");
+              setShowOptions(false);
+            }}
+          >
+            <Image src={deleteIcon} alt="Delete" width={16} height={16} className="mr-2" />
+            <span>Delete</span>
+          </button>
+        </div>
+      )}
+    </div>
             <h2 className="text-md font-semibold text-gray-800">{title}</h2>
             <h2 className="text-sm text-gray-800">{time}</h2>
             <h2 className="text-sm text-gray-800">Status: {status}</h2>
@@ -85,6 +123,8 @@ const Card: React.FC<CardProps> = ({
           </div>
         </div>
       </div>
+
+      
 
       {isVisible && (
         <div className="fixed inset-0 flex justify-center items-center bg-gray-900 bg-opacity-50">

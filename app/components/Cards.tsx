@@ -16,10 +16,10 @@ const BookingCard: React.FC<BookingCardProps> = ({
 }) => {
   return (
     <div
-      className={`${bgColor} rounded-lg shadow-xl h-32 w-56 mx-auto transition duration-200 ease-in-out   hover:shadow-xl flex flex-col justify-center items-center`}
-    >
+      className={`${bgColor} rounded-lg shadow-xl h-32 w-54 mx-auto transition duration-200 ease-in-out   hover:shadow-xl flex flex-col justify-center items-center xl:h-[12rem]`}
+    > 
       <div className="flex items-center gap-3">
-      <h2 className="text-lg font-semibold text-black mb-2 text-center truncate mt-2">
+      <h2 className="text-lg font-semibold text-black mb-2 text-center truncate mt-2 ">
         {title}
       </h2>
       <div className="bg-white rounded-lg p-2 shadow-md flex items-center justify-center h-7 w-7">

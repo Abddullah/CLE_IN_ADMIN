@@ -5,9 +5,6 @@ import FontAwesomeConfig from "@/fontawesome";
 import Navbar from "./components/Navbar";
 import Sidebar from "./components/SideBar";
 
-
-
-
 const latoBlack = localFont({
   src: "./fonts/Lato-Black.ttf",
   variable: "--font-lato-black",
@@ -18,9 +15,6 @@ const latoRegular = localFont({
   variable: "--font-lato-regular",
   weight: "100 900",
 });
-
-
-
 
 export const metadata: Metadata = {
   title: "CLE IN",
@@ -43,6 +37,7 @@ export default function RootLayout({
         {
           <div className="flex h-screen">
             <Sidebar />
+
             <div className="flex-1 flex flex-col">
               <Navbar title="Dashboard" />
               <div className="flex-1 overflow-auto">{children}</div>
@@ -53,19 +48,3 @@ export default function RootLayout({
     </html>
   );
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
