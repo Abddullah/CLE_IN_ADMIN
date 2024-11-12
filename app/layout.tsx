@@ -4,6 +4,8 @@ import "./globals.css";
 import FontAwesomeConfig from "@/fontawesome";
 import Navbar from "./components/Navbar";
 import Sidebar from "./components/SideBar";
+import { Provider } from "react-redux";
+import {store} from '../app/config/Redux/store/store'
 
 const latoBlack = localFont({
   src: "./fonts/Lato-Black.ttf",
@@ -27,13 +29,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
+      <Provider store={store}>
+
     <html lang="en">
       <head>
         <FontAwesomeConfig />
       </head>
       <body
         className={`${latoBlack.variable} ${latoRegular.variable} antialiased`}
-      >
+        >
         {
           <div className="flex h-screen">
             <Sidebar />
@@ -46,5 +50,6 @@ export default function RootLayout({
         }
       </body>
     </html>
+        </Provider>
   );
 }
