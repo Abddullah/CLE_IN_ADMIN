@@ -23,8 +23,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const Sidebar = () => {
-  const path = usePathname();
-
+  
   const [isOpen, setIsOpen] = useState(false);
   const sidebarRef = useRef<HTMLDivElement>(null);
 
@@ -49,6 +48,14 @@ const Sidebar = () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [isOpen]);
+
+  const path = usePathname();
+
+  const hidePath = ['/login']
+
+  if(hidePath.includes(path)){
+    return null
+  }
 
   return (
     <div className="flex relative h-screen">
@@ -127,10 +134,10 @@ const Sidebar = () => {
               <p className="flex items-center">
                 <FontAwesomeIcon
                   icon={faSignOutAlt}
-                  className="text-gray-400 mr-2 mt-2"
+                  className="text-gray-400 mr-2 mt-2 text-xl"
                 />
 
-                <span className="text-gray-500 mt-2">Logout</span>
+                <span className="text-gray-500 mt-2 ml-6">Logout</span>
               </p>
             </Link>
           </button>

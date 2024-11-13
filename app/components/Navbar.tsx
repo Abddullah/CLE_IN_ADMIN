@@ -6,6 +6,12 @@ import Image from "next/image";
 import { useState, useEffect, useRef } from "react";
 import profileImage from "../../assets/Mask Group.png";
 import { Button } from "@/components/ui/button";
+import { usePathname } from "next/navigation";
+
+
+
+
+
 
 interface TitleProps {
   title: string;
@@ -40,7 +46,19 @@ const Navbar: React.FC<TitleProps> = ({ title }) => {
     };
   }, []);
 
+
+  const path = usePathname();
+  const hidePath = ['/login']
+
+  if(hidePath.includes(path)){
+    return null
+  }
+
+
+
+
   return (
+    <aside>
     <div className="w-full flex items-center justify-between bg-white p-5 sm:p-4 md:px-6 md:py-3 rounded-lg relative">
       <div className="hidden md:block text-2xl font-bold text-[#343C6A] mt-2">
         {title}
@@ -128,6 +146,7 @@ const Navbar: React.FC<TitleProps> = ({ title }) => {
         )}
       </div>
     </div>
+    </aside>
   );
 };
 
