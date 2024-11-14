@@ -74,7 +74,7 @@ const Card: React.FC<CardProps> = ({
           />
           <div className="p-4">
           <div className="flex justify-between items-center relative">
-      <h2 className="text-md font-semibold text-[#00BFFF]">{price}</h2>
+      <h2 className="text-md font-semibold text-[#00BFFF] z-1">{price}</h2>
       
       {/* Dots Icon to toggle the menu */}
       <Image

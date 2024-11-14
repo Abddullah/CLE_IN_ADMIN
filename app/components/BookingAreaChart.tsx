@@ -16,21 +16,25 @@ import {
 export const description = "An area chart with gradient fill"
 
 const chartData = [
-  { month: "January", desktop: 186, mobile: 80 },
-  { month: "February", desktop: 305, mobile: 200 },
-  { month: "March", desktop: 237, mobile: 120 },
-  { month: "April", desktop: 73, mobile: 190 },
-  { month: "May", desktop: 209, mobile: 130 },
-  { month: "June", desktop: 214, mobile: 140 },
-  { month: "June", desktop: 214, mobile: 140 },
-  { month: "June", desktop: 214, mobile: 140 },
-  { month: "June", desktop: 214, mobile: 140 },
-  { month: "June", desktop: 214, mobile: 140 },
+  { month: "January",  mobile: 80 },
+  { month: "February",  mobile: 200 },
+  { month: "March",  mobile: 120 },
+  { month: "April", mobile: 190 },
+  { month: "May", mobile: 130 },
+  { month: "June",  mobile: 192 },
+  { month: "July", mobile: 165 },
+  { month: "August",mobile: 160 },
+  { month: "September",  mobile: 140 },
+  { month: "October", mobile: 80 },
+  { month: "November", mobile: 120 },
+  { month: "December", mobile: 135 },
+  { month: "January", mobile: 178 },
+  { month: "Feburary", mobile: 153 },
 ]
 
 const chartConfig = {
   mobile: {
-    label: "Mobile",
+    label: "Bookings",
     color: "#00BFFF",
   },
 } satisfies ChartConfig

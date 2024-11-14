@@ -11,12 +11,13 @@ import hospital from "../../../assets/servicesIcons/hospital.svg";
 import factory from "../../../assets/servicesIcons/factory.svg";
 import Link from "next/link";
 import { useState } from "react";
+import map from '../../../assets/bookingsIcon/map.svg'
 
 function page() {
 
   const [selectedCategory, setSelectedCategory] = useState<string>("");
   const [subCategories, setSubCategories] = useState<string[]>([])
-  // Category options and their corresponding subcategories
+  
   const categories: { [key: string]: string[] } = {
     "Cleaning and Hygiene Services": [
       "Office Cleaning",
@@ -53,16 +54,16 @@ function page() {
   return (
     <>
       <div className="bg-[#F5F7FA] min-h-screen w-full flex items-start justify-start pt-2">
-        <div className="w-full max-w-7xl px-8 lg:px-16 mt-6">
+        <div className="w-full max-w-6xl px-8 lg:px-16 mt-6">
           <h1 className="text-2xl font-bold mt-2">Add Services</h1>
 
           <div className="grid w-full items-center gap-1.5 mt-6">
             <select
-              className="w-full h-[55px] rounded-lg border border-[#4BB1D3] bg-gray-50 outline-[#4BB1D3] focus:border-[#4BB1D3] focus:outline-none"
+              className="w-full h-[55px] rounded-lg border border-[#4BB1D3] bg-gray-50 p-2 outline-[#4BB1D3] focus:border-[#4BB1D3] focus:outline-none"
               id="providerName"
             >
-              <option value="" disabled selected>
-                Select Provider Name
+              <option className="pl-4"  value="" disabled selected>
+              Select Provider Name
               </option>
               <option value="Muzammil">Muzammil</option>
               <option value="Abdullah">Abdullah</option>
@@ -82,7 +83,7 @@ function page() {
         Category
       </label>
       <select
-        className="w-full h-[50px] rounded-lg border border-[#4BB1D3] bg-gray-50 outline-[#4BB1D3] focus:border-blue-500 focus:outline-none"
+        className="w-full h-[50px] rounded-lg border p-2 border-[#4BB1D3] bg-gray-50 outline-[#4BB1D3] focus:border-blue-500 focus:outline-none"
         id="category"
         onChange={handleCategoryChange}
       >
@@ -103,7 +104,7 @@ function page() {
             Subcategory
           </label>
           <select
-            className="w-full h-[50px] rounded-lg border border-[#4BB1D3] bg-gray-50 outline-[#4BB1D3] focus:border-blue-500 focus:outline-none"
+            className="w-full h-[50px] rounded-lg border border-[#4BB1D3] bg-gray-50 p-2 outline-[#4BB1D3] focus:border-blue-500 focus:outline-none"
             id="subCategory"
           >
             <option value="" disabled selected>
@@ -119,7 +120,7 @@ function page() {
       )}
     </div>
 
-          <div className="grid w-full items-center gap-1.5 mt-3">
+          {/* <div className="grid w-full items-center gap-1.5 mt-3">
             <Label className="text-md font-semibold" htmlFor="confirmPassword">
               Add Details
             </Label>
@@ -128,12 +129,40 @@ function page() {
               className="w-full h-[50px] rounded-lg border-[#4BB1D3] focus:border-blue-500 focus:outline-none"
               id="confirmPassword"
             />
+          </div> */}
+
+
+<div className="grid w-full items-center gap-1.5 mt-6">
+<label className="text-md font-semibold" htmlFor=" AdFixedRate">
+Ad Fixed Rate
+          </label>
+            <select
+              className="w-full h-[55px] rounded-lg border border-[#4BB1D3] bg-gray-50 p-2 outline-[#4BB1D3] focus:border-[#4BB1D3] focus:outline-none"
+              id="providerName"
+            >
+              <option className="pl-4"  value="" disabled selected>
+              Ad Fixed Rate
+              </option>
+              <option value="5 Euro">5 Euro</option>
+              <option value="7 Euro">7 Euro</option>
+              <option value="8 Euro">8 Euro</option>
+              <option value="9 Euro">9 Euro</option>
+              <option value="10 Euro">10 Euro</option>
+              <option value="11 Euro">11 Euro</option>
+              <option value="12 Euro">12 Euro</option>
+              <option value="13 Euro">13 Euro</option>
+              <option value="14 Euro">14 Euro</option>
+              <option value="15 Euro">15 Euro</option>
+            </select>
           </div>
 
           <div className="grid w-full items-center gap-1.5 mt-3">
+          <p className="text-md font-semibold">
+Description
+          </p>
             <Textarea
               className="w-full h-[85px] rounded-lg border-[#4BB1D3] focus:border-blue-500 focus:outline-none"
-              placeholder="Type your message here."
+              placeholder="Description"
             />
           </div>
 
@@ -170,8 +199,17 @@ function page() {
             </div>
           </div>
 
+          <div className="grid w-full items-center gap-1.5 mt-6">
+
+          <p className="text-lg font-bold mt-2">Location</p>
+
+          <Image className='mt-4 w-full h-[180px] object-cover' src={map} alt='map'/>
+          </div>
+
+
+
           <div className="grid w-full items-center gap-1.5 mt-3">
-            <h1 className="text-xl font-semibold text-gray-800 mb-6">
+            <h1 className="text-xl font-semibold mt-6 text-gray-800 mb-6">
               Select Slot Time
             </h1>
 
