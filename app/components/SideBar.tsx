@@ -23,6 +23,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const Sidebar = () => {
+
+  const [pathName , setPathName] = useState('')
   
   const [isOpen, setIsOpen] = useState(false);
   const sidebarRef = useRef<HTMLDivElement>(null);
@@ -56,6 +58,30 @@ const Sidebar = () => {
   if(hidePath.includes(path)){
     return null
   }
+
+
+  useEffect(() => {
+    if (path.includes("services")) {
+      setPathName("/services");
+    } else if (path.includes("categories")) {
+      setPathName("/categories");
+    } else if (path.includes("settings")) {
+      setPathName("/settings");
+    } else if (path.includes("bookings")) {
+      setPathName("/bookings");
+    } else if (path.includes("jobs")) {
+      setPathName("/jobs");
+    } else if (path.includes("users")) {
+      setPathName("/users");
+    } else if(path === '/logout'){
+      setPathName('/logout')
+    }else if (path === '/'){
+      setPathName('/')
+    }
+     else {
+      setPathName("");
+    }
+  }, [path]);
 
   return (
     <div className="flex relative h-screen">
@@ -108,15 +134,15 @@ const Sidebar = () => {
                     <FontAwesomeIcon
                       icon={icon}
                       className={`mr-8 text-xl ${
-                        path === link
-                          ? "text-[#00BFFF] font-semibold"
+                        pathName === link
+                          ? "text-[#00BFFF]"
                           : "text-gray-400"
                       }`}
                     />
 
                     <span
                       className={`mr-6 ${
-                        path === link ? "text-[#00BFFF] " : "text-gray-400"
+                        pathName === link ? "text-[#00BFFF] " : "text-gray-400"
                       }`}
                     >
                       {label}
