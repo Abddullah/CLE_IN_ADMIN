@@ -4,8 +4,7 @@ import "./globals.css";
 import FontAwesomeConfig from "@/fontawesome";
 import Navbar from "./components/Navbar";
 import Sidebar from "./components/SideBar";
-import { Provider } from "react-redux";
-import {store} from '../app/config/Redux/store/store'
+
 
 const latoBlack = localFont({
   src: "./fonts/Lato-Black.ttf",
@@ -30,11 +29,11 @@ export default function RootLayout({
 }>) {
   return (
       
-<Provider store={store}>
     <html lang="en">
       <head>
         <FontAwesomeConfig />
       </head>
+
       <body
         className={`${latoBlack.variable} ${latoRegular.variable} antialiased`}
         >
@@ -49,9 +48,9 @@ export default function RootLayout({
           </div>
         }
       </body>
+    
     </html>
 
-    </Provider>
        
   );
 }
