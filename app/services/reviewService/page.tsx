@@ -1,92 +1,123 @@
-import Image from 'next/image'
-import React from 'react'
-import map from '../../../assets/bookingsIcon/map.svg'
-import serviceImage from '../../../assets/bookingsIcon/room.svg'
-import { Button } from '@/components/ui/button'
-
-
+import Image from "next/image";
+import React from "react";
+import map from "../../../assets/bookingsIcon/map.svg";
+import serviceImage from "../../../assets/bookingsIcon/room.svg";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 function page() {
   return (
     <>
+      <div className="bg-[#F5F7FA] min-h-screen w-full flex items-start justify-start pt-2">
+        <div className="w-full max-w-7xl px-8 lg:px-16 mt-6">
+          <div>
+            <h1 className="text-xl font-semibold">Review & Confirm Service</h1>
 
+            <div className="mt-6">
+              <Image src={serviceImage} alt="image" width={300} height={300} />
+            </div>
 
-   
-    <div className="bg-[#F5F7FA] min-h-screen w-full flex items-start justify-start pt-2">
-    <div className="w-full max-w-7xl px-8 lg:px-16 mt-6">
+            <div>
+              <p className="text-xl mt-4">Title</p>
+              <p className="mt-2">Cleaning at Home</p>
+            </div>
 
+            <div>
+              <p className="text-xl mt-4">Description</p>
+              <p className="mt-2">
+                Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                Blanditiis assumenda necessitatibus expedita, dicta iure eius
+                dolorem voluptatum officia aut neque sint distinctio quia quasi
+                sed recusandae voluptatibus voluptas magni error?
+              </p>
+            </div>
 
-        <div>
-        <h1 className='text-xl font-semibold'>Review & Confirm</h1>
+            <div className="max-w-sm w-full bg-white shadow-lg rounded-lg p-6 mt-4 border border-gray-200">
+              <h2 className="text-xl font-semibold text-gray-800 mb-4 text-start">
+                {" "}
+                Job Details
+              </h2>
 
-<p className='text-xl mt-4'>Category</p>
+              <div className="flex justify-between items-center py-2 border-b">
+                <span className="text-gray-600">Price</span>
+                <span className="text-gray-800 font-medium">€ 200/hr</span>
+              </div>
 
-     <div>
-     <input
-        type="text"
-        defaultValue="Cleaning at home"
-        className="p-4 h-[40px] w-[200px] mt-3 border rounded-lg text-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-        placeholder="Enter text here"
-      />
-     </div>
+              <div className="flex justify-between items-center py-2 border-b">
+                <span className="text-gray-600">Cleaners</span>
+                <span className="text-gray-800 font-medium">2</span>
+              </div>
 
+              <div className="flex justify-between items-center py-2 border-b">
+                <span className="text-gray-600">Work Frequency</span>
+                <span className="text-gray-800 font-medium">Weekly</span>
+              </div>
 
-     <div className='mt-7'>
-        <p className='text-xl'>Price</p>
-        <p className='text-[#00BFFF] font-semibold text-xl mt-2'>$30/hr</p>
-     </div>
+              {/* Room Area Size */}
+              <div className="flex justify-between items-center py-2 border-b">
+                <span className="text-gray-600">Room Area Size</span>
+                <span className="text-gray-800 font-medium">51-100m2</span>
+              </div>
 
+              <div className="flex justify-between items-center py-2 border-b">
+                <span className="text-gray-600">Number of Rooms</span>
+                <span className="text-gray-800 font-medium">3 Rooms</span>
+              </div>
 
-     <div className='mt-4'>
-        <p className='text-xl'>Location</p>
-        <p className='text-lg mt-3'>Manor Station Rd.Gastonia</p>
-        <Image className='mt-4' src={map} alt='map'/>
-     </div>
+              <div className="flex justify-between items-center py-2">
+                <span className="text-gray-600">Need Cleaning Materials?</span>
+                <span className="text-gray-800 font-medium">Yes Please</span>
+              </div>
+            </div>
 
-     <div className='mt-6'>
-        <p>Availablity</p>
+            <div>
+              <p className="text-xl mt-8">Availablity</p>
+              <div className="mt-6">
+                <p className="text-lg">Monday</p>
+                <p className="text-md text-[#00BFFF]">8:00 AM to 22:00</p>
+              </div>
+              <div className="mt-3">
+                <p className="text-lg">Tuesday</p>
+                <p className="text-md text-[#00BFFF]">8:00 AM to 22:00</p>
+              </div>
+              <div className="mt-3">
+                <p className="text-lg">Wednesday</p>
+                <p className="text-md text-[#00BFFF]">8:00 AM to 22:00</p>
+              </div>
+            </div>
 
-        <input
-        type="text"
-        defaultValue="8:00 AM to 22:00 PM"
-        className="p-4 h-[40px] w-[280px] mt-3 border rounded-lg text-md text-[#00BFFF] font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500"
-        placeholder="Enter text here"
-      />
-     </div>
+            <div className="mt-6">
+              <p className="text-xl">Location</p>
+              <Image className="mt-4" src={map} alt="map" />
 
+              <Link href={"/services/customerInfo"}>
+                <div className="flex items-center mt-6">
+                  <button
+                    className="flex items-center justify-center w-5 h-5 bg-blue-600 text-white rounded-full shadow-lg transition-all duration-300 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                    aria-label="Customer Info"
+                  >
+                    <span className="text-xl font-bold">i</span>
+                  </button>
 
-     <div className='mt-7'>
-        <p className='text-xl'>Description</p>
-        <p className='mt-4'>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Rerum ducimus debitis beatae aliquid laborum, placeat aspernatur itaque vero provident iusto! Suscipit architecto quos accusamus eius velit minima labore totam dolorem.</p>
-     </div>
+                  <p className="ml-2 text-gray-700 cursor-pointer text-sm font-medium hover:text-blue-600 transition-all duration-300">
+                    Customer info
+                  </p>
+                </div>
+              </Link>
+            </div>
 
-     <div className='mt-3'>
-        <Image src={serviceImage} alt='image'/>
-     </div>
-
-
-     <div className="mt-6 flex justify-center items-center">
-            <Button className="w-[280px] mb-4 h-[45px] text-white bg-[#00BFFF] rounded-lg outline-none hover:bg-[#00A0E0] transition duration-200 ease-in-out">
-              <span>POST</span>
-            </Button>
+            <div className="mt-10 flex justify-center items-center">
+              <Link href={"/services"}>
+                <Button className="w-[280px] mb-4 h-[45px] text-white bg-[#00BFFF] rounded-lg outline-none hover:bg-[#00A0E0] transition duration-200 ease-in-out">
+                  <span>POST</span>
+                </Button>
+              </Link>
+            </div>
           </div>
-
-     
-    
-
-
-
         </div>
-
-
-
-
-</div>
-
-    </div>
-    
+      </div>
     </>
-  )
+  );
 }
 
-export default page
+export default page;

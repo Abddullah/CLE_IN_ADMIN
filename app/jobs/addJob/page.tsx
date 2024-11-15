@@ -12,7 +12,16 @@ import hospital from "../../../assets/servicesIcons/hospital.svg";
 import factory from "../../../assets/servicesIcons/factory.svg";
 import Link from "next/link";
 import { useState } from "react";
-import map from '../../../assets/bookingsIcon/map.svg'
+import map from "../../../assets/bookingsIcon/map.svg";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 function page() {
   const [selectedCategory, setSelectedCategory] = useState<string>("");
@@ -57,6 +66,24 @@ function page() {
       <div className="bg-[#F5F7FA] min-h-screen w-full flex items-start justify-start pt-2">
         <div className="w-full max-w-7xl px-8 lg:px-16 mt-6">
           <h1 className="text-2xl font-bold mt-2">Add Jobs</h1>
+          <div className="grid w-full items-center gap-1.5 mt-6">
+            <Select>
+              <SelectTrigger className="w-full h-[55px] rounded-lg border border-[#4BB1D3] bg-gray-50 mt-1 pr-6 outline-[#4BB1D3] focus:border-[#4BB1D3] focus:outline-none focus:border-none">
+                <SelectValue placeholder="Select Provider Name" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectLabel>Select Provider Name</SelectLabel>
+                  <SelectItem value="Haider Ali">Haider Ali</SelectItem>
+                  <SelectItem value="Ahmed">Ahmed</SelectItem>
+                  <SelectItem value="Muzammil">Muzammil</SelectItem>
+                  <SelectItem value="Ashar">Ashar</SelectItem>
+                  <SelectItem value="Abdullah">Abdullah</SelectItem>
+                  <SelectItem value="Jawed">Jawed</SelectItem>
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+          </div>
 
           <div className="flex flex-col items-start space-y-6 mt-4">
             <h2 className="text-md font-semibold text-gray-800">
@@ -134,54 +161,52 @@ function page() {
             )}
           </div>
 
-          {/* <div className="grid w-full items-center gap-1.5 mt-3">
-            <Label className="text-md font-semibold" htmlFor="confirmPassword">
-              Add Details
-            </Label>
-            <Input
-              type="text"
-              className="w-full h-[50px] rounded-lg border-[#4BB1D3] focus:border-blue-500 focus:outline-none"
-              id="confirmPassword"
-            />
-          </div> */}
-
           <div className="grid w-full items-center gap-1.5 mt-6">
             <label className="text-md font-semibold" htmlFor="Room Area Size">
               Room Area Size
             </label>
-            <select
-              className="w-full h-[55px] rounded-lg border p-2 border-[#4BB1D3] bg-gray-50 outline-[#4BB1D3] focus:border-[#4BB1D3] focus:outline-none"
-              id="providerName"
-            >
-              <option className="pl-4" value="" disabled selected>
-                Room Area Size
-              </option>
-              <option value="Muzammil">Less than 50 m2</option>
-              <option value="Abdullah">51 - 100 m2</option>
-              <option value="Haider Ali">101 - 150 m2</option>
-              <option value="Haider Ali">151 - 200 m2</option>
-              <option value="Ashar">Over 200 m2</option>
-            </select>
+
+            <Select>
+              <SelectTrigger className="w-full h-[55px] rounded-lg border border-[#4BB1D3] bg-gray-50 mt-1 pr-6 outline-[#4BB1D3] focus:border-[#4BB1D3] focus:outline-none focus:border-none">
+                <SelectValue placeholder="Room Area Size" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectLabel>Room Area Size</SelectLabel>
+                  <SelectItem value="Haider Ali">Less than 50 m2</SelectItem>
+                  <SelectItem value="101 - 150 m2">101 - 150 m2</SelectItem>
+                  <SelectItem value="101 - 150 m2">101 - 150 m2</SelectItem>
+                  <SelectItem value="151 - 200 m2">151 - 200 m2</SelectItem>
+                  <SelectItem value="Over 200 m2">Over 200 m2</SelectItem>
+                  
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+            
           </div>
 
           <div className="grid w-full items-center gap-1.5 mt-6">
             <label className="text-md font-semibold" htmlFor="Room Area Size">
               Numbers of Rooms
             </label>
-            <select
-              className="w-full h-[55px] p-2 rounded-lg border border-[#4BB1D3] bg-gray-50 outline-[#4BB1D3] focus:border-[#4BB1D3] focus:outline-none"
-              id="providerName"
-            >
-              <option className="pl-4" value="" disabled selected>
-                Number of Rooms
-              </option>
-              <option value="Studio">Studio</option>
-              <option value="1 Room">1 Room</option>
-              <option value="2 Rooms">2 Rooms</option>
-              <option value="3 Rooms">3 Rooms</option>
-              <option value="4 Rooms">4 Rooms</option>
-              <option value="5 Rooms">5 Rooms</option>
-            </select>
+            
+            <Select>
+              <SelectTrigger className="w-full h-[55px] rounded-lg border border-[#4BB1D3] bg-gray-50 mt-1 pr-6 outline-[#4BB1D3] focus:border-[#4BB1D3] focus:outline-none focus:border-none">
+                <SelectValue placeholder="Number of Rooms" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectLabel>Room Area Size</SelectLabel>
+                  <SelectItem value="1 Room">1 Room</SelectItem>
+                  <SelectItem value="2 Room">2 Room</SelectItem>
+                  <SelectItem value="3 Room">3 Room</SelectItem>
+                  <SelectItem value="4 Room">4 Room</SelectItem>
+                  <SelectItem value="5 Room">5 Room</SelectItem>
+                  
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+            
           </div>
 
           {/* Cleaning Material started */}
@@ -202,36 +227,56 @@ function page() {
           {/* Additional Services Started */}
 
           <div className="grid w-full items-center gap-1.5 mt-6">
-  <p className="text-lg font-semibold text-gray-800 mt-3">Additional Services</p>
-  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-4 mt-4">
-    <label className="flex items-center space-x-2 rounded-lg p-3 border border-gray-200 hover:bg-blue-50 transition-all duration-200">
-      <input type="checkbox" className="form-checkbox h-6 w-6 text-blue-600" />
-      <span className="text-gray-700 font-medium">Oven</span>
-    </label>
-    <label className="flex items-center space-x-2 rounded-lg p-3 border border-gray-200 hover:bg-blue-50 transition-all duration-200">
-      <input type="checkbox" className="form-checkbox h-6 w-6 text-blue-600" />
-      <span className="text-gray-700 font-medium">Laundry</span>
-    </label>
-    <label className="flex items-center space-x-2 rounded-lg p-3 border border-gray-200 hover:bg-blue-50 transition-all duration-200">
-      <input type="checkbox" className="form-checkbox h-6 w-6 text-blue-600" />
-      <span className="text-gray-700 font-medium">Fridge</span>
-    </label>
-    <label className="flex items-center space-x-2 rounded-lg p-3 border border-gray-200 hover:bg-blue-50 transition-all duration-200">
-      <input type="checkbox" className="form-checkbox h-6 w-6 text-blue-600" />
-      <span className="text-gray-700 font-medium">Ironing</span>
-    </label>
-    <label className="flex items-center space-x-2 rounded-lg p-3 border border-gray-200 hover:bg-blue-50 transition-all duration-200">
-      <input type="checkbox" className="form-checkbox h-6 w-6 text-blue-600" />
-      <span className="text-gray-700 font-medium">Balcony</span>
-    </label>
-    <label className="flex items-center space-x-2 rounded-lg p-3 border border-gray-200 hover:bg-blue-50 transition-all duration-200">
-      <input type="checkbox" className="form-checkbox h-6 w-6 text-blue-600" />
-      <span className="text-gray-700 font-medium">Cupboard</span>
-    </label>
-  </div>
-</div>
+            <p className="text-lg font-semibold text-gray-800 mt-3">
+              Additional Services
+            </p>
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-4 mt-4">
+              <label className="flex items-center space-x-2 rounded-lg p-3 border border-gray-200 hover:bg-blue-50 transition-all duration-200">
+                <input
+                  type="checkbox"
+                  className="form-checkbox h-6 w-6 text-blue-600"
+                />
+                <span className="text-gray-700 font-medium">Oven</span>
+              </label>
+              <label className="flex items-center space-x-2 rounded-lg p-3 border border-gray-200 hover:bg-blue-50 transition-all duration-200">
+                <input
+                  type="checkbox"
+                  className="form-checkbox h-6 w-6 text-blue-600"
+                />
+                <span className="text-gray-700 font-medium">Laundry</span>
+              </label>
+              <label className="flex items-center space-x-2 rounded-lg p-3 border border-gray-200 hover:bg-blue-50 transition-all duration-200">
+                <input
+                  type="checkbox"
+                  className="form-checkbox h-6 w-6 text-blue-600"
+                />
+                <span className="text-gray-700 font-medium">Fridge</span>
+              </label>
+              <label className="flex items-center space-x-2 rounded-lg p-3 border border-gray-200 hover:bg-blue-50 transition-all duration-200">
+                <input
+                  type="checkbox"
+                  className="form-checkbox h-6 w-6 text-blue-600"
+                />
+                <span className="text-gray-700 font-medium">Ironing</span>
+              </label>
+              <label className="flex items-center space-x-2 rounded-lg p-3 border border-gray-200 hover:bg-blue-50 transition-all duration-200">
+                <input
+                  type="checkbox"
+                  className="form-checkbox h-6 w-6 text-blue-600"
+                />
+                <span className="text-gray-700 font-medium">Balcony</span>
+              </label>
+              <label className="flex items-center space-x-2 rounded-lg p-3 border border-gray-200 hover:bg-blue-50 transition-all duration-200">
+                <input
+                  type="checkbox"
+                  className="form-checkbox h-6 w-6 text-blue-600"
+                />
+                <span className="text-gray-700 font-medium">Cupboard</span>
+              </label>
+            </div>
+          </div>
 
-{/* Photos section started */}
+          {/* Photos section started */}
 
           <div className="grid w-full items-center gap-1.5 mt-8">
             <p className="font-semibold">Photos</p>
@@ -266,14 +311,16 @@ function page() {
             </div>
           </div>
 
+          {/* location */}
 
-      {/* location */}
+          <div className="grid w-full items-center gap-1.5 mt-6">
+            <p className="text-lg font-bold mt-2">Location</p>
 
-      <div className="grid w-full items-center gap-1.5 mt-6">
-
-          <p className="text-lg font-bold mt-2">Location</p>
-
-          <Image className='mt-4 w-full h-[180px] object-cover' src={map} alt='map'/>
+            <Image
+              className="mt-4 w-full h-[180px] object-cover"
+              src={map}
+              alt="map"
+            />
           </div>
 
           <div className="mt-8 flex justify-center items-center">

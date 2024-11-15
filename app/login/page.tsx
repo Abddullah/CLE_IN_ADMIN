@@ -4,7 +4,7 @@ import logo from "../../assets/Logo.png";
 
 export default function Login() {
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-200 px-4 sm:px-0">
+    <div className="flex items-center justify-center min-h-screen px-4 sm:px-0">
       <div className="absolute inset-0 bg-opacity-50 z-0"></div>
 
       <div className="relative w-full max-w-md p-8 space-y-6 bg-white bg-opacity-90 rounded-3xl shadow-2xl z-10 border-2 border-[#00BFFF] sm:p-10">

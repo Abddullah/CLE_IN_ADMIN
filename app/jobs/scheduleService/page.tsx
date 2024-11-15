@@ -44,7 +44,7 @@ function page() {
         </div>
 
         <div className="mt-8 flex justify-center items-center">
-            <Link href={"/jobs/reviewJob"}>
+            <Link href={"/jobs/location"}>
               <Button className="w-[250px] mb-4 mt-6 h-[45px] text-white bg-[#00BFFF] rounded-lg outline-none hover:bg-[#00A0E0] transition duration-200 ease-in-out">
                 <span>Next</span>
               </Button>

@@ -8,12 +8,32 @@ function page() {
       <div className="bg-[#F5F7FA] min-h-screen w-full flex items-start justify-start pt-2">
         <div className="w-full max-w-7xl px-8 lg:px-16 mt-6">
           <div>
-            <h1 className="text-2xl font-semibold">Review & Confirm Job</h1>
+            <h1 className="text-2xl font-semibold">Customer Information</h1>
 
             {/* Service Section */}
             <div className="mt-4">
+              <h2 className="text-lg font-semibold">Full Name</h2>
+              <p className="mt-2 ">Kam David</p>
+            </div>
+            <div className="mt-4">
+              <h2 className="text-lg font-semibold">Phone No</h2>
+              <p className="mt-2 ">0987654321</p>
+            </div>
+            <div className="mt-4">
+              <h2 className="text-lg font-semibold">Email Address</h2>
+              <p className="mt-2 ">kamdavid@gmail.com</p>
+            </div>
+            <div className="mt-4">
+              <h2 className="text-lg font-semibold">Date of Birth</h2>
+              <p className="mt-2 ">11/07/2024</p>
+            </div>
+            <div className="mt-4">
+              <h2 className="text-lg font-semibold">Gender</h2>
+              <p className="mt-2 ">Male</p>
+            </div>
+            <div className="mt-4">
               <h2 className="text-lg font-semibold">Service</h2>
-              <p className="mt-2 ">Cleaning and Services</p>
+              <p className="mt-2 ">Cleaning at Home</p>
             </div>
             <div className="mt-4">
               <h2 className="text-lg font-semibold">Description</h2>
@@ -84,7 +104,7 @@ function page() {
             </div>
 
             <div className="mt-8 flex justify-center items-center">
-              <Link href={"/jobs"}>
+              <Link href={"/services"}>
                 <Button className="w-[250px] mb-4 mt-6 h-[45px] text-white bg-[#00BFFF] rounded-lg outline-none hover:bg-[#00A0E0] transition duration-200 ease-in-out">
                   <span>Book</span>
                 </Button>

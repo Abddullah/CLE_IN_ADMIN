@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import React from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -11,13 +11,21 @@ import hospital from "../../../assets/servicesIcons/hospital.svg";
 import factory from "../../../assets/servicesIcons/factory.svg";
 import Link from "next/link";
 import { useState } from "react";
-import map from '../../../assets/bookingsIcon/map.svg'
+import map from "../../../assets/bookingsIcon/map.svg";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 function page() {
-
   const [selectedCategory, setSelectedCategory] = useState<string>("");
-  const [subCategories, setSubCategories] = useState<string[]>([])
-  
+  const [subCategories, setSubCategories] = useState<string[]>([]);
+
   const categories: { [key: string]: string[] } = {
     "Cleaning and Hygiene Services": [
       "Office Cleaning",
@@ -58,108 +66,98 @@ function page() {
           <h1 className="text-2xl font-bold mt-2">Add Services</h1>
 
           <div className="grid w-full items-center gap-1.5 mt-6">
-            <select
-              className="w-full h-[55px] rounded-lg border border-[#4BB1D3] bg-gray-50 p-2 outline-[#4BB1D3] focus:border-[#4BB1D3] focus:outline-none"
-              id="providerName"
-            >
-              <option className="pl-4"  value="" disabled selected>
-              Select Provider Name
-              </option>
-              <option value="Muzammil">Muzammil</option>
-              <option value="Abdullah">Abdullah</option>
-              <option value="Haider Ali">Haider Ali</option>
-              <option value="Ashar">Ashar</option>
-              <option value="Ahmed">Ahmed</option>
-            </select>
-          </div>
-
-          
-
-
-<div className="grid w-full items-center gap-1.5 mt-3">
-      
-      <p className="text-xl font-semibold mt-6 mb-4">Select Category</p>
-      <label className="text-md font-semibold" htmlFor="category">
-        Category
-      </label>
-      <select
-        className="w-full h-[50px] rounded-lg border p-2 border-[#4BB1D3] bg-gray-50 outline-[#4BB1D3] focus:border-blue-500 focus:outline-none"
-        id="category"
-        onChange={handleCategoryChange}
-      >
-        <option value="" disabled selected>
-          Select Category
-        </option>
-        {Object.keys(categories).map((category) => (
-          <option key={category} value={category}>
-            {category}
-          </option>
-        ))}
-      </select>
-
-      
-      {subCategories.length > 0 && (
-        <div className="grid w-full items-center gap-1.5 mt-4">
-          <label className="text-md font-semibold" htmlFor="subCategory">
-            Subcategory
-          </label>
-          <select
-            className="w-full h-[50px] rounded-lg border border-[#4BB1D3] bg-gray-50 p-2 outline-[#4BB1D3] focus:border-blue-500 focus:outline-none"
-            id="subCategory"
-          >
-            <option value="" disabled selected>
-              Select Subcategory
-            </option>
-            {subCategories.map((subCategory) => (
-              <option key={subCategory} value={subCategory}>
-                {subCategory}
-              </option>
-            ))}
-          </select>
-        </div>
-      )}
-    </div>
-
-          {/* <div className="grid w-full items-center gap-1.5 mt-3">
-            <Label className="text-md font-semibold" htmlFor="confirmPassword">
-              Add Details
-            </Label>
-            <Input
-              type="text"
-              className="w-full h-[50px] rounded-lg border-[#4BB1D3] focus:border-blue-500 focus:outline-none"
-              id="confirmPassword"
-            />
-          </div> */}
-
-
-<div className="grid w-full items-center gap-1.5 mt-6">
-<label className="text-md font-semibold" htmlFor=" AdFixedRate">
-Ad Fixed Rate
-          </label>
-            <select
-              className="w-full h-[55px] rounded-lg border border-[#4BB1D3] bg-gray-50 p-2 outline-[#4BB1D3] focus:border-[#4BB1D3] focus:outline-none"
-              id="providerName"
-            >
-              <option className="pl-4"  value="" disabled selected>
-              Ad Fixed Rate
-              </option>
-              <option value="5 Euro">5 Euro</option>
-              <option value="7 Euro">7 Euro</option>
-              <option value="8 Euro">8 Euro</option>
-              <option value="9 Euro">9 Euro</option>
-              <option value="10 Euro">10 Euro</option>
-              <option value="11 Euro">11 Euro</option>
-              <option value="12 Euro">12 Euro</option>
-              <option value="13 Euro">13 Euro</option>
-              <option value="14 Euro">14 Euro</option>
-              <option value="15 Euro">15 Euro</option>
-            </select>
+            <Select>
+              <SelectTrigger className="w-full h-[55px] rounded-lg border border-[#4BB1D3] bg-gray-50 mt-1 pr-6 outline-[#4BB1D3] focus:border-[#4BB1D3] focus:outline-none focus:border-none">
+                <SelectValue placeholder="Select Provider Name" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectLabel>Select Provider Name</SelectLabel>
+                  <SelectItem value="Haider Ali">Haider Ali</SelectItem>
+                  <SelectItem value="Ahmed">Ahmed</SelectItem>
+                  <SelectItem value="Muzammil">Muzammil</SelectItem>
+                  <SelectItem value="Ashar">Ashar</SelectItem>
+                  <SelectItem value="Abdullah">Abdullah</SelectItem>
+                  <SelectItem value="Jawed">Jawed</SelectItem>
+                </SelectGroup>
+              </SelectContent>
+            </Select>
           </div>
 
           <div className="grid w-full items-center gap-1.5 mt-3">
-          <p className="text-md font-semibold">
-Description
-          </p>
+            <p className="text-xl font-semibold mt-6 mb-4">Select Category</p>
+            <label className="text-md font-semibold" htmlFor="category">
+              Category
+            </label>
+            <select
+              className="w-full h-[50px] rounded-lg border p-2 border-[#4BB1D3] bg-gray-50 outline-[#4BB1D3] focus:border-blue-500 focus:outline-none"
+              id="category"
+              onChange={handleCategoryChange}
+            >
+              <option value="" disabled selected>
+                Select Category
+              </option>
+              {Object.keys(categories).map((category) => (
+                <option key={category} value={category}>
+                  {category}
+                </option>
+              ))}
+            </select>
+
+            {subCategories.length > 0 && (
+              <div className="grid w-full items-center gap-1.5 mt-4">
+                <label className="text-md font-semibold" htmlFor="subCategory">
+                  Subcategory
+                </label>
+                <select
+                  className="w-full h-[50px] rounded-lg border border-[#4BB1D3] bg-gray-50 p-2 outline-[#4BB1D3] focus:border-blue-500 focus:outline-none"
+                  id="subCategory"
+                >
+                  <option value="" disabled selected>
+                    Select Subcategory
+                  </option>
+                  {subCategories.map((subCategory) => (
+                    <option key={subCategory} value={subCategory}>
+                      {subCategory}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
+          </div>
+
+          <div className="grid w-full items-center gap-1.5 mt-6">
+            <div className="w-full">
+              <label className="text-md font-semibold" htmlFor="AdFixedRate">
+                Ad Fixed Rate
+              </label>
+
+              <Select>
+                <SelectTrigger className="w-full h-[55px] rounded-lg border border-[#4BB1D3] bg-gray-50 mt-1 pr-6 outline-[#4BB1D3] focus:border-[#4BB1D3] focus:outline-none focus:border-none">
+                  <SelectValue placeholder="Add Fix Rate" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectLabel>Fix Rate</SelectLabel>
+                    <SelectItem value="5 Euro">5 Euro</SelectItem>
+                    <SelectItem value="6 Euro">6 Euro</SelectItem>
+                    <SelectItem value="7 Euro">7 Euro</SelectItem>
+                    <SelectItem value="8 Euro">8 Euro</SelectItem>
+                    <SelectItem value="9 Euro">9 Euro</SelectItem>
+                    <SelectItem value="10 Euro">10 Euro</SelectItem>
+                    <SelectItem value="11 Euro">11 Euro</SelectItem>
+                    <SelectItem value="12 Euro">12 Euro</SelectItem>
+                    <SelectItem value="13 Euro">13 Euro</SelectItem>
+                    <SelectItem value="14 Euro">14 Euro</SelectItem>
+                    <SelectItem value="15 Euro">15 Euro</SelectItem>
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+
+          <div className="grid w-full items-center gap-1.5 mt-3">
+            <p className="text-md font-semibold">Description</p>
             <Textarea
               className="w-full h-[85px] rounded-lg border-[#4BB1D3] focus:border-blue-500 focus:outline-none"
               placeholder="Description"
@@ -200,13 +198,14 @@ Description
           </div>
 
           <div className="grid w-full items-center gap-1.5 mt-6">
+            <p className="text-lg font-bold mt-2">Location</p>
 
-          <p className="text-lg font-bold mt-2">Location</p>
-
-          <Image className='mt-4 w-full h-[180px] object-cover' src={map} alt='map'/>
+            <Image
+              className="mt-4 w-full h-[180px] object-cover"
+              src={map}
+              alt="map"
+            />
           </div>
-
-
 
           <div className="grid w-full items-center gap-1.5 mt-3">
             <h1 className="text-xl font-semibold mt-6 text-gray-800 mb-6">
