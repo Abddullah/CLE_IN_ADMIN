@@ -41,7 +41,7 @@ function page() {
         <div className="flex flex-wrap justify-center lg:justify-start gap-12 w-full px-4 sm:px-8 md:px-14 lg:px-10 mt-4 z-5">
           <div className="w-[310px]">
             <Card
-              price="3400"
+              price="€34/hr"
               title="Cleaning at home"
               time="8:00 pm to 22:00pm"
               imageUrl={image}
@@ -55,7 +55,7 @@ function page() {
 
           <div className="w-[310px]">
             <Card
-              price="3400"
+              price="€ 34/hr"
               title="Cleaning at company"
               time="8:00 pm to 22:00pm"
               imageUrl={company}
@@ -69,7 +69,7 @@ function page() {
 
           <div className="w-[310px]">
             <Card
-              price="3400"
+              price="€ 34/hr"
               title="Cleaning at Hospital"
               time="8:00 pm to 22:00pm"
               imageUrl={hospital}
@@ -83,7 +83,7 @@ function page() {
 
           <div className="w-[310px]">
             <Card
-              price="$30/hr"
+              price="€ 30/hr"
               title="Cleaning at Office"
               time="8:00 pm to 22:00pm"
               imageUrl={office}
@@ -97,7 +97,7 @@ function page() {
 
           <div className="w-[310px]">
             <Card
-              price="$30/hr"
+              price="€ 30/hr"
               title="Cleaning at Factory"
               time="8:00 pm to 22:00pm"
               imageUrl={factory}

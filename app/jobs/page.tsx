@@ -47,7 +47,7 @@ function page() {
   {/* Card 1 */}
   <div className="w-[300px]">
   <Card
-    price="3400"
+    price="€ 34/hr"
     title="Cleaning at home"
     time="8:00 pm to 22:00pm"
     imageUrl={image}
@@ -62,7 +62,7 @@ function page() {
   {/* Card 2 */}
   <div className="w-[300px]">
   <Card
-    price="3400"
+    price="€ 34/hr"
     title="Cleaning at company"
     time="8:00 pm to 22:00pm"
     imageUrl={company}
@@ -77,7 +77,7 @@ function page() {
   {/* Card 3 */}
   <div className="w-[300px]">
   <Card
-    price="3400"
+    price="€ 34/hr"
     title="Cleaning at Hospital"
     time="8:00 pm to 22:00pm"
     imageUrl={hospital}
@@ -92,7 +92,7 @@ function page() {
   {/* Card 4 */}
   <div className="w-[300px]">
   <Card
-    price="$30/hr"
+    price="€ 34/hr"
     title="Cleaning at Office"
     time="8:00 pm to 22:00pm"
     imageUrl={office}
@@ -107,7 +107,7 @@ function page() {
   {/* Card 5 */}
   <div className="w-[400px]">
   <Card
-    price="$30/hr"
+    price="€ 34/hr"
     title="Cleaning at Factory"
     time="8:00 pm to 22:00pm"
     imageUrl={factory}

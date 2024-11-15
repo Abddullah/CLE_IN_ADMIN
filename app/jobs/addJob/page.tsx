@@ -91,7 +91,7 @@ function page() {
             </h2>
 
             <div className="flex space-x-4">
-              {[1, 2, 3, 4, 5, 6, 7].map((hour) => (
+              {[1, 2, 3, 4, 5, 6, 7 , 8].map((hour) => (
                 <button
                   key={hour}
                   className="flex items-center justify-center w-9 h-9 text-lg font-bold text-[#4BB1D3]  rounded-full border border-[#4BB1D3]  hover:bg-[#4BB1D3] hover:text-white focus:outline-none  focus:bg-[#4BB1D3] focus:text-white transition duration-300"
@@ -129,6 +129,8 @@ function page() {
               id="category"
               onChange={handleCategoryChange}
             >
+           
+            
               <option value="" disabled selected>
                 Select Category
               </option>
