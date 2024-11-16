@@ -4,15 +4,19 @@ import React, { useState } from "react";
 import Image from "next/image";
 import closeIcon from "../../../assets/bookingsIcon/closeIcon.svg";
 import bookingImage from "../../../assets/bookingsIcon/room.svg";
-import profile from "../../../assets/servicesIcons/profile.svg";
+
 import profile2 from "../../../assets/servicesIcons/profile2.svg";
-import editIcon from "../../../assets/categoriesIcons/edit.svg";
-import deleteIcon from "../../../assets/categoriesIcons/delete.svg";
+
 import map from "../../../assets/bookingsIcon/map.svg";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faEllipsisV,
+  faEdit,
+  faTrashAlt,
+} from "@fortawesome/free-solid-svg-icons";
 
-// Define the props for the Card component
 interface CardProps {
   imageUrl: string;
   title: string;
@@ -42,6 +46,7 @@ const Card: React.FC<CardProps> = ({
   const handleOpen = () => setIsVisible(true);
 
   const [showOptions, setShowOptions] = useState(false);
+  const [editDelete, SetEditDelete] = useState(false);
 
   const path = usePathname();
 
@@ -149,14 +154,14 @@ const Card: React.FC<CardProps> = ({
             </div>
 
             <div className="space-y-4 z-10 relative">
-              <div className="flex justify-start">
-                <div className="w-32 h-32 sm:w-20 sm:h-20 mr-4">
+              <div className="flex justify-center items-center mt-5 w-full">
+                <div className="w-full max-w-xl">
                   <Image
                     src={bookingData.imageUrl}
                     alt="Room Image"
-                    width={800}
-                    height={800}
-                    className="object-cover rounded"
+                    width={300}
+                    height={100}
+                    className="w-full h-[200px] object-cover rounded-md shadow-lg"
                   />
                 </div>
               </div>
@@ -278,6 +283,46 @@ const Card: React.FC<CardProps> = ({
                           </span>
                         </div>
                       </div>
+
+                      <div className="ml-auto relative">
+                        <button
+                          onClick={() => SetEditDelete(!editDelete)}
+                          className="text-gray-600 hover:text-gray-900"
+                        >
+                          <FontAwesomeIcon icon={faEllipsisV} size="lg" />
+                        </button>
+
+                        {editDelete && (
+                          <div className="absolute right-0 top-8 w-32 bg-white border border-gray-200 rounded-lg shadow-md z-10">
+                            <button
+                              className="flex items-center w-full p-2 hover:bg-gray-100"
+                              onClick={() => {
+                                console.log("Edit clicked");
+                                SetEditDelete(false);
+                              }}
+                            >
+                              <FontAwesomeIcon
+                                icon={faEdit}
+                                className="w-4 h-4 mr-2"
+                              />
+                              <span>Edit</span>
+                            </button>
+                            <button
+                              className="flex items-center w-full p-2 hover:bg-gray-100"
+                              onClick={() => {
+                                console.log("Delete clicked");
+                                SetEditDelete(false);
+                              }}
+                            >
+                              <FontAwesomeIcon
+                                icon={faTrashAlt}
+                                className="w-4 h-4 mr-2"
+                              />
+                              <span>Delete</span>
+                            </button>
+                          </div>
+                        )}
+                      </div>
                     </div>
                     <p className="text-gray-600 text-sm">
                       "Very happy with the cleaning. Will definitely book
@@ -286,6 +331,7 @@ const Card: React.FC<CardProps> = ({
                   </div>
                 </div>
               </div>
+
               <div className="flex mt-6 justify-center">
                 <button className="px-6 py-2 border-2 w-[250px] rounded-md max-w-xs border-[#00BFFF] text-[#00BFFF] hover:bg-[#00BFFF] hover:text-white transition mt-3">
                   Apply

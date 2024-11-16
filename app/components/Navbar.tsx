@@ -64,6 +64,8 @@ const Navbar = () => {
       setPathName('Settings')
     }else if (path === '/'){
       setPathName('Dashboard')
+    }else if(path.includes('additionalServices') ){
+      setPathName('Additional Services')
     }
      else {
       setPathName("");

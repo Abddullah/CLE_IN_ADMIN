@@ -5,7 +5,6 @@ import { useState, useEffect, useRef } from "react";
 
 import logo from "../../assets/Logo.png";
 
-
 import {
   faBars,
   faHome,
@@ -15,6 +14,7 @@ import {
   faGear,
   faSuitcase,
   faSignOutAlt,
+  faWrench,
 } from "@fortawesome/free-solid-svg-icons";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -23,9 +23,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const Sidebar = () => {
+  const [pathName, setPathName] = useState("");
 
-  const [pathName , setPathName] = useState('')
-  
   const [isOpen, setIsOpen] = useState(false);
   const sidebarRef = useRef<HTMLDivElement>(null);
 
@@ -53,12 +52,11 @@ const Sidebar = () => {
 
   const path = usePathname();
 
-  const hidePath = ['/login']
+  const hidePath = ["/login"];
 
-  if(hidePath.includes(path)){
-    return null
+  if (hidePath.includes(path)) {
+    return null;
   }
-
 
   useEffect(() => {
     if (path.includes("services")) {
@@ -73,15 +71,17 @@ const Sidebar = () => {
       setPathName("/jobs");
     } else if (path.includes("users")) {
       setPathName("/users");
-    } else if(path === '/logout'){
-      setPathName('/logout')
-    }else if (path === '/'){
-      setPathName('/')
-    }
-     else {
+    } else if (path === "/logout") {
+      setPathName("/logout");
+    } else if (path.includes("additionalServices")) {
+      setPathName("/additionalServices");
+    } else if (path === "/") {
+      setPathName("/");
+    } else {
       setPathName("");
     }
   }, [path]);
+  
 
   return (
     <div className="flex relative h-screen">
@@ -91,7 +91,10 @@ const Sidebar = () => {
           isOpen ? "hidden" : ""
         }`}
       >
-        <FontAwesomeIcon icon={faBars} className="text-gray-600 text-xl mt-3.5" />
+        <FontAwesomeIcon
+          icon={faBars}
+          className="text-gray-600 text-xl mt-3.5"
+        />
       </button>
 
       <div
@@ -100,27 +103,34 @@ const Sidebar = () => {
           isOpen ? "translate-x-0" : "-translate-x-full"
         } md:translate-x-0 fixed md:relative z-20 top-0`}
       >
-        <Link href={'/'}>
-        <div className="flex items-center p-4 ml-1 mb-5 mt-1 ">
-          <Image
-            src={logo}
-            alt="Logo"
-            width={38}
-            height={388}
-            className="mr-2 ml-4 mt-1"
-          />
-          <h1 className="text-xl font-bold text-[#343C6A] mt-2 ml-2">Pulizie Di Casa</h1>
-        </div>
+        <Link href={"/"}>
+          <div className="flex items-center p-4 ml-1 mb-5 mt-1 ">
+            <Image
+              src={logo}
+              alt="Logo"
+              width={38}
+              height={388}
+              className="mr-2 ml-4 mt-1"
+            />
+            <h1 className="text-xl font-bold text-[#343C6A] mt-2 ml-2">
+              Pulizie Di Casa
+            </h1>
+          </div>
         </Link>
-        <nav className="mt-4 ml-8">
+        <nav className="mt-4 ml-7">
           <ul className="space-y-2 mr-2">
             {[
-              { icon: faHome, label: "Dashboard", link: "/"  },
+              { icon: faHome, label: "Dashboard", link: "/" },
               { icon: faList, label: "Categories", link: "/categories" },
               { icon: faUser, label: "Users", link: "/users" },
               { icon: faCalendarAlt, label: "Bookings", link: "/bookings" },
               { icon: faSuitcase, label: "Services", link: "/services" },
               { icon: faSuitcase, label: "Jobs", link: "/jobs" },
+              {
+                icon: faWrench,
+                label: "Additional Services",
+                link: "/additionalServices",
+              },
               { icon: faGear, label: "Settings", link: "/settings" },
             ].map(({ icon, label, link }) => (
               <Link
@@ -133,15 +143,13 @@ const Sidebar = () => {
                   <p className="flex items-center">
                     <FontAwesomeIcon
                       icon={icon}
-                      className={`mr-8 text-xl ${
-                        pathName === link
-                          ? "text-[#00BFFF]"
-                          : "text-gray-400"
+                      className={`mr-7 text-xl ${
+                        pathName === link ? "text-[#00BFFF]" : "text-gray-400"
                       }`}
                     />
 
                     <span
-                      className={`mr-6 ${
+                      className={`mr-2  ${
                         pathName === link ? "text-[#00BFFF] " : "text-gray-400"
                       }`}
                     >
@@ -181,46 +189,6 @@ const Sidebar = () => {
 };
 
 export default Sidebar;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

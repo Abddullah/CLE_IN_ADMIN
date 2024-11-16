@@ -29,7 +29,6 @@ const CleaningCards: React.FC<Props> = ({ title, image }) => {
             onClick={handleToggleOptions}
           />
 
-          
           {showOptions && (
             <div className="absolute right-0 top-8 w-32 bg-white border border-gray-200 rounded-lg shadow-md z-10">
               <button

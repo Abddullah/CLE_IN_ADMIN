@@ -33,7 +33,6 @@ function page() {
       "Room Cleaning",
       "Pest Control Service",
       "Laundry Service",
-      "Etc",
     ],
     "Home Maintenance Services": [
       "Electrician",
@@ -56,10 +55,9 @@ function page() {
     ],
   };
 
-  const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const selected = e.target.value;
-    setSelectedCategory(selected);
-    setSubCategories(categories[selected] || []);
+  const handleCategoryChange = (value: string) => {
+    setSelectedCategory(value);
+    setSubCategories(categories[value] || []);
   };
   return (
     <>
@@ -91,7 +89,7 @@ function page() {
             </h2>
 
             <div className="flex space-x-4">
-              {[1, 2, 3, 4, 5, 6, 7 , 8].map((hour) => (
+              {[1, 2, 3, 4, 5, 6, 7, 8].map((hour) => (
                 <button
                   key={hour}
                   className="flex items-center justify-center w-9 h-9 text-lg font-bold text-[#4BB1D3]  rounded-full border border-[#4BB1D3]  hover:bg-[#4BB1D3] hover:text-white focus:outline-none  focus:bg-[#4BB1D3] focus:text-white transition duration-300"
@@ -124,41 +122,46 @@ function page() {
             <label className="text-md font-semibold" htmlFor="category">
               Category
             </label>
-            <select
-              className="w-full h-[50px] rounded-lg border p-2  border-[#4BB1D3] bg-gray-50 outline-[#4BB1D3] focus:border-blue-500 focus:outline-none"
-              id="category"
-              onChange={handleCategoryChange}
+            <Select
+              onValueChange={handleCategoryChange}
+              value={selectedCategory}
             >
-           
-            
-              <option value="" disabled selected>
-                Select Category
-              </option>
-              {Object.keys(categories).map((category) => (
-                <option key={category} value={category}>
-                  {category}
-                </option>
-              ))}
-            </select>
+              <SelectTrigger className="w-full h-[50px] rounded-lg border p-2 border-[#4BB1D3] bg-gray-50 outline-[#4BB1D3] focus:border-blue-500 focus:outline-none">
+                <SelectValue placeholder="Select Category" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectLabel>Categories</SelectLabel>
+                  {Object.keys(categories).map((category) => (
+                    <SelectItem key={category} value={category}>
+                      {category}
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
 
+            {/* Show Subcategory dropdown if there are subcategories */}
             {subCategories.length > 0 && (
               <div className="grid w-full items-center gap-1.5 mt-4">
                 <label className="text-md font-semibold" htmlFor="subCategory">
                   Subcategory
                 </label>
-                <select
-                  className="w-full h-[50px] rounded-lg border p-2 border-[#4BB1D3] bg-gray-50 outline-[#4BB1D3] focus:border-blue-500 focus:outline-none"
-                  id="subCategory"
-                >
-                  <option value="" disabled selected>
-                    Select Subcategory
-                  </option>
-                  {subCategories.map((subCategory) => (
-                    <option key={subCategory} value={subCategory}>
-                      {subCategory}
-                    </option>
-                  ))}
-                </select>
+                <Select>
+                  <SelectTrigger className="w-full h-[50px] rounded-lg border p-2 border-[#4BB1D3] bg-gray-50 outline-[#4BB1D3] focus:border-blue-500 focus:outline-none">
+                    <SelectValue placeholder="Select Subcategory" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectLabel>Subcategories</SelectLabel>
+                      {subCategories.map((subCategory) => (
+                        <SelectItem key={subCategory} value={subCategory}>
+                          {subCategory}
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
               </div>
             )}
           </div>
@@ -180,18 +183,16 @@ function page() {
                   <SelectItem value="101 - 150 m2">101 - 150 m2</SelectItem>
                   <SelectItem value="151 - 200 m2">151 - 200 m2</SelectItem>
                   <SelectItem value="Over 200 m2">Over 200 m2</SelectItem>
-                  
                 </SelectGroup>
               </SelectContent>
             </Select>
-            
           </div>
 
           <div className="grid w-full items-center gap-1.5 mt-6">
             <label className="text-md font-semibold" htmlFor="Room Area Size">
               Numbers of Rooms
             </label>
-            
+
             <Select>
               <SelectTrigger className="w-full h-[55px] rounded-lg border border-[#4BB1D3] bg-gray-50 mt-1 pr-6 outline-[#4BB1D3] focus:border-[#4BB1D3] focus:outline-none focus:border-none">
                 <SelectValue placeholder="Number of Rooms" />
@@ -204,11 +205,9 @@ function page() {
                   <SelectItem value="3 Room">3 Room</SelectItem>
                   <SelectItem value="4 Room">4 Room</SelectItem>
                   <SelectItem value="5 Room">5 Room</SelectItem>
-                  
                 </SelectGroup>
               </SelectContent>
             </Select>
-            
           </div>
 
           {/* Cleaning Material started */}
@@ -280,7 +279,7 @@ function page() {
 
           {/* Photos section started */}
 
-          <div className="grid w-full items-center gap-1.5 mt-8">
+          {/* <div className="grid w-full items-center gap-1.5 mt-8">
             <p className="font-semibold">Photos</p>
             <div className="flex justify-between flex-wrap">
               <div className="w-[108px] h-[99.52px]">
@@ -311,8 +310,54 @@ function page() {
                 <Image src={room} alt="djdj" />
               </div>
             </div>
-          </div>
+          </div> */}
 
+<div className="grid w-full items-center gap-1.5 mt-3">
+  <p className="font-semibold">Photos</p>
+  <div className="flex justify-between flex-wrap">
+    {/* Displaying existing images */}
+    <div className="w-[108px] h-[99.52px]">
+      <Image src={room} alt="djdj" />
+    </div>
+    <div className="w-[108px] h-[99.52px]">
+      <Image src={factory} alt="djdj" />
+    </div>
+    <div className="w-[108px] h-[99.52px]">
+      <Image src={hospital} alt="djdj" />
+    </div>
+    <div className="w-[108px] h-[99.52px]">
+      <Image src={room} alt="djdj" />
+    </div>
+    <div className="w-[108px] h-[99.52px]">
+      <Image src={factory} alt="djdj" />
+    </div>
+    <div className="w-[108px] h-[99.52px]">
+      <Image src={office} alt="djdj" />
+    </div>
+    <div className="w-[108px] h-[99.52px]">
+      <Image src={hospital} alt="djdj" />
+    </div>
+    <div className="w-[108px] h-[99.52px]">
+      <Image src={office} alt="djdj" />
+    </div>
+    <div className="w-[108px] h-[99.52px]">
+      <Image src={room} alt="djdj" />
+    </div>
+
+    {/* Upload Button */}
+    <div className="w-[108px] h-[99.52px] flex items-center justify-center">
+      <label htmlFor="upload" className="cursor-pointer w-full h-full flex justify-center items-center border-2 border-[#00BFFF] rounded-lg">
+        <span className="text-sm text-gray-600">Upload</span>
+        <input
+          id="upload"
+          type="file"
+          className="hidden"
+          accept="image/*"
+        />
+      </label>
+    </div>
+  </div>
+</div>
           {/* location */}
 
           <div className="grid w-full items-center gap-1.5 mt-6">
@@ -339,3 +384,14 @@ function page() {
 }
 
 export default page;
+
+
+
+
+
+
+
+
+
+
+

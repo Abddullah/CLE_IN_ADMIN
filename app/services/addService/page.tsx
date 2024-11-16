@@ -1,7 +1,5 @@
 "use client";
-import React from "react";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import React, { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import Image from "next/image";
@@ -25,6 +23,9 @@ import {
 function page() {
   const [selectedCategory, setSelectedCategory] = useState<string>("");
   const [subCategories, setSubCategories] = useState<string[]>([]);
+
+  const [selectProvider , setSelectProvider] = useState("");
+  const [selectPrice , setSelectPrice] = useState("");
 
   const categories: { [key: string]: string[] } = {
     "Cleaning and Hygiene Services": [
@@ -54,11 +55,44 @@ function page() {
     ],
   };
 
-  const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const selected = e.target.value;
-    setSelectedCategory(selected);
-    setSubCategories(categories[selected] || []);
+  const handleCategoryChange = (value: string) => {
+    setSelectedCategory(value);
+    setSubCategories(categories[value] || []);
+    console.log(categories[value]);
+    
+    
   };
+  console.log(subCategories)
+
+  const handleProviderValue = (value:string) => {
+    setSelectProvider(value);
+    console.log(value);
+    
+  }
+
+  
+
+  
+
+  
+
+  const [data , setData] = useState({})
+
+ 
+  
+  
+  const showData = () => {
+    setData({
+      provider:selectProvider,
+      price:selectPrice,
+      category: selectedCategory,
+      subCategory: subCategories,
+    });
+  }
+    
+ 
+
+  
   return (
     <>
       <div className="bg-[#F5F7FA] min-h-screen w-full flex items-start justify-start pt-2">
@@ -66,9 +100,9 @@ function page() {
           <h1 className="text-2xl font-bold mt-2">Add Services</h1>
 
           <div className="grid w-full items-center gap-1.5 mt-6">
-            <Select>
+            <Select required onValueChange={handleProviderValue} value={selectProvider}>
               <SelectTrigger className="w-full h-[55px] rounded-lg border border-[#4BB1D3] bg-gray-50 mt-1 pr-6 outline-[#4BB1D3] focus:border-[#4BB1D3] focus:outline-none focus:border-none">
-                <SelectValue placeholder="Select Provider Name" />
+                <SelectValue  placeholder="Select Provider Name" />
               </SelectTrigger>
               <SelectContent>
                 <SelectGroup>
@@ -89,39 +123,46 @@ function page() {
             <label className="text-md font-semibold" htmlFor="category">
               Category
             </label>
-            <select
-              className="w-full h-[50px] rounded-lg border p-2 border-[#4BB1D3] bg-gray-50 outline-[#4BB1D3] focus:border-blue-500 focus:outline-none"
-              id="category"
-              onChange={handleCategoryChange}
+            <Select required
+              onValueChange={handleCategoryChange}
+              value={selectedCategory}
             >
-              <option value="" disabled selected>
-                Select Category
-              </option>
-              {Object.keys(categories).map((category) => (
-                <option key={category} value={category}>
-                  {category}
-                </option>
-              ))}
-            </select>
+              <SelectTrigger className="w-full h-[50px] rounded-lg border p-2 border-[#4BB1D3] bg-gray-50 outline-[#4BB1D3] focus:border-blue-500 focus:outline-none">
+                <SelectValue placeholder="Select Category" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectLabel>Categories</SelectLabel>
+                  {Object.keys(categories).map((category) => (
+                    <SelectItem key={category} value={category}>
+                      {category}
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
 
+            
             {subCategories.length > 0 && (
               <div className="grid w-full items-center gap-1.5 mt-4">
                 <label className="text-md font-semibold" htmlFor="subCategory">
                   Subcategory
                 </label>
-                <select
-                  className="w-full h-[50px] rounded-lg border border-[#4BB1D3] bg-gray-50 p-2 outline-[#4BB1D3] focus:border-blue-500 focus:outline-none"
-                  id="subCategory"
-                >
-                  <option value="" disabled selected>
-                    Select Subcategory
-                  </option>
-                  {subCategories.map((subCategory) => (
-                    <option key={subCategory} value={subCategory}>
-                      {subCategory}
-                    </option>
-                  ))}
-                </select>
+                <Select required>
+                  <SelectTrigger className="w-full h-[50px] rounded-lg border p-2 border-[#4BB1D3] bg-gray-50 outline-[#4BB1D3] focus:border-blue-500 focus:outline-none">
+                    <SelectValue placeholder="Select Subcategory" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectLabel>Subcategories</SelectLabel>
+                      {subCategories.map((subCategory) => (
+                        <SelectItem key={subCategory} value={subCategory}>
+                          {subCategory}
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
               </div>
             )}
           </div>
@@ -132,7 +173,7 @@ function page() {
                 Ad Fixed Rate
               </label>
 
-              <Select>
+              <Select required>
                 <SelectTrigger className="w-full h-[55px] rounded-lg border border-[#4BB1D3] bg-gray-50 mt-1 pr-6 outline-[#4BB1D3] focus:border-[#4BB1D3] focus:outline-none focus:border-none">
                   <SelectValue placeholder="Add Fix Rate" />
                 </SelectTrigger>
@@ -165,37 +206,52 @@ function page() {
           </div>
 
           <div className="grid w-full items-center gap-1.5 mt-3">
-            <p className="font-semibold">Photos</p>
-            <div className="flex justify-between flex-wrap">
-              <div className="w-[108px] h-[99.52px]">
-                <Image src={room} alt="djdj" />
-              </div>
-              <div className="w-[108px] h-[99.52px]">
-                <Image src={factory} alt="djdj" />
-              </div>
-              <div className="w-[108px] h-[99.52px]">
-                <Image src={hospital} alt="djdj" />
-              </div>
-              <div className="w-[108px] h-[99.52px]">
-                <Image src={room} alt="djdj" />
-              </div>
-              <div className="w-[108px] h-[99.52px]">
-                <Image src={factory} alt="djdj" />
-              </div>
-              <div className="w-[108px] h-[99.52px]">
-                <Image src={office} alt="djdj" />
-              </div>
-              <div className="w-[108px] h-[99.52px]">
-                <Image src={hospital} alt="djdj" />
-              </div>
-              <div className="w-[108px] h-[99.52px]">
-                <Image src={office} alt="djdj" />
-              </div>
-              <div className="w-[108px] h-[99.52px]">
-                <Image src={room} alt="djdj" />
-              </div>
-            </div>
-          </div>
+  <p className="font-semibold">Photos</p>
+  <div className="flex justify-between flex-wrap">
+    {/* Displaying existing images */}
+    <div className="w-[108px] h-[99.52px]">
+      <Image src={room} alt="djdj" />
+    </div>
+    <div className="w-[108px] h-[99.52px]">
+      <Image src={factory} alt="djdj" />
+    </div>
+    <div className="w-[108px] h-[99.52px]">
+      <Image src={hospital} alt="djdj" />
+    </div>
+    <div className="w-[108px] h-[99.52px]">
+      <Image src={room} alt="djdj" />
+    </div>
+    <div className="w-[108px] h-[99.52px]">
+      <Image src={factory} alt="djdj" />
+    </div>
+    <div className="w-[108px] h-[99.52px]">
+      <Image src={office} alt="djdj" />
+    </div>
+    <div className="w-[108px] h-[99.52px]">
+      <Image src={hospital} alt="djdj" />
+    </div>
+    <div className="w-[108px] h-[99.52px]">
+      <Image src={office} alt="djdj" />
+    </div>
+    <div className="w-[108px] h-[99.52px]">
+      <Image src={room} alt="djdj" />
+    </div>
+
+    {/* Upload Button */}
+    <div className="w-[108px] h-[99.52px] flex items-center justify-center">
+      <label htmlFor="upload" className="cursor-pointer w-full h-full flex justify-center items-center border-2 border-[#00BFFF] rounded-lg">
+        <span className="text-sm text-gray-600">Upload</span>
+        <input
+          id="upload"
+          type="file"
+          className="hidden"
+          accept="image/*"
+        />
+      </label>
+    </div>
+  </div>
+</div>
+
 
           <div className="grid w-full items-center gap-1.5 mt-6">
             <p className="text-lg font-bold mt-2">Location</p>
@@ -254,15 +310,19 @@ function page() {
                   </div>
                 </div>
               ))}
+
+
+
+
             </div>
           </div>
 
           <div className="mt-6 flex justify-center items-center">
-            <Link href={"/services/reviewService"}>
-              <Button className="w-[200px] h-[45px] mb-6 mt-2 text-white bg-[#00BFFF] rounded-lg outline-none hover:bg-[#00A0E0] transition duration-200 ease-in-out">
+            {/* <Link href={"/services/reviewService"}> */}
+              <Button onClick={showData}  className="w-[200px] h-[45px] mb-6 mt-2 text-white bg-[#00BFFF] rounded-lg outline-none hover:bg-[#00A0E0] transition duration-200 ease-in-out">
                 <span>Next</span>
               </Button>
-            </Link>
+            {/* </Link> */}
           </div>
         </div>
       </div>
@@ -271,3 +331,49 @@ function page() {
 }
 
 export default page;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
