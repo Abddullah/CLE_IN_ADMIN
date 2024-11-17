@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { ReactEventHandler, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import Image from "next/image";
@@ -23,9 +23,12 @@ import {
 function page() {
   const [selectedCategory, setSelectedCategory] = useState<string>("");
   const [subCategories, setSubCategories] = useState<string[]>([]);
-
-  const [selectProvider , setSelectProvider] = useState("");
-  const [selectPrice , setSelectPrice] = useState("");
+  const [provider, setProvider] = useState("");
+  const [category, setCategory] = useState("");
+  const [subCategory, setSubCategory] = useState("");
+  const [fixRate, setFixRate] = useState("");
+  const [descriptionValue, setDescriptionValue] = useState("");
+  const [formData, setFormData] = useState({});
 
   const categories: { [key: string]: string[] } = {
     "Cleaning and Hygiene Services": [
@@ -55,44 +58,95 @@ function page() {
     ],
   };
 
+  const description = useRef<HTMLTextAreaElement>(null);
+
   const handleCategoryChange = (value: string) => {
     setSelectedCategory(value);
+    setCategory(value);
     setSubCategories(categories[value] || []);
-    console.log(categories[value]);
-    
-    
   };
-  console.log(subCategories)
 
-  const handleProviderValue = (value:string) => {
-    setSelectProvider(value);
-    console.log(value);
-    
-  }
+  const handleProvider = (value: string) => {
+    setProvider(value);
+  };
 
-  
+  const handleSubCategory = (value: string) => {
+    setSubCategory(value);
+  };
 
-  
+  const handleFixRate = (value: string) => {
+    setFixRate(value);
+  };
 
-  
+  const handleDescription = () => {
+    if (description.current) {
+      setDescriptionValue(description.current.value);
+      return;
+    }
+  };
 
-  const [data , setData] = useState({})
+  const [slotTimes, setSlotTimes] = useState<Record<string, any>>(
+    [
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+      "Sunday",
+    ].reduce(
+      (acc, day) => ({
+        ...acc,
+        [day.toLowerCase()]: { checked: false, open: "", close: "" },
+      }),
+      {}
+    )
+  );
 
- 
-  
-  
-  const showData = () => {
-    setData({
-      provider:selectProvider,
-      price:selectPrice,
-      category: selectedCategory,
-      subCategory: subCategories,
-    });
-  }
-    
- 
+  // Handle checkbox toggle
+  const handleCheckboxChange = (day: string) => {
+    setSlotTimes((prev) => ({
+      ...prev,
+      [day]: {
+        ...prev[day],
+        checked: !prev[day].checked,
+      },
+    }));
+  };
 
-  
+  // Handle input field change
+  const handleInputChange = (
+    day: string,
+    field: "open" | "close",
+    value: string
+  ) => {
+    setSlotTimes((prev) => ({
+      ...prev,
+      [day]: {
+        ...prev[day],
+        [field]: value,
+      },
+    }));
+  };
+
+  // Handle form submission
+  const handleSubmit = () => {
+    console.log("Selected Slot Times:", slotTimes);
+  };
+  const nextBtn = () => {
+    !category || !subCategory || !provider || !fixRate || !descriptionValue
+      ? alert("Please fill all the fields")
+      : setFormData({
+          provider,
+          category,
+          subCategory,
+          fixRate,
+          descriptionValue,
+          slotTimes,
+        });
+  };
+  console.log(formData);
+
   return (
     <>
       <div className="bg-[#F5F7FA] min-h-screen w-full flex items-start justify-start pt-2">
@@ -100,9 +154,9 @@ function page() {
           <h1 className="text-2xl font-bold mt-2">Add Services</h1>
 
           <div className="grid w-full items-center gap-1.5 mt-6">
-            <Select required onValueChange={handleProviderValue} value={selectProvider}>
+            <Select required onValueChange={handleProvider} value={provider}>
               <SelectTrigger className="w-full h-[55px] rounded-lg border border-[#4BB1D3] bg-gray-50 mt-1 pr-6 outline-[#4BB1D3] focus:border-[#4BB1D3] focus:outline-none focus:border-none">
-                <SelectValue  placeholder="Select Provider Name" />
+                <SelectValue placeholder="Select Provider Name" />
               </SelectTrigger>
               <SelectContent>
                 <SelectGroup>
@@ -123,7 +177,8 @@ function page() {
             <label className="text-md font-semibold" htmlFor="category">
               Category
             </label>
-            <Select required
+            <Select
+              required
               onValueChange={handleCategoryChange}
               value={selectedCategory}
             >
@@ -142,13 +197,16 @@ function page() {
               </SelectContent>
             </Select>
 
-            
             {subCategories.length > 0 && (
               <div className="grid w-full items-center gap-1.5 mt-4">
                 <label className="text-md font-semibold" htmlFor="subCategory">
                   Subcategory
                 </label>
-                <Select required>
+                <Select
+                  required
+                  value={subCategory}
+                  onValueChange={handleSubCategory}
+                >
                   <SelectTrigger className="w-full h-[50px] rounded-lg border p-2 border-[#4BB1D3] bg-gray-50 outline-[#4BB1D3] focus:border-blue-500 focus:outline-none">
                     <SelectValue placeholder="Select Subcategory" />
                   </SelectTrigger>
@@ -173,7 +231,7 @@ function page() {
                 Ad Fixed Rate
               </label>
 
-              <Select required>
+              <Select required value={fixRate} onValueChange={handleFixRate}>
                 <SelectTrigger className="w-full h-[55px] rounded-lg border border-[#4BB1D3] bg-gray-50 mt-1 pr-6 outline-[#4BB1D3] focus:border-[#4BB1D3] focus:outline-none focus:border-none">
                   <SelectValue placeholder="Add Fix Rate" />
                 </SelectTrigger>
@@ -200,58 +258,63 @@ function page() {
           <div className="grid w-full items-center gap-1.5 mt-3">
             <p className="text-md font-semibold">Description</p>
             <Textarea
+              required
+              onChange={handleDescription}
+              ref={description}
               className="w-full h-[85px] rounded-lg border-[#4BB1D3] focus:border-blue-500 focus:outline-none"
               placeholder="Description"
             />
           </div>
 
           <div className="grid w-full items-center gap-1.5 mt-3">
-  <p className="font-semibold">Photos</p>
-  <div className="flex justify-between flex-wrap">
-    {/* Displaying existing images */}
-    <div className="w-[108px] h-[99.52px]">
-      <Image src={room} alt="djdj" />
-    </div>
-    <div className="w-[108px] h-[99.52px]">
-      <Image src={factory} alt="djdj" />
-    </div>
-    <div className="w-[108px] h-[99.52px]">
-      <Image src={hospital} alt="djdj" />
-    </div>
-    <div className="w-[108px] h-[99.52px]">
-      <Image src={room} alt="djdj" />
-    </div>
-    <div className="w-[108px] h-[99.52px]">
-      <Image src={factory} alt="djdj" />
-    </div>
-    <div className="w-[108px] h-[99.52px]">
-      <Image src={office} alt="djdj" />
-    </div>
-    <div className="w-[108px] h-[99.52px]">
-      <Image src={hospital} alt="djdj" />
-    </div>
-    <div className="w-[108px] h-[99.52px]">
-      <Image src={office} alt="djdj" />
-    </div>
-    <div className="w-[108px] h-[99.52px]">
-      <Image src={room} alt="djdj" />
-    </div>
+            <p className="font-semibold">Photos</p>
+            <div className="flex justify-between flex-wrap">
+              {/* Displaying existing images */}
+              <div className="w-[108px] h-[99.52px]">
+                <Image src={room} alt="djdj" />
+              </div>
+              <div className="w-[108px] h-[99.52px]">
+                <Image src={factory} alt="djdj" />
+              </div>
+              <div className="w-[108px] h-[99.52px]">
+                <Image src={hospital} alt="djdj" />
+              </div>
+              <div className="w-[108px] h-[99.52px]">
+                <Image src={room} alt="djdj" />
+              </div>
+              <div className="w-[108px] h-[99.52px]">
+                <Image src={factory} alt="djdj" />
+              </div>
+              <div className="w-[108px] h-[99.52px]">
+                <Image src={office} alt="djdj" />
+              </div>
+              <div className="w-[108px] h-[99.52px]">
+                <Image src={hospital} alt="djdj" />
+              </div>
+              <div className="w-[108px] h-[99.52px]">
+                <Image src={office} alt="djdj" />
+              </div>
+              <div className="w-[108px] h-[99.52px]">
+                <Image src={room} alt="djdj" />
+              </div>
 
-    {/* Upload Button */}
-    <div className="w-[108px] h-[99.52px] flex items-center justify-center">
-      <label htmlFor="upload" className="cursor-pointer w-full h-full flex justify-center items-center border-2 border-[#00BFFF] rounded-lg">
-        <span className="text-sm text-gray-600">Upload</span>
-        <input
-          id="upload"
-          type="file"
-          className="hidden"
-          accept="image/*"
-        />
-      </label>
-    </div>
-  </div>
-</div>
-
+              {/* Upload Button */}
+              <div className="w-[108px] h-[99.52px] flex items-center justify-center">
+                <label
+                  htmlFor="upload"
+                  className="cursor-pointer w-full h-full flex justify-center items-center border-2 border-[#00BFFF] rounded-lg"
+                >
+                  <span className="text-sm text-gray-600">Upload</span>
+                  <input
+                    id="upload"
+                    type="file"
+                    className="hidden"
+                    accept="image/*"
+                  />
+                </label>
+              </div>
+            </div>
+          </div>
 
           <div className="grid w-full items-center gap-1.5 mt-6">
             <p className="text-lg font-bold mt-2">Location</p>
@@ -286,6 +349,8 @@ function page() {
                     type="checkbox"
                     id={day.toLowerCase()}
                     className="h-5 w-5 text-[#00BFFF] rounded-md focus:ring-[#00BFFF] cursor-pointer"
+                    checked={slotTimes[day.toLowerCase()].checked}
+                    onChange={() => handleCheckboxChange(day.toLowerCase())}
                   />
                   <label
                     htmlFor={day.toLowerCase()}
@@ -296,32 +361,47 @@ function page() {
 
                   <div className="flex space-x-4 w-2/3 justify-end gap-1">
                     <input
-                      type="number"
+                      type="text"
                       className="w-[70px] sm:w-[105px] md:w-[105px] lg:w-[100px] h-[40px] rounded-lg bg-transparent focus:outline-none px-3 border-2 border-[#4BB1D3] focus:border-blue-500 placeholder-gray-400"
                       placeholder="Open"
                       id={`open-${day.toLowerCase()}`}
+                      value={slotTimes[day.toLowerCase()].open}
+                      onChange={(e) =>
+                        handleInputChange(
+                          day.toLowerCase(),
+                          "open",
+                          e.target.value
+                        )
+                      }
                     />
                     <input
-                      type="number"
+                      type="text"
                       className="w-[70px] sm:w-[105px] md:w-[105px] lg:w-[100px] h-[40px] rounded-lg bg-transparent focus:outline-none px-3 border-2 border-[#4BB1D3] focus:border-blue-500 placeholder-gray-400"
                       placeholder="Close"
                       id={`close-${day.toLowerCase()}`}
+                      value={slotTimes[day.toLowerCase()].close}
+                      onChange={(e) =>
+                        handleInputChange(
+                          day.toLowerCase(),
+                          "close",
+                          e.target.value
+                        )
+                      }
                     />
                   </div>
                 </div>
               ))}
-
-
-
-
             </div>
           </div>
 
           <div className="mt-6 flex justify-center items-center">
             {/* <Link href={"/services/reviewService"}> */}
-              <Button onClick={showData}  className="w-[200px] h-[45px] mb-6 mt-2 text-white bg-[#00BFFF] rounded-lg outline-none hover:bg-[#00A0E0] transition duration-200 ease-in-out">
-                <span>Next</span>
-              </Button>
+            <Button
+              onClick={nextBtn}
+              className="w-[200px] h-[45px] mb-6 mt-2 text-white bg-[#00BFFF] rounded-lg outline-none hover:bg-[#00A0E0] transition duration-200 ease-in-out"
+            >
+              <span>Next</span>
+            </Button>
             {/* </Link> */}
           </div>
         </div>
@@ -331,49 +411,3 @@ function page() {
 }
 
 export default page;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
