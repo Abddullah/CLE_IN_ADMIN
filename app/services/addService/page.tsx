@@ -1,5 +1,5 @@
 "use client";
-import React, { ReactEventHandler, useEffect, useRef } from "react";
+
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import Image from "next/image";
@@ -10,6 +10,7 @@ import factory from "../../../assets/servicesIcons/factory.svg";
 import Link from "next/link";
 import { useState } from "react";
 import map from "../../../assets/bookingsIcon/map.svg";
+import { useRef } from "react";
 import {
   Select,
   SelectContent,
@@ -19,8 +20,17 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useRouter } from "next/navigation";
 
 function page() {
+  interface Props {
+    provider: string;
+    category: string;
+    subCategory: string;
+    fixRate: string;
+    descriptionValue: string;
+    slotTimes: object;
+  }
   const [selectedCategory, setSelectedCategory] = useState<string>("");
   const [subCategories, setSubCategories] = useState<string[]>([]);
   const [provider, setProvider] = useState("");
@@ -28,7 +38,8 @@ function page() {
   const [subCategory, setSubCategory] = useState("");
   const [fixRate, setFixRate] = useState("");
   const [descriptionValue, setDescriptionValue] = useState("");
-  const [formData, setFormData] = useState({});
+  let [formData, setFormData] = useState<Props | any>("");
+  const [slotTimes, setSlotTimes] = useState<Record<string, any>>({});
 
   const categories: { [key: string]: string[] } = {
     "Cleaning and Hygiene Services": [
@@ -58,6 +69,8 @@ function page() {
     ],
   };
 
+  const router = useRouter();
+
   const description = useRef<HTMLTextAreaElement>(null);
 
   const handleCategoryChange = (value: string) => {
@@ -85,36 +98,24 @@ function page() {
     }
   };
 
-  const [slotTimes, setSlotTimes] = useState<Record<string, any>>(
-    [
-      "Monday",
-      "Tuesday",
-      "Wednesday",
-      "Thursday",
-      "Friday",
-      "Saturday",
-      "Sunday",
-    ].reduce(
-      (acc, day) => ({
-        ...acc,
-        [day.toLowerCase()]: { checked: false, open: "", close: "" },
-      }),
-      {}
-    )
-  );
-
-  // Handle checkbox toggle
   const handleCheckboxChange = (day: string) => {
-    setSlotTimes((prev) => ({
-      ...prev,
-      [day]: {
-        ...prev[day],
-        checked: !prev[day].checked,
-      },
-    }));
+    setSlotTimes((prev) => {
+      const updatedSlotTimes = { ...prev };
+
+      if (updatedSlotTimes[day]) {
+        updatedSlotTimes[day].checked = !updatedSlotTimes[day].checked;
+      } else {
+        updatedSlotTimes[day] = { checked: true, open: "", close: "" };
+      }
+
+      if (!updatedSlotTimes[day].checked) {
+        delete updatedSlotTimes[day];
+      }
+
+      return updatedSlotTimes;
+    });
   };
 
-  // Handle input field change
   const handleInputChange = (
     day: string,
     field: "open" | "close",
@@ -129,23 +130,47 @@ function page() {
     }));
   };
 
-  // Handle form submission
-  const handleSubmit = () => {
-    console.log("Selected Slot Times:", slotTimes);
+  const handleFormSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    console.log(slotTimes);
+
+    const checkedSlotTimes = Object.keys(slotTimes).map((day) => ({
+      day,
+      open: slotTimes[day].open,
+      close: slotTimes[day].close,
+    }));
+
+    console.log("Checked Slot Times:", checkedSlotTimes);
   };
+
   const nextBtn = () => {
-    !category || !subCategory || !provider || !fixRate || !descriptionValue
-      ? alert("Please fill all the fields")
-      : setFormData({
-          provider,
-          category,
-          subCategory,
-          fixRate,
-          descriptionValue,
-          slotTimes,
-        });
+    if (
+      !category ||
+      !subCategory ||
+      !provider ||
+      !fixRate ||
+      !descriptionValue ||
+      !slotTimes
+    ) {
+      alert("Please fill all the fields");
+    } else {
+      formData = {
+        provider,
+        category,
+        subCategory,
+        fixRate,
+        descriptionValue,
+        slotTimes,
+      };
+
+      setFormData({ ...formData });
+      alert("Data Submitted Sucessfully!");
+
+      console.log(formData);
+      router.push("/services/reviewService")
+    }
   };
-  console.log(formData);
 
   return (
     <>
@@ -182,7 +207,7 @@ function page() {
               onValueChange={handleCategoryChange}
               value={selectedCategory}
             >
-              <SelectTrigger className="w-full h-[50px] rounded-lg border p-2 border-[#4BB1D3] bg-gray-50 outline-[#4BB1D3] focus:border-blue-500 focus:outline-none">
+              <SelectTrigger className="w-full h-[55px] rounded-lg border p-4 pr-6 border-[#4BB1D3] bg-gray-50 outline-[#4BB1D3] focus:border-blue-500 focus:outline-none ">
                 <SelectValue placeholder="Select Category" />
               </SelectTrigger>
               <SelectContent>
@@ -207,7 +232,7 @@ function page() {
                   value={subCategory}
                   onValueChange={handleSubCategory}
                 >
-                  <SelectTrigger className="w-full h-[50px] rounded-lg border p-2 border-[#4BB1D3] bg-gray-50 outline-[#4BB1D3] focus:border-blue-500 focus:outline-none">
+                  <SelectTrigger className="w-full h-[55px] rounded-lg border p-4 pr-6 border-[#4BB1D3] bg-gray-50 outline-[#4BB1D3] focus:border-blue-500 focus:outline-none">
                     <SelectValue placeholder="Select Subcategory" />
                   </SelectTrigger>
                   <SelectContent>
@@ -326,72 +351,78 @@ function page() {
             />
           </div>
 
+         
+
           <div className="grid w-full items-center gap-1.5 mt-3">
             <h1 className="text-xl font-semibold mt-6 text-gray-800 mb-6">
               Select Slot Time
             </h1>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6">
-              {[
-                "Monday",
-                "Tuesday",
-                "Wednesday",
-                "Thursday",
-                "Friday",
-                "Saturday",
-                "Sunday",
-              ].map((day) => (
-                <div
-                  key={day}
-                  className="flex items-center justify-between space-x-4 py-3 px-4 rounded-lg border border-gray-200 shadow-md"
-                >
-                  <input
-                    type="checkbox"
-                    id={day.toLowerCase()}
-                    className="h-5 w-5 text-[#00BFFF] rounded-md focus:ring-[#00BFFF] cursor-pointer"
-                    checked={slotTimes[day.toLowerCase()].checked}
-                    onChange={() => handleCheckboxChange(day.toLowerCase())}
-                  />
-                  <label
-                    htmlFor={day.toLowerCase()}
-                    className="font-semibold text-lg text-gray-700 w-1/4"
+            <form onSubmit={handleFormSubmit}>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6">
+                {[
+                  "Monday",
+                  "Tuesday",
+                  "Wednesday",
+                  "Thursday",
+                  "Friday",
+                  "Saturday",
+                  "Sunday",
+                ].map((day) => (
+                  <div
+                    key={day}
+                    className="flex items-center justify-between space-x-4 py-3 px-4 rounded-lg border border-gray-200 shadow-md"
                   >
-                    {day}
-                  </label>
+                    <input
+                      type="checkbox"
+                      id={day.toLowerCase()}
+                      className="h-5 w-5 text-[#00BFFF] rounded-md focus:ring-[#00BFFF] cursor-pointer"
+                      checked={slotTimes[day.toLowerCase()]?.checked || false}
+                      onChange={() => handleCheckboxChange(day.toLowerCase())}
+                    />
+                    <label
+                      htmlFor={day.toLowerCase()}
+                      className="font-semibold text-lg text-gray-700 w-1/4"
+                    >
+                      {day}
+                    </label>
 
-                  <div className="flex space-x-4 w-2/3 justify-end gap-1">
-                    <input
-                      type="text"
-                      className="w-[70px] sm:w-[105px] md:w-[105px] lg:w-[100px] h-[40px] rounded-lg bg-transparent focus:outline-none px-3 border-2 border-[#4BB1D3] focus:border-blue-500 placeholder-gray-400"
-                      placeholder="Open"
-                      id={`open-${day.toLowerCase()}`}
-                      value={slotTimes[day.toLowerCase()].open}
-                      onChange={(e) =>
-                        handleInputChange(
-                          day.toLowerCase(),
-                          "open",
-                          e.target.value
-                        )
-                      }
-                    />
-                    <input
-                      type="text"
-                      className="w-[70px] sm:w-[105px] md:w-[105px] lg:w-[100px] h-[40px] rounded-lg bg-transparent focus:outline-none px-3 border-2 border-[#4BB1D3] focus:border-blue-500 placeholder-gray-400"
-                      placeholder="Close"
-                      id={`close-${day.toLowerCase()}`}
-                      value={slotTimes[day.toLowerCase()].close}
-                      onChange={(e) =>
-                        handleInputChange(
-                          day.toLowerCase(),
-                          "close",
-                          e.target.value
-                        )
-                      }
-                    />
+                    <div className="flex space-x-4 w-2/3 justify-end gap-1">
+                      <input
+                        type="text"
+                        required
+                        className="w-[70px] sm:w-[105px] md:w-[105px] lg:w-[100px] h-[40px] rounded-lg bg-transparent focus:outline-none px-3 border-2 border-[#4BB1D3] focus:border-blue-500 placeholder-gray-400"
+                        placeholder="Open"
+                        id={`open-${day.toLowerCase()}`}
+                        value={slotTimes[day.toLowerCase()]?.open || ""}
+                        onChange={(e) =>
+                          handleInputChange(
+                            day.toLowerCase(),
+                            "open",
+                            e.target.value
+                          )
+                        }
+                      />
+
+                      <input
+                        type="text"
+                        required
+                        className="w-[70px] sm:w-[105px] md:w-[105px] lg:w-[100px] h-[40px] rounded-lg bg-transparent focus:outline-none px-3 border-2 border-[#4BB1D3] focus:border-blue-500 placeholder-gray-400"
+                        placeholder="Close"
+                        id={`close-${day.toLowerCase()}`}
+                        value={slotTimes[day.toLowerCase()]?.close || ""}
+                        onChange={(e) =>
+                          handleInputChange(
+                            day.toLowerCase(),
+                            "close",
+                            e.target.value
+                          )
+                        }
+                      />
+                    </div>
                   </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            </form>
           </div>
 
           <div className="mt-6 flex justify-center items-center">

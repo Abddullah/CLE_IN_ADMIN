@@ -1,4 +1,6 @@
-import React from "react";
+'use client'
+
+import React, { useRef, useState , useEffect} from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
@@ -6,6 +8,60 @@ import { Button } from "@/components/ui/button";
 
 
 function page() {
+
+  let [data , setData] = useState({});
+  let [userName , setUserName] = useState("");
+  let [email , setEmail] = useState("");
+  let [role , setRole] = useState("");
+
+  const nameValue = useRef<HTMLInputElement>(null);
+  const emailValue = useRef<HTMLInputElement>(null);
+  const roleValue = useRef<HTMLInputElement>(null);
+  
+
+  const handleUserName =() => {
+    if(nameValue.current){
+      setUserName(nameValue.current.value)
+      return
+    }
+  }
+
+  const handleEmail =() => {
+    if(emailValue.current){
+      setEmail(emailValue.current.value)
+      return
+    }
+  }
+
+  const handleRole =() => {
+    if(roleValue.current){
+      setRole(roleValue.current.value)
+      return
+    }
+  }
+
+const handleData = ()=> {
+
+  if(!email || !userName || !role){
+    alert("Please fill all fields")
+  }else{
+    data = {
+      userName:userName,
+      email:email,
+      role:role
+    }
+  
+    setData({...data})
+  
+    console.log(data);
+    
+  }
+  
+  
+}
+
+  
+
   return (
     <>
     
@@ -20,7 +76,7 @@ function page() {
             <Input
               type="text"
               className="h-[50px] rounded-lg border-[#4BB1D3] focus:border-blue-500 focus:outline-none"
-              id="Name"
+              id="Name" ref={nameValue} onChange={handleUserName}
             />
           </div>
 
@@ -31,7 +87,7 @@ function page() {
             <Input
               type="email"
               className="h-[50px] rounded-lg border-[#4BB1D3] focus:border-blue-500 focus:outline-none"
-              id="email"
+              id="email" ref={emailValue} onChange={handleEmail}
             />
           </div>
 
@@ -64,12 +120,12 @@ function page() {
             <Input
               type="text"
               className="h-[50px] rounded-lg border-[#4BB1D3] focus:border-blue-500 focus:outline-none"
-              id="role"
+              id="role" ref={roleValue} onChange={handleRole}
             />
           </div>
 
           <div className="mt-6">
-            <Button className="border-[#4BB1D3] w-full h-[40px] mt-5 text-white bg-[#00BFFF] rounded-lg outline-none hover:bg-[#00A0E0] transition duration-200 ease-in-out sm:w-[100px] sm:h-[45px]">
+            <Button onClick={handleData} className="border-[#4BB1D3] w-full h-[40px] mt-5 text-white bg-[#00BFFF] rounded-lg outline-none hover:bg-[#00A0E0] transition duration-200 ease-in-out sm:w-[100px] sm:h-[45px]">
               <span>Add User</span>
             </Button>
           </div>

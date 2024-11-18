@@ -1,8 +1,45 @@
-import React from "react";
+"use client";
+import React, { useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
 function page() {
+  let [data, setData] = useState({});
+  let [location, setLocation] = useState("");
+  let [comment, setComment] = useState("");
+
+  let locationValue = useRef<HTMLInputElement>(null);
+  let commentValue = useRef<any>(null);
+
+  const handleLocation = () => {
+    if (locationValue.current) {
+      setLocation(locationValue.current.value);
+      return;
+    }
+  };
+
+  const handleComment = () => {
+    if (commentValue.current) {
+      setComment(commentValue.current.value);
+      return;
+    }
+  };
+
+  const handleData = () => {
+  if(!location || !comment){
+    alert("Please fill in the required fields");
+  }else{
+    data = {
+      location,
+      comment,
+    };
+
+    setData({ ...data });
+    console.log(data);
+    alert("Data submitted Sucessfully")
+  }
+  };
+
   return (
     <>
       <div className="bg-[#F5F7FA] min-h-screen w-full flex items-start justify-start pt-2">
@@ -39,6 +76,8 @@ function page() {
                 name="location"
                 placeholder="Enter your location"
                 className="w-full pl-10 pr-4 py-2 border border-[#00BFFF] rounded-md shadow-sm focus:outline-none focus:ring-1  focus:ring-[#00BFFF]"
+                ref={locationValue}
+                onChange={handleLocation}
               />
             </div>
           </div>
@@ -56,13 +95,19 @@ function page() {
               name="instructions"
               rows={4}
               placeholder="Write here..."
+              ref={commentValue}
+              onChange={handleComment}
               className="w-full mt-2 p-3 border border-[#00BFFF] rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-[#00BFFF] focus:border-[#00BFFF]"
+              
             ></textarea>
           </div>
 
           <div className="mt-8 flex justify-center items-center">
             <Link href={"/jobs/reviewJob"}>
-              <Button className="w-[250px] mb-4 mt-6 h-[45px] text-white bg-[#00BFFF] rounded-lg outline-none hover:bg-[#00A0E0] transition duration-200 ease-in-out">
+              <Button
+                onClick={handleData}
+                className="w-[250px] mb-4 mt-6 h-[45px] text-white bg-[#00BFFF] rounded-lg outline-none hover:bg-[#00A0E0] transition duration-200 ease-in-out"
+              >
                 <span>Next</span>
               </Button>
             </Link>

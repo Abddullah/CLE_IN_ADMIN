@@ -1,6 +1,5 @@
-import { InputWithLabel } from "@/app/components/categoriesComponents/addCategoryPage/NameField";
-import UploadButton from "@/app/components/categoriesComponents/addCategoryPage/UploadBtn";
-import React from "react";
+'use client'
+import React, { useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -8,6 +7,43 @@ import Link from "next/link";
 
 
 function page() {
+
+  let [title , setTitle] = useState("");
+  let [price , setPrice] = useState("");
+  let [data , setData] = useState({});
+
+  let titleValue = useRef<HTMLInputElement>(null);
+  let priceValue = useRef<HTMLInputElement>(null);
+
+  const handleTitle = ()=> {
+    if(titleValue.current){
+      setTitle(titleValue.current.value)
+    }
+    return
+  }
+
+
+  const handlePrice = ()=> {
+    if(priceValue.current){
+      setPrice(priceValue.current.value)
+    }
+    return
+  }
+
+
+  const handleData = () => {
+    data ={
+      title,
+      price
+    }
+
+    setData({...data});
+    console.log(data);
+    
+  }
+
+
+
   return (
     <>
 
@@ -20,16 +56,16 @@ function page() {
 
         <div className="grid w-full max-w-sm items-center gap-1.5 mt-8">
       <Label htmlFor="text" className="font-semibold text-md"> Title</Label>
-      <Input type="text" placeholder="e.g: Cupboard Cleaning" className="h-[50px] border-[#4BB1D3] " id="title" />
+      <Input type="text" placeholder="e.g: Cupboard Cleaning" className="h-[50px] border-[#4BB1D3] " id="title" ref={titleValue} onChange={handleTitle} />
     </div>
 
     <div className="grid w-full max-w-sm items-center gap-1.5 mt-4">
       <Label htmlFor="text" className="font-semibold text-md">Price</Label>
-      <Input type="number" className="h-[50px] border-[#4BB1D3] " id="number" />
+      <Input type="number" className="h-[50px] border-[#4BB1D3] " id="number" ref={priceValue} onChange={handlePrice} />
     </div>
         <div className="mt-6">
     <Link href="/additionalServices">
-          <Button className="border-[#4BB1D3] w-full h-[40px] mt-5 text-white bg-[#00BFFF] rounded-lg outline-none hover:bg-[#00A0E0] transition duration-200 ease-in-out sm:w-[100px] sm:h-[45px]">
+          <Button onClick={handleData} className="border-[#4BB1D3] w-full h-[40px] mt-5 text-white bg-[#00BFFF] rounded-lg outline-none hover:bg-[#00A0E0] transition duration-200 ease-in-out sm:w-[100px] sm:h-[45px]">
             <span>Add</span>
           </Button>
     </Link>

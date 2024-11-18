@@ -1,11 +1,49 @@
-import { InputWithLabel } from "@/app/components/categoriesComponents/addCategoryPage/NameField";
+'use client'
+
 import UploadButton from "@/app/components/categoriesComponents/addCategoryPage/UploadBtn";
-import React from "react";
+import React, { useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+
 
 
 
 function page() {
+
+  
+
+  const [input , setInput]= useState("");
+  let [data , setData] = useState({});
+
+  const inputVal = useRef<HTMLInputElement>(null);
+
+  const handleDescription =() => {
+    if(inputVal.current){
+      setInput(inputVal.current.value);
+      return
+      
+    }
+  }
+
+
+  const handleData = () => {
+   data = {
+    "name": input,
+   }
+
+   setData({...data});
+
+   console.log(data);
+   
+    
+
+  }
+
+  
+
+  
+
   return (
     <>
 
@@ -17,7 +55,10 @@ function page() {
         <h1 className="text-2xl font-bold mb-4">Add Category</h1>
 
         <div className="mt-8">
-          <InputWithLabel />
+        <div className="grid w-full max-w-sm items-center gap-1.5">
+      <Label htmlFor="text" className="font-semibold text-md">Name</Label>
+      <Input type="text" className="h-[50px] border-[#4BB1D3] " id="name" ref={inputVal} onChange={handleDescription} />
+    </div>
         </div>
 
         <div className="mt-8">
@@ -28,7 +69,7 @@ function page() {
         </div>
 
         <div className="mt-6">
-          <Button className="border-[#4BB1D3] w-full h-[40px] mt-5 text-white bg-[#00BFFF] rounded-lg outline-none hover:bg-[#00A0E0] transition duration-200 ease-in-out sm:w-[100px] sm:h-[45px]">
+          <Button onClick={handleData} className="border-[#4BB1D3] w-full h-[40px] mt-5 text-white bg-[#00BFFF] rounded-lg outline-none hover:bg-[#00A0E0] transition duration-200 ease-in-out sm:w-[100px] sm:h-[45px]">
             <span>Save</span>
           </Button>
         </div>

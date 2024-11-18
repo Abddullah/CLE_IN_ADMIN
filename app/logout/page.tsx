@@ -105,6 +105,7 @@ function page() {
 
   return (
     <>
+    <div className="bg-[#F5F7FA] min-h-screen w-full ">
       
           <div className="flex items-center justify-center space-x-4 flex-col h-[60vh]">
             <p className="text-2xl sm:text-3xl font-semibold text-center">
@@ -124,6 +125,8 @@ function page() {
                 No
               </button>
             </div>
+          </div>
+
           </div>
       
       

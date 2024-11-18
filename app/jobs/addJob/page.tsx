@@ -11,7 +11,7 @@ import office from "../../../assets/servicesIcons/office.svg";
 import hospital from "../../../assets/servicesIcons/hospital.svg";
 import factory from "../../../assets/servicesIcons/factory.svg";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import map from "../../../assets/bookingsIcon/map.svg";
 import {
   Select,
@@ -22,8 +22,19 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useRouter } from "next/navigation";
 
 function page() {
+  interface Props {
+    provider: string;
+    category: string;
+    subCategory: string;
+    selectedHour: any;
+    roomSize: string;
+    noOfRooms: string;
+    selectedOption: string;
+    AdditionalServices: string[];
+  }
   const [selectedCategory, setSelectedCategory] = useState<string>("");
   const [subCategories, setSubCategories] = useState<string[]>([]);
   const [category, setCategory] = useState("");
@@ -31,10 +42,18 @@ function page() {
   const [provider, setProvider] = useState("");
   const [roomSize, setRoomSize] = useState("");
   const [noOfRooms, setNoOfRooms] = useState("");
-  const [formData, setFormData] = useState({});
+  let [formData, setFormData] = useState<Props | any>({});
   const [selectedHour, setSelectedHour] = useState(null);
   const [selectedProfessionals, setSelectedProfessionals] = useState(null);
   const [selectedOption, setSelectedOption] = useState(null);
+
+
+
+  const router = useRouter()
+  
+
+  // const router = useRouter();
+  
 
   const categories: { [key: string]: string[] } = {
     "Cleaning and Hygiene Services": [
@@ -100,7 +119,6 @@ function page() {
 
   const [selectedServices, setSelectedServices] = useState<string[]>([]);
 
-  // List of services
   const services: string[] = [
     "Oven",
     "Laundry",
@@ -114,22 +132,40 @@ function page() {
     selectedServices.includes(service)
       ? setSelectedServices(selectedServices.filter((item) => item !== service))
       : setSelectedServices([...selectedServices, service]);
-   
   };
 
   const nextBtn = () => {
-    (!category || !subCategory || !provider || !selectedHour || !roomSize || !noOfRooms || !selectedOption) ? alert('Please fill all the fields') :  setFormData({
-      provider,
-      category,
-      subCategory,
-      selectedHour,
-      roomSize,
-      noOfRooms,
-      selectedOption,
-      AdditionalServices:selectedServices
+    if (
+      !provider ||
+      !category ||
+      !subCategory ||
+      !selectedHour ||
+      !selectedProfessionals ||
+      !selectedOption ||
+      !selectedServices.length
+    ) {
+      alert("Please fill all fields");
+    } else {
+      formData = {
+        provider,
+        category,
+        subCategory,
+        selectedHour,
+        roomSize,
+        noOfRooms,
+        selectedOption,
+        AdditionalServices: selectedServices,
+      };
+
+      setFormData({ ...formData });
+
+      alert("Data submitted Sucessfully");
+
+      console.log(formData);
+
+      router.push("/jobs/location")
       
-    })
-    console.log(formData);
+    }
   };
 
   return (
@@ -139,7 +175,7 @@ function page() {
           <h1 className="text-2xl font-bold mt-2">Add Jobs</h1>
           <div className="grid w-full items-center gap-1.5 mt-6">
             <Select required onValueChange={handleProvider} value={provider}>
-              <SelectTrigger className="w-full h-[55px] rounded-lg border border-[#4BB1D3] bg-gray-50 mt-1 pr-6 outline-[#4BB1D3] focus:border-[#4BB1D3] focus:outline-none focus:border-none">
+              <SelectTrigger className="w-full h-[55px] rounded-lg border border-[#4BB1D3] bg-gray-50 mt-1 pr-6 outline-[#4BB1D3] focus:border-[#4BB1D3] focus:outline-none focus:border-none ">
                 <SelectValue placeholder="Select Provider Name" />
               </SelectTrigger>
               <SelectContent>
@@ -212,7 +248,7 @@ function page() {
               onValueChange={handleCategoryChange}
               value={selectedCategory}
             >
-              <SelectTrigger className="w-full h-[50px] rounded-lg border p-2 border-[#4BB1D3] bg-gray-50 outline-[#4BB1D3] focus:border-blue-500 focus:outline-none">
+              <SelectTrigger className="w-full h-[55px] rounded-lg border pr-6 p-4 border-[#4BB1D3] mt-1 bg-gray-50 outline-[#4BB1D3] focus:border-blue-500 focus:outline-none">
                 <SelectValue placeholder="Select Category" />
               </SelectTrigger>
               <SelectContent>
@@ -237,7 +273,7 @@ function page() {
                   value={subCategory}
                   onValueChange={handleSubCategory}
                 >
-                  <SelectTrigger className="w-full h-[50px] rounded-lg border p-2 border-[#4BB1D3] bg-gray-50 outline-[#4BB1D3] focus:border-blue-500 focus:outline-none">
+                  <SelectTrigger className="w-full h-[55px] rounded-lg border pr-6 p-4 mt-1 border-[#4BB1D3] bg-gray-50 outline-[#4BB1D3] focus:border-blue-500 focus:outline-none">
                     <SelectValue placeholder="Select Subcategory" />
                   </SelectTrigger>
                   <SelectContent>
@@ -255,6 +291,9 @@ function page() {
             )}
           </div>
 
+
+
+
           <div className="grid w-full items-center gap-1.5 mt-6">
             <label className="text-md font-semibold" htmlFor="Room Area Size">
               Room Area Size
@@ -269,7 +308,7 @@ function page() {
                   <SelectLabel>Room Area Size</SelectLabel>
                   <SelectItem value="Haider Ali">Less than 50 m2</SelectItem>
                   <SelectItem value="101 - 150 m2">101 - 150 m2</SelectItem>
-                  <SelectItem value="101 - 150 m2">101 - 150 m2</SelectItem>
+
                   <SelectItem value="151 - 200 m2">151 - 200 m2</SelectItem>
                   <SelectItem value="Over 200 m2">Over 200 m2</SelectItem>
                 </SelectGroup>
@@ -420,12 +459,16 @@ function page() {
           </div>
 
           <div className="mt-8 flex justify-center items-center">
+            
             <Button
-              onClick={nextBtn}
+              onClick={() => {
+                nextBtn();
+              }}
               className="w-[250px] mb-4 mt-6 h-[45px] text-white bg-[#00BFFF] rounded-lg outline-none hover:bg-[#00A0E0] transition duration-200 ease-in-out"
-            >
+              >
               <span>Next</span>
             </Button>
+            
           </div>
         </div>
       </div>
@@ -434,32 +477,3 @@ function page() {
 }
 
 export default page;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
