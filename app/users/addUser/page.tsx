@@ -4,6 +4,15 @@ import React, { useRef, useState , useEffect} from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 
 
@@ -16,7 +25,7 @@ function page() {
 
   const nameValue = useRef<HTMLInputElement>(null);
   const emailValue = useRef<HTMLInputElement>(null);
-  const roleValue = useRef<HTMLInputElement>(null);
+  
   
 
   const handleUserName =() => {
@@ -33,12 +42,10 @@ function page() {
     }
   }
 
-  const handleRole =() => {
-    if(roleValue.current){
-      setRole(roleValue.current.value)
-      return
-    }
-  }
+  const handleRole = (value: string) => {
+    setRole(value);
+  };
+
 
 const handleData = ()=> {
 
@@ -74,7 +81,7 @@ const handleData = ()=> {
               Name
             </Label>
             <Input
-              type="text"
+              type="text" placeholder="Username"
               className="h-[50px] rounded-lg border-[#4BB1D3] focus:border-blue-500 focus:outline-none"
               id="Name" ref={nameValue} onChange={handleUserName}
             />
@@ -86,6 +93,7 @@ const handleData = ()=> {
             </Label>
             <Input
               type="email"
+              placeholder="Email Address "
               className="h-[50px] rounded-lg border-[#4BB1D3] focus:border-blue-500 focus:outline-none"
               id="email" ref={emailValue} onChange={handleEmail}
             />
@@ -97,6 +105,7 @@ const handleData = ()=> {
             </Label>
             <Input
               type="password"
+              placeholder="Password"
               className="h-[50px] rounded-lg border-[#4BB1D3] focus:border-blue-500 focus:outline-none"
               id="password"
             />
@@ -108,6 +117,7 @@ const handleData = ()=> {
             </Label>
             <Input
               type="password"
+              placeholder="Confirm Password"
               className="h-[50px] rounded-lg border-[#4BB1D3] focus:border-blue-500 focus:outline-none"
               id="confirmPassword"
             />
@@ -117,11 +127,24 @@ const handleData = ()=> {
             <Label className="text-md font-semibold" htmlFor="role">
               Role
             </Label>
-            <Input
+            {/* <Input
               type="text"
               className="h-[50px] rounded-lg border-[#4BB1D3] focus:border-blue-500 focus:outline-none"
               id="role" ref={roleValue} onChange={handleRole}
-            />
+            /> */}
+
+<Select required onValueChange={handleRole} value={role}  >
+              <SelectTrigger className="w-full h-[55px] rounded-lg border border-[#4BB1D3] bg-gray-50 mt-1 pr-6 outline-[#4BB1D3] focus:border-[#4BB1D3] focus:outline-none focus:border-none">
+                <SelectValue placeholder="Please Select Role" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectItem value="User">User</SelectItem>
+                  <SelectItem value="Provider">Provider</SelectItem>
+                  
+                </SelectGroup>
+              </SelectContent>
+            </Select>
           </div>
 
           <div className="mt-6">

@@ -37,14 +37,12 @@ const AdditionalServices = () => {
       </Link>
 
       <div className="container mx-auto px-4 py-8">
-        <h2 className="text-3xl font-bold text-center text-gray-800 mb-8">
-          Additional Services
-        </h2>
+        
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-6">
           {services.map((service, index) => (
             <div
               key={index}
-              className="relative bg-white p-6 rounded-xl border border-gray-300 shadow-lg hover:shadow-xl transform transition-all duration-300 hover:scale-105"
+              className="relative bg-white p-6 rounded-xl border border-gray-300 shadow-lg hover:shadow-xl transform transition-all duration-300 hover:scale-104 cursor-pointer"
             >
               <div className="absolute top-4 right-4">
                 <button
@@ -88,11 +86,7 @@ const AdditionalServices = () => {
                 Price: {service.price}
               </p>
 
-              <div className="mt-4">
-                <button className="w-full py-2 px-4 bg-[#4BB1D3] text-white rounded-lg hover:bg-[#59ccf2] transition-colors">
-                  Add Service
-                </button>
-              </div>
+            
             </div>
           ))}
         </div>

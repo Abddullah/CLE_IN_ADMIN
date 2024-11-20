@@ -30,7 +30,7 @@ function page() {
           </button>
         </div>
 
-        <div className="flex flex-wrap justify-center lg:justify-start gap-12 w-full px-4 sm:px-8 md:px-14 lg:px-10 mt-4 z-5">
+        <div className="flex flex-wrap justify-center lg:justify-start gap-12 w-full px-4 sm:px-8 md:px-14 lg:px-10 mt-4">
           <div className="w-[310px]">
             <Card
               price="€34/hr"

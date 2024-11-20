@@ -38,7 +38,7 @@ const Navbar = () => {
   }, []);
 
   const path = usePathname();
-  const hidePath = ["/login"];
+  const hidePath = ["/"];
 
   if (hidePath.includes(path)) {
     return null;
@@ -61,7 +61,7 @@ const Navbar = () => {
       setPathName("Users");
     } else if(path.includes('/logout')){
       setPathName('Settings')
-    }else if (path === '/'){
+    }else if (path.includes('/dashboard')){
       setPathName('Dashboard')
     }else if(path.includes('additionalServices') ){
       setPathName('Additional Services')

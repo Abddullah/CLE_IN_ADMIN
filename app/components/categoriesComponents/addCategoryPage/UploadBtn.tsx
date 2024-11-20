@@ -17,7 +17,7 @@ const UploadButton: React.FC = () => {
       <input type="file" id="file-input" className="hidden" accept="image/*" />
       <button
         onClick={handleFileInputClick}
-        className="flex items-center justify-center p-3 border border-blue-400 rounded-lg hover:bg-gray-100 transition"
+        className="flex items-start justify-start p-3 border border-blue-400 rounded-lg hover:bg-gray-100 transition"
       >
         <Image className="w-6 h-6 mr-3" src="/assets/categoriesIcons/upload-icon.svg" width={10} height={10} alt="upload icon" />
         <span className="mt-1">Choose a File</span>

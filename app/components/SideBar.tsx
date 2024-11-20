@@ -52,7 +52,7 @@ const Sidebar = () => {
 
   const path = usePathname();
 
-  const hidePath = ["/login"];
+  const hidePath = ["/"];
 
   if (hidePath.includes(path)) {
     return null;
@@ -75,13 +75,12 @@ const Sidebar = () => {
       setPathName("/logout");
     } else if (path.includes("additionalServices")) {
       setPathName("/additionalServices");
-    } else if (path === "/") {
-      setPathName("/");
+    } else if (path.includes("dashboard")) {
+      setPathName("dashboard");
     } else {
       setPathName("");
     }
   }, [path]);
-  
 
   return (
     <div className="flex relative h-screen">
@@ -103,7 +102,7 @@ const Sidebar = () => {
           isOpen ? "translate-x-0" : "-translate-x-full"
         } md:translate-x-0 fixed md:relative z-20 top-0`}
       >
-        <Link href={"/"}>
+        <Link href={"dashboard"}>
           <div className="flex items-center p-4 ml-1 mb-5 mt-1 ">
             <Image
               src="/assets/Logo.png"
@@ -118,9 +117,9 @@ const Sidebar = () => {
           </div>
         </Link>
         <nav className="mt-4 ml-7">
-          <ul className="space-y-2 mr-2">
+          <ul className="space-y-2 mr-3">
             {[
-              { icon: faHome, label: "Dashboard", link: "/" },
+              { icon: faHome, label: "Dashboard", link: "dashboard" },
               { icon: faList, label: "Categories", link: "/categories" },
               { icon: faUser, label: "Users", link: "/users" },
               { icon: faCalendarAlt, label: "Bookings", link: "/bookings" },
@@ -149,7 +148,7 @@ const Sidebar = () => {
                     />
 
                     <span
-                      className={`mr-2  ${
+                      className={`mr-2 flex items-center gap-2   ${
                         pathName === link ? "text-[#00BFFF] " : "text-gray-400"
                       }`}
                     >
@@ -161,6 +160,11 @@ const Sidebar = () => {
             ))}
           </ul>
         </nav>
+
+
+
+
+
 
         <div className="absolute bottom-4 left-0 w-full px-9">
           <button className="flex items-center w-full p-2 hover:bg-red-100 rounded cursor-pointer">
@@ -189,9 +193,3 @@ const Sidebar = () => {
 };
 
 export default Sidebar;
-
-
-
-
-
-

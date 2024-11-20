@@ -10,7 +10,6 @@ import {
   faEdit,
   faTrashAlt,
 } from "@fortawesome/free-solid-svg-icons";
-import JobCard from "../jobsComponent/JobsCard";
 
 interface CardProps {
   imageUrl: string;
@@ -24,7 +23,7 @@ interface CardProps {
   deleteIcon: string;
 }
 
-const Card: React.FC<CardProps> = ({
+const JobCard: React.FC<CardProps> = ({
   imageUrl,
   title,
   price,
@@ -38,18 +37,13 @@ const Card: React.FC<CardProps> = ({
   const [isVisible, setIsVisible] = useState(false);
   const path = usePathname();
   console.log(path);
-  
 
   const handleClose = () => setIsVisible(false);
   const handleOpen = () => setIsVisible(true);
 
   const [showOptions, setShowOptions] = useState(false);
   const [editDelete, SetEditDelete] = useState(false);
-  const [customerInfo , setCustomerInfo] = useState(false);
-  
-
-  
-
+  const [customerInfo, setCustomerInfo] = useState(false);
 
   const bookingData = {
     name: "John Doe",
@@ -86,7 +80,6 @@ const Card: React.FC<CardProps> = ({
             <div className="flex justify-between items-center">
               <h2 className="text-md font-semibold text-[#00BFFF]">{price}</h2>
 
-              
               <Image
                 src={dotsIcon}
                 alt="options"
@@ -99,8 +92,7 @@ const Card: React.FC<CardProps> = ({
                 }}
               />
 
-              
-{showOptions && (
+              {showOptions && (
                 <div className="w-36 bg-white border border-gray-200 rounded-lg shadow-md z-10">
                   <button
                     className="flex items-center w-full p-2 hover:bg-gray-100"
@@ -136,7 +128,6 @@ const Card: React.FC<CardProps> = ({
                   </button>
                 </div>
               )}
-
             </div>
 
             <h2 className="text-md font-semibold text-gray-800">{title}</h2>
@@ -147,12 +138,17 @@ const Card: React.FC<CardProps> = ({
         </div>
       </div>
 
-      {isVisible  && (
+      {isVisible && (
         <div className="fixed inset-0 flex justify-center items-center bg-gray-900 bg-opacity-50">
           <div className="w-full max-w-4xl sm:max-w-xl mx-auto bg-white rounded-lg shadow-lg p-6 relative max-h-[95vh] overflow-auto">
             <div className="flex justify-end">
               <button onClick={handleClose}>
-                <Image src="/assets/bookingsIcon/closeIcon.svg" alt="Close" width={16} height={16} />
+                <Image
+                  src="/assets/bookingsIcon/closeIcon.svg"
+                  alt="Close"
+                  width={16}
+                  height={16}
+                />
               </button>
             </div>
 
@@ -176,43 +172,11 @@ const Card: React.FC<CardProps> = ({
                 {bookingData.description}
               </p>
 
-              <div className="max-w-full w-full bg-white shadow-lg rounded-lg p-6 mt-4 border border-gray-200">
+              <div className="max-w-full w-full bg-white  rounded-lg p-1 mt-4 ">
                 {/* Price */}
-                <div className="flex justify-between items-center py-2 border-b">
+                <div className="flex justify-between items-center py-2 ">
                   <span className="text-gray-600">Price</span>
                   <span className="text-gray-800 font-medium">€ 200/hr</span>
-                </div>
-
-                {/* Cleaners */}
-                <div className="flex justify-between items-center py-2 border-b">
-                  <span className="text-gray-600">Cleaners</span>
-                  <span className="text-gray-800 font-medium">2</span>
-                </div>
-
-                {/* Work Frequency */}
-                <div className="flex justify-between items-center py-2 border-b">
-                  <span className="text-gray-600">Work Frequency</span>
-                  <span className="text-gray-800 font-medium">Weekly</span>
-                </div>
-
-                {/* Room Area Size */}
-                <div className="flex justify-between items-center py-2 border-b">
-                  <span className="text-gray-600">Room Area Size</span>
-                  <span className="text-gray-800 font-medium">51-100m2</span>
-                </div>
-
-                {/* Number of Rooms */}
-                <div className="flex justify-between items-center py-2 border-b">
-                  <span className="text-gray-600">Number of Rooms</span>
-                  <span className="text-gray-800 font-medium">3 Rooms</span>
-                </div>
-
-                {/* Need Cleaning Material */}
-                <div className="flex justify-between items-center py-2">
-                  <span className="text-gray-600">
-                    Need Cleaning Materials?
-                  </span>
-                  <span className="text-gray-800 font-medium">Yes Please</span>
                 </div>
               </div>
 
@@ -247,106 +211,75 @@ const Card: React.FC<CardProps> = ({
                 />
               </div>
 
-              
-                <div onClick={() => {setCustomerInfo(!customerInfo)}} className="flex items-center mt-6">
-                  {/* Info Button */}
-                  <button 
-                    className="flex items-center justify-center w-5 h-5 bg-blue-600 text-white rounded-full shadow-lg transition-all duration-300 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                    aria-label="Customer Info"
-                  >
-                    <span className="text-xl font-bold">i</span>
-                  </button>
-                  {/* Info Text */}
-                  <p className="ml-2 text-gray-700 cursor-pointer text-sm font-medium hover:text-blue-600 transition-all duration-300">
-                    Customer info
-                  </p>
+              <div
+                onClick={() => {
+                  setCustomerInfo(!customerInfo);
+                }}
+                className="flex items-center mt-6"
+              >
+                {/* Info Button */}
+                <button
+                  className="flex items-center justify-center w-5 h-5 bg-blue-600 text-white rounded-full shadow-lg transition-all duration-300 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                  aria-label="Customer Info"
+                >
+                  <span className="text-xl font-bold">i</span>
+                </button>
+                {/* Info Text */}
+                <p className="ml-2 text-gray-700 cursor-pointer text-sm font-medium hover:text-blue-600 transition-all duration-300">
+                  Service Provider info
+                </p>
+              </div>
+
+              {customerInfo && (
+                <div className="max-w-full w-full bg-white shadow-lg rounded-lg overflow-hidden border border-gray-300">
+                  <div className="px-6 py-4 border-b bg-[#00BFFF] text-white">
+                    <h2 className="text-lg font-bold">Customer Information</h2>
+                  </div>
+                  <div className="p-6 space-y-4">
+                    <div>
+                      <h3 className="text-sm font-bold text-gray-500">
+                        Full Name
+                      </h3>
+                      <p className="text-gray-700">Kam David</p>
+                    </div>
+                    <div>
+                      <h3 className="text-sm font-bold text-gray-500">
+                        Phone No
+                      </h3>
+                      <p className="text-gray-700">0987654321</p>
+                    </div>
+                    <div>
+                      <h3 className="text-sm font-bold text-gray-500">
+                        Email Address
+                      </h3>
+                      <p className="text-gray-700">kamdavid@gmail.com</p>
+                    </div>
+                    <div>
+                      <h3 className="text-sm font-bold text-gray-500">
+                        Date of Birth
+                      </h3>
+                      <p className="text-gray-700">11/07/2024</p>
+                    </div>
+                    <div>
+                      <h3 className="text-sm font-bold text-gray-500">
+                        Gender
+                      </h3>
+                      <p className="text-gray-700">Male</p>
+                    </div>
+
+                    <div>
+                      <h3 className="text-sm font-bold text-gray-500">
+                        Address
+                      </h3>
+                      <p className="text-gray-700">
+                        3.W estern Avenue, New York, USA
+                      </p>
+                    </div>
+                  </div>
                 </div>
-              
+              )}
 
-     {
-      customerInfo &&(
-        <div className="max-w-full w-full bg-white shadow-lg rounded-lg overflow-hidden border border-gray-300">
-        <div className="px-6 py-4 border-b bg-[#00BFFF] text-white">
-          <h2 className="text-lg font-bold">Customer Information</h2>
-        </div>
-        <div className="p-6 space-y-4">
-          <div>
-            <h3 className="text-sm font-bold text-gray-500">Full Name</h3>
-            <p className="text-gray-700">Kam David</p>
-          </div>
-          <div>
-            <h3 className="text-sm font-bold text-gray-500">Phone No</h3>
-            <p className="text-gray-700">0987654321</p>
-          </div>
-          <div>
-            <h3 className="text-sm font-bold text-gray-500">Email Address</h3>
-            <p className="text-gray-700">kamdavid@gmail.com</p>
-          </div>
-          <div>
-            <h3 className="text-sm font-bold text-gray-500">Date of Birth</h3>
-            <p className="text-gray-700">11/07/2024</p>
-          </div>
-          <div>
-            <h3 className="text-sm font-bold text-gray-500">Gender</h3>
-            <p className="text-gray-700">Male</p>
-          </div>
-          <div>
-            <h3 className="text-sm font-bold text-gray-500">Service</h3>
-            <p className="text-gray-700">Cleaning at Home</p>
-          </div>
-          <div>
-            <h3 className="text-sm font-bold text-gray-500">Description</h3>
-            <p className="text-gray-700">This is a text description</p>
-          </div>
-          <div>
-            <h3 className="text-sm font-bold text-gray-500">Cleaners</h3>
-            <p className="text-gray-700">3</p>
-          </div>
-          <div>
-            <h3 className="text-sm font-bold text-gray-500">Work Frequency</h3>
-            <p className="text-gray-700">Weekly</p>
-          </div>
-          <div>
-            <h3 className="text-sm font-bold text-gray-500">Room Area Size</h3>
-            <p className="text-gray-700">51 - 100 m2</p>
-          </div>
-          <div>
-            <h3 className="text-sm font-bold text-gray-500">Number of Rooms</h3>
-            <p className="text-gray-700">1 Room</p>
-          </div>
-          <div>
-            <h3 className="text-sm font-bold text-gray-500">Needs Cleaning Materials?</h3>
-            <p className="text-gray-700">Yes Please</p>
-          </div>
-          <div>
-            <h3 className="text-sm font-bold text-gray-500">Price</h3>
-            <p className="text-gray-700">€ 30/hr</p>
-          </div>
-          <div>
-            <h3 className="text-sm font-bold text-gray-500">Selected Date</h3>
-            <p className="text-gray-700">8, Jan, 2024</p>
-          </div>
-          <div>
-            <h3 className="text-sm font-bold text-gray-500">Selected Time</h3>
-            <p className="text-gray-700">10:00 AM - 12:00 PM</p>
-          </div>
-          <div>
-            <h3 className="text-sm font-bold text-gray-500">Selected Location</h3>
-            <p className="text-gray-700">Jameria Residence</p>
-          </div>
-          
-        </div>
-       
-      </div>
-
-      
-      )
-     }
-   
-
-     
-      
- 
+              {/* </div> */}
 
               <div className="mt-6">
                 <h4 className="text-lg font-semibold text-gray-800 mb-4">
@@ -357,7 +290,7 @@ const Card: React.FC<CardProps> = ({
                     <div className="flex items-center mb-2">
                       <div className="flex-shrink-0 w-10 h-10 bg-gray-200 rounded-full overflow-hidden mr-3">
                         <Image
-                          src="/assets/servicesIcons/profile2.svg" 
+                          src="/assets/servicesIcons/profile2.svg"
                           alt="Alex Smith"
                           width={40}
                           height={40}
@@ -424,17 +357,15 @@ const Card: React.FC<CardProps> = ({
 
               <div className="flex mt-6 justify-center">
                 <button className="px-6 py-2 border-2 w-[250px] rounded-md max-w-xs border-[#00BFFF] text-[#00BFFF] hover:bg-[#00BFFF] hover:text-white transition mt-3">
-                  Apply
+                  Book
                 </button>
               </div>
             </div>
           </div>
         </div>
       )}
-
-      
     </>
   );
 };
 
-export default Card;
+export default JobCard;

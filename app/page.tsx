@@ -1,76 +1,77 @@
 import React from "react";
-import BookingCard from "./components/Cards";
-import {
-  faUser,
-  faEnvelope,
-  faMoneyBill,
-} from "@fortawesome/free-solid-svg-icons";
-import { Component } from "./components/IncomeBarChart";
-import { ComponentAreaChart } from "./components/BookingAreaChart";
+import Image from "next/image";
+import Link from "next/link";
 
-
-
-const page = () => {
+export default function Login() {
   return (
-    <>
-    
-     <div className="bg-white m-4 p-1 flex flex-wrap justify-start gap-4 mt-6 my-2 ">
-        <div className="mt-1 w-full sm:w-[48%] lg:w-[28%] xl:w-[20%]">
-          <BookingCard
-            title="Total Booking"
-            totalBookings={10}
-            icons={faEnvelope}
-            bgColor="bg-[#C8E7F8]"
-          />
-        </div>
-        <div className="mt-1 w-full sm:w-[48%] lg:w-[28%] xl:w-[20%]">
-          <BookingCard
-            title="Total Income"
-            totalBookings={18}
-            icons={faMoneyBill}
-            bgColor="bg-[#BBD4E2]"
-          />
-        </div>
-        <div className="mt-1 w-full sm:w-[48%] lg:w-[28%] xl:w-[20%] ">
-          <BookingCard
-            title="Total Users"
-            totalBookings={18}
-            icons={faUser}
-            bgColor="bg-[#C8E7F8]"
-          />
-        </div>
-        <div className="mt-1 w-full sm:w-[48%] lg:w-[28%] xl:w-[20%]">
-          <BookingCard
-            title="Total Provider"
-            totalBookings={18}
-            icons={faUser}
-            bgColor="bg-[#BBD4E2]"
-          />
-        </div>
-      </div>
+    <div className="flex items-center justify-center min-h-screen px-4 sm:px-0">
+      <div className="absolute inset-0 bg-opacity-50 z-0"></div>
 
-      <div className="bg-white m-4 p-1 flex flex-col gap-3 mt-16 my-4 h-[315px]">
-        <p className="text-2xl font-semibold text-left md:text-3xl lg:text-2xl">
-          Total Income
+      <div className="relative w-full max-w-md p-8 space-y-6 bg-white bg-opacity-90 rounded-3xl shadow-2xl z-10 border-2 border-[#00BFFF] sm:p-10">
+        <div className="flex items-center justify-center mb-6">
+          <Image
+            src="/assets/Logo.png"
+            alt="Company Logo"
+            width={70}
+            height={70}
+            className="object-contain"
+          />
+        </div>
+
+        <h2 className="text-2xl sm:text-3xl font-extrabold text-center text-gray-800">
+          Admin Login
+        </h2>
+        <p className="text-center text-gray-600">
+          Please Enter Your Credentials
         </p>
 
-        <Component />
-      </div>
+        <form className="space-y-6">
+          <div className="flex flex-col space-y-1">
+            <label className="text-sm font-medium text-gray-700">
+              Email Address
+            </label>
+            <input
+              type="email"
+              className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#00BFFF] transition duration-300"
+              placeholder="Enter your email"
+              required
+            />
+          </div>
 
-      <div className="bg-white m-4 p-1 flex flex-col gap-3 mt-1 my-4">
-        <p className="text-2xl font-semibold text-left md:text-3xl lg:text-2xl">
-          Total Booking
-        </p>
-        <div>
-          <ComponentAreaChart />
-        </div>
+          <div className="flex flex-col space-y-1">
+            <label className="text-sm font-medium text-gray-700">
+              Password
+            </label>
+            <input
+              type="password"
+              className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#00BFFF] transition duration-300"
+              placeholder="Enter your password"
+              required
+            />
+          </div>
+          <button
+            type="submit"
+            className="w-full py-3 text-white bg-[#00BFFF] rounded-lg shadow-lg hover:bg-[#00A4D3] focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-100 transform hover:scale-100 font-semibold"
+            >
+          <Link href={"/dashboard"}>
+            Log In
+            </Link>
+          </button>
+        </form>
       </div>
-   
-    
-      
-      
-    </>
+    </div>
   );
-};
+}
 
-export default page;
+
+
+
+
+
+
+
+
+
+
+
+

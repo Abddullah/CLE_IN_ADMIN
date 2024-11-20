@@ -141,7 +141,7 @@ export default function BookingCard({ name }: ProfileButtonProps) {
 
               <div className="mt-6">
                 <div className="w-full h-[80px] sm:h-[110px] bg-gray-300 mt-2 rounded-lg">
-                  <Image src="/assets/bookingsIcon/map.svg" alt="map" />
+                  <Image src="/assets/bookingsIcon/map.svg" alt="map" width={1000} height={1000} />
                 </div>
               </div>
 
