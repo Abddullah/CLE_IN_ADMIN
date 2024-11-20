@@ -1,7 +1,5 @@
 import Image from "next/image";
 import React from "react";
-import map from "../../../assets/bookingsIcon/map.svg";
-import serviceImage from "../../../assets/bookingsIcon/room.svg";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
@@ -14,7 +12,7 @@ function page() {
             <h1 className="text-xl font-semibold">Review & Confirm Service</h1>
 
             <div className="mt-6">
-              <Image src={serviceImage} alt="image" width={300} height={300} />
+              <Image src="/assets/bookingsIcon/room.svg" alt="image" width={300} height={300} />
             </div>
 
             <div>
@@ -88,7 +86,7 @@ function page() {
 
             <div className="mt-6">
               <p className="text-xl">Location</p>
-              <Image className="mt-4" src={map} alt="map" />
+              <Image className="mt-4" src="/assets/bookingsIcon/map.svg" alt="map" width={1000} height={800} />
 
               <Link href={"/services/customerInfo"}>
                 <div className="flex items-center mt-6">

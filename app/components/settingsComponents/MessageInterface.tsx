@@ -3,56 +3,55 @@
 import Image from "next/image";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
-import userProfile from "../../../assets/settingsIcons/userProfile.svg";
 import Link from "next/link";
 
 const ChatInterface = () => {
   const users = [
     {
       name: "John Doe",
-      profilePic: userProfile,
+      profilePic: "/assets/settingsIcons/userProfile.svg",
       message: "Hey, how are you doing?",
       time: "10:30 AM",
     },
     {
       name: "Jane Smith",
-      profilePic: userProfile,
+      profilePic: "/assets/settingsIcons/userProfile.svg",
       message: "I will send the report by 5 PM.",
       time: "11:00 AM",
     },
     {
       name: "Alice Johnson",
-      profilePic: userProfile,
+      profilePic: "/assets/settingsIcons/userProfile.svg",
       message: "Looking forward to our meeting!",
       time: "11:15 AM",
     },
     {
       name: "Bob Lee",
-      profilePic: userProfile,
+      profilePic: "/assets/settingsIcons/userProfile.svg",
       message: "Got it, thanks for the update!",
       time: "12:00 PM",
     },
     {
       name: "Charlie Brown",
-      profilePic: userProfile,
+      profilePic: "/assets/settingsIcons/userProfile.svg",
       message: "Can you send me the files?",
       time: "12:30 PM",
     },
     {
       name: "Eva Green",
-      profilePic: userProfile,
+      profilePic: "/assets/settingsIcons/userProfile.svg",
       message: "Let's catch up later!",
       time: "1:00 PM",
     },
     {
       name: "David Blue",
-      profilePic: userProfile,
+      profilePic: "/assets/settingsIcons/userProfile.svg",
       message: "On my way to the meeting.",
       time: "1:45 PM",
     },
     {
       name: "Olivia White",
-      profilePic: userProfile,
+      profilePic: "/assets/settingsIcons/userProfile.svg",
       message: "Please check your inbox.",
       time: "2:00 PM",
     },

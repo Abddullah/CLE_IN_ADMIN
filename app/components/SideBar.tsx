@@ -106,7 +106,7 @@ const Sidebar = () => {
         <Link href={"/"}>
           <div className="flex items-center p-4 ml-1 mb-5 mt-1 ">
             <Image
-              src={logo}
+              src="/assets/Logo.png"
               alt="Logo"
               width={38}
               height={388}

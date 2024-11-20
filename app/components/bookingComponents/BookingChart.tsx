@@ -234,7 +234,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import Image from "next/image";
-import clockIcon from "../../../assets/bookingsIcon/clock.svg";
 import BookingCard from "./UserDetails";
 
 const timeSlots = [
@@ -273,7 +272,7 @@ export function BookingTable() {
               className="transition-all duration-300 hover:bg-gray-50 border-b border-gray-200"
             >
               <TableCell className="flex items-center gap-4 text-sm text-gray-700 py-3">
-                <Image src={clockIcon} alt="Clock Icon" width={24} height={24} />
+                <Image src="/assets/bookingsIcon/clock.svg" alt="Clock Icon" width={24} height={24} />
                 <span>{slot}</span>
               </TableCell>
 

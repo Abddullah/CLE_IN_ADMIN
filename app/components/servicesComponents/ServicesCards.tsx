@@ -2,12 +2,6 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
-import closeIcon from "../../../assets/bookingsIcon/closeIcon.svg";
-import bookingImage from "../../../assets/bookingsIcon/room.svg";
-
-import profile2 from "../../../assets/servicesIcons/profile2.svg";
-
-import map from "../../../assets/bookingsIcon/map.svg";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -54,7 +48,7 @@ const Card: React.FC<CardProps> = ({
     name: "John Doe",
     date: "September 18, 2024",
     bookingTime: "2:00 pm to 4:00 pm",
-    imageUrl: bookingImage,
+    imageUrl: "/assets/bookingsIcon/room.svg",
     title: "We clean room with 100% efforts and dedication",
     description:
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. Deleniti, ipsam nihil? Accusantium vitae quam quod quis sint, soluta molestias tempore, facere earum atque nulla, nihil voluptatibus magni excepturi! Unde, ducimus.",
@@ -149,7 +143,7 @@ const Card: React.FC<CardProps> = ({
           <div className="w-full max-w-4xl sm:max-w-xl mx-auto bg-white rounded-lg shadow-lg p-6 relative max-h-[95vh] overflow-auto">
             <div className="flex justify-end">
               <button onClick={handleClose}>
-                <Image src={closeIcon} alt="Close" width={16} height={16} />
+                <Image src="/assets/bookingsIcon/closeIcon.svg" alt="Close" width={16} height={16} />
               </button>
             </div>
 
@@ -237,7 +231,7 @@ const Card: React.FC<CardProps> = ({
 
                 <Image
                   className="mt-4 w-full h-[180px] object-cover"
-                  src={map}
+                  src="/assets/bookingsIcon/map.svg"
                   alt="map"
                 />
               </div>
@@ -267,7 +261,7 @@ const Card: React.FC<CardProps> = ({
                     <div className="flex items-center mb-2">
                       <div className="flex-shrink-0 w-10 h-10 bg-gray-200 rounded-full overflow-hidden mr-3">
                         <Image
-                          src={profile2} // replace with actual path
+                          src="/assets/servicesIcons/profile2.svg" 
                           alt="Alex Smith"
                           width={40}
                           height={40}

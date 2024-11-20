@@ -1,13 +1,5 @@
 import React from "react";
 import Card from "../components/servicesComponents/ServicesCards";
-import image from "../../assets/servicesIcons/cardImage.svg";
-import office from "../../assets/servicesIcons/office.svg";
-import hospital from "../../assets/servicesIcons/hospital.svg";
-import company from "../../assets/servicesIcons/company.svg";
-import factory from "../../assets/servicesIcons/factory.svg";
-import dotsIcon from "../../assets/categoriesIcons/dots.svg";
-import edit from "../../assets/categoriesIcons/edit.svg";
-import remove from "../../assets/categoriesIcons/delete.svg";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
@@ -44,12 +36,12 @@ function page() {
               price="€34/hr"
               title="Cleaning at home"
               time="8:00 pm to 22:00pm"
-              imageUrl={image}
+              imageUrl="/assets/servicesIcons/cardImage.svg"
               status="active"
               date="Sep 09 , 2024"
-              dotsIcon={dotsIcon}
-              editIcon={edit}
-              deleteIcon={remove}
+              dotsIcon="/assets/categoriesIcons/dots.svg"
+              editIcon="/assets/categoriesIcons/edit.svg"
+              deleteIcon="/assets/categoriesIcons/delete.svg"
             />
           </div>
 
@@ -58,12 +50,12 @@ function page() {
               price="€ 34/hr"
               title="Cleaning at company"
               time="8:00 pm to 22:00pm"
-              imageUrl={company}
+              imageUrl="/assets/servicesIcons/company.svg"
               status="active"
               date="Sep 09 , 2024"
-              dotsIcon={dotsIcon}
-              editIcon={edit}
-              deleteIcon={remove}
+              dotsIcon="/assets/categoriesIcons/dots.svg"
+              editIcon="/assets/categoriesIcons/edit.svg"
+              deleteIcon="/assets/categoriesIcons/delete.svg"
             />
           </div>
 
@@ -72,12 +64,12 @@ function page() {
               price="€ 34/hr"
               title="Cleaning at Hospital"
               time="8:00 pm to 22:00pm"
-              imageUrl={hospital}
+              imageUrl="/assets/servicesIcons/hospital.svg"
               status="active"
               date="Sep 09 , 2024"
-              dotsIcon={dotsIcon}
-              editIcon={edit}
-              deleteIcon={remove}
+              dotsIcon="/assets/categoriesIcons/dots.svg"
+              editIcon="/assets/categoriesIcons/edit.svg"
+              deleteIcon="/assets/categoriesIcons/delete.svg"
             />
           </div>
 
@@ -86,12 +78,12 @@ function page() {
               price="€ 30/hr"
               title="Cleaning at Office"
               time="8:00 pm to 22:00pm"
-              imageUrl={office}
+              imageUrl="/assets/servicesIcons/office.svg"
               status="active"
               date="Sep 09 , 2024"
-              dotsIcon={dotsIcon}
-              editIcon={edit}
-              deleteIcon={remove}
+              dotsIcon="/assets/categoriesIcons/dots.svg"
+              editIcon="/assets/categoriesIcons/edit.svg"
+              deleteIcon="/assets/categoriesIcons/delete.svg"
             />
           </div>
 
@@ -100,12 +92,12 @@ function page() {
               price="€ 30/hr"
               title="Cleaning at Factory"
               time="8:00 pm to 22:00pm"
-              imageUrl={factory}
+              imageUrl="/assets/servicesIcons/factory.svg"
               status="active"
               date="Sep 09 , 2024"
-              dotsIcon={dotsIcon}
-              editIcon={edit}
-              deleteIcon={remove}
+              dotsIcon="/assets/categoriesIcons/dots.svg"
+              editIcon="/assets/categoriesIcons/edit.svg"
+              deleteIcon="/assets/categoriesIcons/delete.svg"
             />
           </div>
         </div>

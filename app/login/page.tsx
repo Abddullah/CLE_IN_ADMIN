@@ -1,6 +1,5 @@
 import React from "react";
 import Image from "next/image";
-import logo from "../../assets/Logo.png";
 
 export default function Login() {
   return (
@@ -10,7 +9,7 @@ export default function Login() {
       <div className="relative w-full max-w-md p-8 space-y-6 bg-white bg-opacity-90 rounded-3xl shadow-2xl z-10 border-2 border-[#00BFFF] sm:p-10">
         <div className="flex items-center justify-center mb-6">
           <Image
-            src={logo}
+            src="/assets/Logo.png"
             alt="Company Logo"
             width={70}
             height={70}

@@ -2,9 +2,7 @@
 
 import Image from "next/image";
 import React, { useState } from "react";
-import dots from "../../../assets/categoriesIcons/dots.svg";
-import editIcon from "../../../assets/categoriesIcons/edit.svg";
-import deleteIcon from "../../../assets/categoriesIcons/delete.svg";
+
 
 interface Props {
   title: string;
@@ -23,7 +21,7 @@ const CleaningCards: React.FC<Props> = ({ title, image }) => {
       <div className="relative w-[203px] rounded-3xl border border-6 top-9 border-[#00BFFF] shadow-lg bg-transparent p-4 hover:shadow-xl transition-shadow duration-300 ease-in-out">
         <div className="absolute top-3 right-3 flex flex-col space-y-1 cursor-pointer">
           <Image
-            src={dots}
+            src="/assets/categoriesIcons/dots.svg" width={10} height={10}
             alt="Options"
             className="w-6 h-6 transition-all duration-300 ease-in-out transform hover:scale-125"
             onClick={handleToggleOptions}
@@ -38,7 +36,7 @@ const CleaningCards: React.FC<Props> = ({ title, image }) => {
                   setShowOptions(false);
                 }}
               >
-                <Image src={editIcon} alt="Edit" className="w-4 h-4 mr-2" />
+                <Image src="/assets/categoriesIcons/edit.svg" alt="Edit" width={10} height={10} className="w-4 h-4 mr-2" />
                 <span>Edit</span>
               </button>
               <button
@@ -48,7 +46,7 @@ const CleaningCards: React.FC<Props> = ({ title, image }) => {
                   setShowOptions(false);
                 }}
               >
-                <Image src={deleteIcon} alt="Delete" className="w-4 h-4 mr-2" />
+                <Image src="/assets/categoriesIcons/delete.svg" alt="Delete" width={10} height={10} className="w-4 h-4 mr-2" />
                 <span>Delete</span>
               </button>
             </div>
@@ -61,6 +59,8 @@ const CleaningCards: React.FC<Props> = ({ title, image }) => {
               src={image}
               className="w-12 h-auto object-cover mt-7 ml-7"
               alt="House Image"
+              width={10}
+              height={10}
             />
           </div>
           <h2 className="text-md font-semibold text-[#242525] mt-4 text-center">

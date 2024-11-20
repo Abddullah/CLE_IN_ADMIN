@@ -2,10 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import closeIcon from "../../../assets/bookingsIcon/closeIcon.svg";
-import bookingImage from "../../../assets/bookingsIcon/room.svg";
-import map from "../../../assets/bookingsIcon/map.svg";
-import profile from "../../../assets/bookingsIcon/buttonProfile.svg";
+
 
 interface ProfileButtonProps {
   name: string;
@@ -26,7 +23,7 @@ export default function BookingCard({ name }: ProfileButtonProps) {
     name: "John Doe",
     date: "September 18, 2024",
     bookingTime: "2:00 pm to 4:00 pm",
-    imageUrl: bookingImage,
+    imageUrl: "/assets/bookingsIcon/room.svg",
     title: "We clean room with 100% efforts and dedication",
     description:
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. Deleniti, ipsam nihil? Accusantium vitae quam quod quis sint, soluta molestias tempore, facere earum atque nulla, nihil voluptatibus magni excepturi! Unde, ducimus.",
@@ -49,7 +46,7 @@ export default function BookingCard({ name }: ProfileButtonProps) {
         className="bg-[#00BFFF] flex gap-2 w-[125px] text-white rounded-lg hover:bg-[#00BFFF] py-2 px-4 text-sm h-12"
       >
         <span>
-          <Image src={profile} alt="profile" />
+          <Image src="/assets/bookingsIcon/buttonProfile.svg" alt="profile" width={30} height={30} />
         </span>
         <span className="mt-1">{name}</span>
       </button>
@@ -59,7 +56,7 @@ export default function BookingCard({ name }: ProfileButtonProps) {
           <div className="w-full max-w-4xl sm:max-w-xl mx-auto bg-white rounded-lg shadow-lg p-6 relative max-h-[95vh] overflow-auto">
             <div className="flex justify-end">
               <button onClick={handleClose}>
-                <Image src={closeIcon} alt="Close" width={16} height={16} />
+                <Image src="/assets/bookingsIcon/closeIcon.svg" alt="Close" width={16} height={16} />
               </button>
             </div>
 
@@ -144,7 +141,7 @@ export default function BookingCard({ name }: ProfileButtonProps) {
 
               <div className="mt-6">
                 <div className="w-full h-[80px] sm:h-[110px] bg-gray-300 mt-2 rounded-lg">
-                  <Image src={map} alt="map" />
+                  <Image src="/assets/bookingsIcon/map.svg" alt="map" />
                 </div>
               </div>
 

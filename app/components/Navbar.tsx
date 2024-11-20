@@ -4,7 +4,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBell, faSearch } from "@fortawesome/free-solid-svg-icons";
 import Image from "next/image";
 import { useState, useEffect, useRef } from "react";
-import profileImage from "../../assets/Mask Group.png";
 import { Button } from "@/components/ui/button";
 import { usePathname } from "next/navigation";
 
@@ -109,7 +108,7 @@ const Navbar = () => {
 
           <div className="flex items-center">
             <Image
-              src={profileImage}
+              src="/assets/Mask Group.png"
               alt="User Profile"
               width={32}
               height={32}
@@ -133,7 +132,7 @@ const Navbar = () => {
                       className="flex items-start p-3 bg-gray-100 rounded-lg hover:bg-gray-200 transition duration-150 ease-in-out"
                     >
                       <Image
-                        src={profileImage}
+                        src="/assets/Mask Group.png"
                         alt="Notification Icon"
                         width={40}
                         height={40}

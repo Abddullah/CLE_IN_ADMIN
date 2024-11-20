@@ -3,11 +3,6 @@
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import Image from "next/image";
-import room from "../../../assets/servicesIcons/cardImage.svg";
-import office from "../../../assets/servicesIcons/office.svg";
-import hospital from "../../../assets/servicesIcons/hospital.svg";
-import factory from "../../../assets/servicesIcons/factory.svg";
-import Link from "next/link";
 import { useState } from "react";
 import map from "../../../assets/bookingsIcon/map.svg";
 import { useRef } from "react";
@@ -296,31 +291,31 @@ function page() {
             <div className="flex justify-between flex-wrap">
               {/* Displaying existing images */}
               <div className="w-[108px] h-[99.52px]">
-                <Image src={room} alt="djdj" />
+                <Image src="/assets/servicesIcons/cardImage.svg" alt="room-image" width={100} height={100} />
               </div>
               <div className="w-[108px] h-[99.52px]">
-                <Image src={factory} alt="djdj" />
+                <Image src="/assets/servicesIcons/factory.svg" alt="factory-image" width={100} height={100} />
               </div>
               <div className="w-[108px] h-[99.52px]">
-                <Image src={hospital} alt="djdj" />
+                <Image src="/assets/servicesIcons/hospital.svg" alt="hospital-image" width={100} height={100} />
               </div>
               <div className="w-[108px] h-[99.52px]">
-                <Image src={room} alt="djdj" />
+                <Image src="/assets/servicesIcons/cardImage.svg" alt="djdj" width={100} height={100} />
               </div>
               <div className="w-[108px] h-[99.52px]">
-                <Image src={factory} alt="djdj" />
+                <Image src="/assets/servicesIcons/factory.svg" alt="djdj" width={100} height={100}/>
               </div>
               <div className="w-[108px] h-[99.52px]">
-                <Image src={office} alt="djdj" />
+                <Image src="/assets/servicesIcons/office.svg" alt="djdj" width={100} height={100} />
               </div>
               <div className="w-[108px] h-[99.52px]">
-                <Image src={hospital} alt="djdj" />
+                <Image src="/assets/servicesIcons/hospital.svg" alt="djdj" width={100} height={100} />
               </div>
               <div className="w-[108px] h-[99.52px]">
-                <Image src={office} alt="djdj" />
+                <Image src="/assets/servicesIcons/office.svg" alt="djdj" width={100} height={100} />
               </div>
               <div className="w-[108px] h-[99.52px]">
-                <Image src={room} alt="djdj" />
+                <Image src="/assets/servicesIcons/cardImage.svg" alt="djdj" width={100} height={100} />
               </div>
 
               {/* Upload Button */}
@@ -346,7 +341,8 @@ function page() {
 
             <Image
               className="mt-4 w-full h-[180px] object-cover"
-              src={map}
+              src="/assets/bookingsIcon/map.svg"
+              width={10} height={10}
               alt="map"
             />
           </div>

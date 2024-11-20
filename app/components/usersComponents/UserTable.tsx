@@ -2,9 +2,6 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import editIcon from "../../../assets/categoriesIcons/edit.svg";
-import deleteIcon from "../../../assets/categoriesIcons/delete.svg";
-import dots from "../../../assets/categoriesIcons/dots.svg";
 import {
   Table,
   TableBody,
@@ -147,7 +144,10 @@ export function TableDemo() {
 
               <TableCell className="p-2 text-center relative">
                 <button onClick={() => handleActionClick(index)}>
-                  <Image src={dots} alt="Options" className="w-6 h-6 mr-2" />
+                  <Image src="/assets/categoriesIcons/dots.svg" 
+                  width={10}
+                  height={10} 
+                  alt="Options" className="w-6 h-6 mr-2" />
                 </button>
 
                 {showOptions === index && (
@@ -160,7 +160,9 @@ export function TableDemo() {
                       }}
                     >
                       <Image
-                        src={editIcon}
+                        src="/assets/categoriesIcons/edit.svg"
+                        width={10}
+                        height={10}
                         alt="Edit"
                         className="w-4 h-4 mr-2"
                       />
@@ -174,7 +176,9 @@ export function TableDemo() {
                       }}
                     >
                       <Image
-                        src={deleteIcon}
+                        src="/assets/categoriesIcons/delete.svg"
+                        width={10}
+                        height={10}
                         alt="Delete"
                         className="w-4 h-4 mr-2"
                       />
