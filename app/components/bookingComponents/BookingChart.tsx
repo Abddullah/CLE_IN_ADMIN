@@ -222,9 +222,6 @@
 
 
 
-
-
-
 import {
   Table,
   TableBody,
@@ -263,6 +260,9 @@ export function BookingTable() {
             <TableHead className="text-left text-base font-semibold text-gray-600">
               Bookings
             </TableHead>
+            <TableHead className="text-left text-base font-semibold text-gray-600">
+              User Bookings
+            </TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -272,18 +272,21 @@ export function BookingTable() {
               className="transition-all duration-300 hover:bg-gray-50 border-b border-gray-200"
             >
               <TableCell className="flex items-center gap-4 text-sm text-gray-700 py-3">
-                <Image src="/assets/bookingsIcon/clock.svg" alt="Clock Icon" width={24} height={24} />
+                <Image src="/assets/bookingsIcon/clock.svg" alt="Clock Icon" width={20} height={20} />
                 <span>{slot}</span>
               </TableCell>
 
-              <TableCell className="flex justify-end items-center gap-4">
+              {/* Align the booking cards to the top and right */}
+              <TableCell className="flex flex-col items-end">
                 {index === 0 || index === 1 ? (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 w-full">
-                    <BookingCard name="Ashar" />
+                  <div className="flex flex-wrap gap-4">
+                    <BookingCard name="User 1" />
                     <BookingCard name="User 2" />
                     <BookingCard name="User 3" />
                   </div>
-                ) : null}
+                ) : (
+                  <span className="text-gray-400">No bookings yet</span>
+                )}
               </TableCell>
             </TableRow>
           ))}
@@ -292,13 +295,6 @@ export function BookingTable() {
     </div>
   );
 }
-
-
-
-
-
-
-
 
 
 

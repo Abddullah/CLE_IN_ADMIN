@@ -122,7 +122,7 @@ const Sidebar = () => {
   return (
     <div className="bg-[#F5F7FA] min-h-screen flex flex-col md:flex-row pt-1">
       {/* Sidebar Menu */}
-      <div className="w-[348px] mx-auto mt-6 border md:w-[30%] bg-white p-4 md:p-6 flex flex-col shadow-md md:shadow-none lg:ml-4">
+      <div className="w-[348px] mx-auto mt-6  border-2  md:w-[30%] bg-white  p-4 md:p-6 flex flex-col shadow-md md:shadow-none lg:ml-4">
         <button
           className={`text-md font-semibold mb-4 text-left transition-colors duration-200 ${
             activeSection === "privacyPolicy" ? "text-[#00BFFF]" : "text-gray-800"
@@ -142,7 +142,7 @@ const Sidebar = () => {
       </div>
 
       {/* Content Area */}
-      <div className="w-full md:w-[100%] p-4 md:p-6 flex flex-col md:flex-row justify-start max-h-screen">
+      <div className="w-full  md:w-[100%] p-4 md:p-6 flex flex-col md:flex-row justify-start ">
         {/* Privacy Policy Section */}
         <div
           className={`w-full bg-white p-4 md:p-6 px-6 md:px-10 border shadow-sm rounded-lg transition-transform duration-500 ${

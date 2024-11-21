@@ -1,11 +1,14 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 
 function page() {
+  const router = useRouter();
   const [confirmLogout, setConfirmLogout] = useState(false);
   const handleLogout = () => {
-    alert("You have successfully logged out");
+    router.push("/")
+    
   };
 
   return (

@@ -44,8 +44,6 @@ const Navbar = () => {
     return null;
   }
 
-  
-
   useEffect(() => {
     if (path.includes("services")) {
       setPathName("Services");
@@ -59,14 +57,15 @@ const Navbar = () => {
       setPathName("Jobs");
     } else if (path.includes("users")) {
       setPathName("Users");
-    } else if(path.includes('/logout')){
-      setPathName('Settings')
-    }else if (path.includes('/dashboard')){
-      setPathName('Dashboard')
-    }else if(path.includes('additionalServices') ){
-      setPathName('Additional Services')
-    }
-     else {
+    } else if (path.includes("/logout")) {
+      setPathName("Settings");
+    } else if (path.includes("/chat")) {
+      setPathName("Chat");
+    } else if (path.includes("/dashboard")) {
+      setPathName("Dashboard");
+    } else if (path.includes("additionalServices")) {
+      setPathName("Additional Services");
+    } else {
       setPathName("");
     }
   }, [path]);
