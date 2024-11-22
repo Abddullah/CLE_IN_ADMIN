@@ -1,136 +1,169 @@
 "use client";
-import React, { useState } from "react";
 
-type User = {
+import { useState } from "react";
+
+interface User {
   id: number;
   name: string;
-  lastMessage: string;
-};
+  avatar: string;
+  status: "online" | "offline";
+}
 
-type Message = {
-  sender: string;
-  message: string;
-};
+const ChatInterface: React.FC = () => {
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const [showChat, setShowChat] = useState<boolean>(false);
 
-const ChatPage = () => {
   const users: User[] = [
-    { id: 1, name: "John Doe", lastMessage: "Hello, how are you?" },
-    { id: 2, name: "Jane Smith", lastMessage: "Meeting tomorrow" },
-    { id: 3, name: "Alice Johnson", lastMessage: "Let's catch up soon!" },
+    { id: 1, name: "John Doe", avatar: "JD", status: "online" },
+    { id: 2, name: "Jane Smith", avatar: "JS", status: "offline" },
+    { id: 3, name: "Mike Johnson", avatar: "MJ", status: "online" },
   ];
 
-  const [activeUser, setActiveUser] = useState<User | null>(null);
-  const [message, setMessage] = useState<string>("");
-
-  const messages: Message[] = [
-    { sender: "John Doe", message: "Hello, how are you?" },
-    { sender: "You", message: "I'm good, thank you! How about you?" },
-    { sender: "John Doe", message: "All is great! Let's catch up soon." },
-  ];
-
-  const handleUserClick = (user: User) => {
-    setActiveUser(user);
-  };
-
-  const handleBackClick = () => {
-    setActiveUser(null);
+  const handleUserSelect = (user: User): void => {
+    setSelectedUser(user);
+    setShowChat(true);
   };
 
   return (
-    <div className="flex h-screen bg-gradient-to-b from-[#f8f8f8] to-[#d1e8e2]">
-      {/* Sidebar: Show all chats */}
-      <aside
-        className={`md:flex flex-col w-full md:w-1/4 bg-white shadow-lg border-r border-gray-300 ${activeUser ? "hidden" : "block"} md:block rounded-xl`}
+    <div className="flex h-screen bg-gray-100 overflow-hidden max-h-screen">
+      <div
+        className={`h-screen w-full md:w-1/3 bg-white shadow-sm ${
+          showChat ? "hidden md:block" : "block"
+        }`}
       >
-        <div className="p-4 space-y-4 overflow-y-auto">
+        <div
+          className="overflow-y-auto"
+          style={{ height: "calc(100vh - 64px)" }}
+        >
           {users.map((user) => (
-            <li
+            <div
               key={user.id}
-              onClick={() => handleUserClick(user)}
-              className={`flex items-center gap-4 p-4 rounded-lg cursor-pointer hover:bg-[#00BFFF] hover:text-white transition-all ease-in-out duration-300 ${
-                activeUser?.id === user.id ? "bg-[#00BFFF] text-white" : "text-[#333]"
-              }`}
+              onClick={() => handleUserSelect(user)}
+              className="flex items-center p-4 hover:bg-gray-50 cursor-pointer border-b"
             >
-              <div className="h-14 w-14 flex items-center justify-center rounded-full bg-[#00BFFF] text-white text-xl font-semibold">
-                {user.name[0]}
+              <div className="w-10 h-10 rounded-full bg-[#00BFFF] flex items-center justify-center">
+                <span className="text-white font-semibold">{user.avatar}</span>
               </div>
-              <div className="flex-1">
-                <p className="font-semibold text-gray-800">{user.name}</p>
-                <p className="text-sm text-gray-600 truncate">{user.lastMessage}</p>
+              <div className="ml-4">
+                <h3 className="font-semibold">{user.name}</h3>
+                <p
+                  className={`text-sm ${
+                    user.status === "online"
+                      ? "text-green-500"
+                      : "text-gray-500"
+                  }`}
+                >
+                  {user.status}
+                </p>
               </div>
-            </li>
+            </div>
           ))}
         </div>
-      </aside>
+      </div>
 
-      {/* Main Chat Area */}
-      <div className="flex-1 flex flex-col relative rounded-xl shadow-lg overflow-hidden bg-white">
-        {/* Header */}
-        <header className="bg-[#00BFFF] text-white px-4 py-3 flex items-center shadow-md">
-          {activeUser && (
-            <>
-              <div className="h-14 w-14 flex items-center justify-center rounded-full bg-white text-[#00BFFF] text-xl font-semibold">
-                {activeUser.name[0]}
-              </div>
-              <div className="ml-4 flex-1">
-                <h2 className="text-lg font-semibold">{activeUser.name}</h2>
-                <p className="text-sm text-gray-200">Online</p>
-              </div>
+      {/* Chat Interface - Full width on mobile when open, 2/3 width on desktop */}
+      <div
+        className={`h-screen w-full md:w-2/3 flex flex-col ${
+          !showChat ? "hidden md:flex" : "flex"
+        }`}
+      >
+        {selectedUser ? (
+          <>
+            {/* Chat Header */}
+            <div className="bg-white shadow-sm p-4 flex items-center">
               <button
-                className="md:hidden bg-[#00BFFF] text-white p-3 rounded-full hover:bg-[#0097CC] transition-all ease-in-out duration-300"
-                onClick={handleBackClick}
+                className="md:hidden mr-2"
+                onClick={() => setShowChat(false)}
               >
-                &larr; Back
-              </button>
-            </>
-          )}
-        </header>
-
-        {/* Messages Section */}
-        <div className="flex-1 overflow-auto p-4 space-y-4">
-          {activeUser ? (
-            messages.map((msg, index) => (
-              <div
-                key={index}
-                className={`flex ${msg.sender === "You" ? "justify-end" : "justify-start"}`}
-              >
-                <div
-                  className={`max-w-xs p-3 rounded-xl shadow-lg transition-all transform ${
-                    msg.sender === "You"
-                      ? "bg-[#00BFFF] text-white"
-                      : "bg-[#F1F1F1] text-gray-800"
-                  } hover:scale-105 ease-in-out duration-300`}
+                <svg
+                  className="w-6 h-6 "
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
                 >
-                  {msg.message}
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M15 19l-7-7 7-7"
+                  />
+                </svg>
+              </button>
+              <div className="w-10 h-10 rounded-full bg-[#00BFFF] flex items-center justify-center">
+                <span className="text-white font-semibold">
+                  {selectedUser.avatar}
+                </span>
+              </div>
+              <div className="ml-4">
+                <h2 className="font-semibold">{selectedUser.name}</h2>
+                <p className="text-sm text-green-500">{selectedUser.status}</p>
+              </div>
+            </div>
+
+            {/* Chat Messages Area */}
+            <div className="flex-1 overflow-y-auto p-4 space-y-4 h-[calc(100vh-180px)]">
+              {/* Received Message */}
+              <div className="flex items-start">
+                <div className="w-8 h-8 rounded-full bg-gray-300 flex-shrink-0" />
+                <div className="ml-3 bg-white rounded-lg rounded-tl-none p-3 shadow max-w-[80%] md:max-w-[60%]">
+                  <p className="text-gray-800">Hey, how are you?</p>
+                  <span className="text-xs text-gray-500 mt-1">10:00 AM</span>
                 </div>
               </div>
-            ))
-          ) : (
-            <p className="text-center text-gray-500">Select a chat to start messaging</p>
-          )}
-        </div>
 
-        {/* Message Input Area */}
-        {activeUser && (
-          <div className="sticky bottom-0 bg-white border-t border-gray-200 px-4 py-3 flex items-center shadow-md">
-            <input
-              type="text"
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
-              placeholder="Type a message..."
-              className="flex-1 px-6 py-3 border border-gray-300 rounded-full shadow-md focus:outline-none focus:ring-2 focus:ring-[#00BFFF] transition-all ease-in-out"
-            />
-            <button
-              onClick={() => {
-                if (message.trim()) {
-                  alert("Message Sent!");
-                  setMessage("");
-                }
-              }}
-              className="ml-4 bg-[#00BFFF] text-white px-5 py-3 rounded-full shadow-md hover:bg-[#0097CC] transition-all ease-in-out"
-            >
-              Send
-            </button>
+              {/* Sent Message */}
+              <div className="flex items-start justify-end">
+                <div className="mr-3 bg-[#00BFFF] rounded-lg rounded-tr-none p-3 shadow max-w-[80%] md:max-w-[60%]">
+                  <p className="text-white">I'm doing great! How about you?</p>
+                  <span className="text-xs text-blue-100 mt-1">10:02 AM</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Message Input */}
+            <div className="bg-white p-4 shadow-lg mt-auto">
+              <div className="flex items-center space-x-2">
+                <button className="p-2 hover:bg-gray-100 rounded-full transition">
+                  <svg
+                    className="w-6 h-6 text-gray-500"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
+                  </svg>
+                </button>
+                <input
+                  type="text"
+                  placeholder="Type your message..."
+                  className="flex-1 border border-gray-300 rounded-full px-4 py-2 focus:outline-none focus:border-[#00BFFF]"
+                />
+                <button className="bg-[#00BFFF] text-white rounded-full p-2 hover:bg-blue-600 transition">
+                  <svg
+                    className="w-6 h-6"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"
+                    />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </>
+        ) : (
+          <div className="hidden md:flex items-center justify-center h-full">
+            <p className="text-gray-500">Select a user to start chatting</p>
           </div>
         )}
       </div>
@@ -138,4 +171,4 @@ const ChatPage = () => {
   );
 };
 
-export default ChatPage;
+export default ChatInterface;

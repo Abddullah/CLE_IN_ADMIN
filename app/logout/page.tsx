@@ -1,15 +1,14 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 function page() {
   const router = useRouter();
+  
   const [confirmLogout, setConfirmLogout] = useState(false);
-  const handleLogout = () => {
-    router.push("/")
-    
-  };
+
+
 
   return (
     <>
@@ -20,7 +19,7 @@ function page() {
           </p>
           <div className="flex justify-center gap-4 mt-8 flex-col sm:flex-col">
             <button
-              onClick={handleLogout}
+              onClick={() => {setConfirmLogout(true)}}
               className="w-[16rem] sm:w-[20rem] bg-[#00BFFF] text-white py-2 px-4 rounded hover:bg-[#00BFFF] transition-all duration-300"
             >
               Yes

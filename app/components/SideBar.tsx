@@ -3,8 +3,6 @@
 import Image from "next/image";
 import { useState, useEffect, useRef } from "react";
 
-
-
 import {
   faBars,
   faHome,
@@ -15,6 +13,7 @@ import {
   faSuitcase,
   faSignOutAlt,
   faWrench,
+  faMessage,
 } from "@fortawesome/free-solid-svg-icons";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -77,18 +76,27 @@ const Sidebar = () => {
       setPathName("/additionalServices");
     } else if (path.includes("dashboard")) {
       setPathName("dashboard");
-    } else {
-      setPathName("");
-    }
+    } else if (path === "/chat") {
+      setPathName("/chat");
+      return
+    } 
   }, [path]);
+
+  console.log(path);
+  
 
   return (
     <div className="flex relative h-screen">
       <button
         onClick={toggleSidebar}
-        className={`md:hidden fixed top-1 left-1 p-4 z-30 ${isOpen ? "hidden" : ""}`}
+        className={`md:hidden fixed top-1 left-1 p-4 z-30 ${
+          isOpen ? "hidden" : ""
+        }`}
       >
-        <FontAwesomeIcon icon={faBars} className="text-gray-600 text-xl mt-3.5" />
+        <FontAwesomeIcon
+          icon={faBars}
+          className="text-gray-600 text-xl mt-3.5"
+        />
       </button>
 
       <div
@@ -97,85 +105,216 @@ const Sidebar = () => {
           isOpen ? "translate-x-0" : "-translate-x-full"
         } md:translate-x-0 fixed md:relative z-20 top-0`}
       >
-        <Link href={"dashboard"}>
+        <Link href={"/dashboard"}>
           <div className="flex items-center p-4 ml-1 mb-5 mt-1 ">
-            <Image src="/assets/Logo.png" alt="Logo" width={38} height={388} className="mr-2 ml-4 mt-1" />
-            <h1 className="text-xl font-bold text-[#343C6A] mt-2 ml-2">Pulizie Di Casa</h1>
+            <Image
+              src="/assets/Logo.png"
+              alt="Logo"
+              width={38}
+              height={388}
+              className="mr-2 ml-4 mt-1"
+            />
+            <h1 className="text-xl font-bold text-[#343C6A] mt-2 ml-2">
+              Pulizie Di Casa
+            </h1>
           </div>
         </Link>
 
         <nav className="mt-4 ml-7">
           <ul className="space-y-2 mr-3">
             <li className="flex items-center p-2 hover:bg-gray-100 rounded cursor-pointer ml-1">
-              <Link href="dashboard" passHref>
+              <Link href="/dashboard" passHref>
                 <FontAwesomeIcon
                   icon={faHome}
-                  className={`mr-[1.70rem] text-xl ${pathName === "dashboard" ? "text-[#00BFFF]" : "text-gray-400"}`}
+                  className={`mr-[1.70rem] text-xl ${
+                    pathName === "dashboard"
+                      ? "text-[#00BFFF]"
+                      : "text-gray-400"
+                  }`}
                 />
-                <span className={`mr-2 ${pathName === "dashboard" ? "text-[#00BFFF]" : "text-gray-400"}`}>Dashboard</span>
+                <span
+                  className={`mr-2 ${
+                    pathName === "dashboard"
+                      ? "text-[#00BFFF]"
+                      : "text-gray-400"
+                  }`}
+                >
+                  Dashboard
+                </span>
               </Link>
             </li>
             <li className="flex items-center p-2 hover:bg-gray-100 rounded cursor-pointer ml-1">
               <Link href="/categories" passHref>
                 <FontAwesomeIcon
                   icon={faList}
-                  className={`mr-7 text-xl ${pathName === "/categories" ? "text-[#00BFFF]" : "text-gray-400"}`}
+                  className={`mr-7 text-xl ${
+                    pathName === "/categories"
+                      ? "text-[#00BFFF]"
+                      : "text-gray-400"
+                  }`}
                 />
-                <span className={`mr-[1.70rem] ${pathName === "/categories" ? "text-[#00BFFF]" : "text-gray-400"}`}>Categories</span>
+                <span
+                  className={`mr-[1.70rem] ${
+                    pathName === "/categories"
+                      ? "text-[#00BFFF]"
+                      : "text-gray-400"
+                  }`}
+                >
+                  Categories
+                </span>
               </Link>
             </li>
             <li className="flex items-center p-2 hover:bg-gray-100 rounded cursor-pointer ml-1">
               <Link href="/users" passHref>
                 <FontAwesomeIcon
                   icon={faUser}
-                  className={`mr-7 text-xl ${pathName === "/users" ? "text-[#00BFFF]" : "text-gray-400"}`}
+                  className={`mr-7 text-xl ${
+                    pathName === "/users" ? "text-[#00BFFF]" : "text-gray-400"
+                  }`}
                 />
-                <span className={`ml-1 ${pathName === "/users" ? "text-[#00BFFF]" : "text-gray-400"}`}>Users</span>
+                <span
+                  className={`ml-1 ${
+                    pathName === "/users" ? "text-[#00BFFF]" : "text-gray-400"
+                  }`}
+                >
+                  Users
+                </span>
               </Link>
             </li>
             <li className="flex items-center p-2 hover:bg-gray-100 rounded cursor-pointer ml-1">
               <Link href="/bookings" passHref>
                 <FontAwesomeIcon
                   icon={faCalendarAlt}
-                  className={`mr-7 text-xl ${pathName === "/bookings" ? "text-[#00BFFF]" : "text-gray-400"}`}
+                  className={`mr-7 text-xl ${
+                    pathName === "/bookings"
+                      ? "text-[#00BFFF]"
+                      : "text-gray-400"
+                  }`}
                 />
-                <span className={`ml-1 ${pathName === "/bookings" ? "text-[#00BFFF]" : "text-gray-400"}`}>Bookings</span>
+                <span
+                  className={`ml-1 ${
+                    pathName === "/bookings"
+                      ? "text-[#00BFFF]"
+                      : "text-gray-400"
+                  }`}
+                >
+                  Bookings
+                </span>
               </Link>
             </li>
             <li className="flex items-center p-2 hover:bg-gray-100 rounded cursor-pointer ml-1">
               <Link href="/services" passHref>
                 <FontAwesomeIcon
                   icon={faSuitcase}
-                  className={`mr-7 text-xl ${pathName === "/services" ? "text-[#00BFFF]" : "text-gray-400"}`}
+                  className={`mr-7 text-xl ${
+                    pathName === "/services"
+                      ? "text-[#00BFFF]"
+                      : "text-gray-400"
+                  }`}
                 />
-                <span className={`ml-[0.7px] ${pathName === "/services" ? "text-[#00BFFF]" : "text-gray-400"}`}>Services</span>
+                <span
+                  className={`ml-[0.7px] ${
+                    pathName === "/services"
+                      ? "text-[#00BFFF]"
+                      : "text-gray-400"
+                  }`}
+                >
+                  Services
+                </span>
               </Link>
             </li>
             <li className="flex items-center p-2 hover:bg-gray-100 rounded cursor-pointer ml-1">
               <Link href="/jobs" passHref>
                 <FontAwesomeIcon
                   icon={faSuitcase}
-                  className={`mr-7 text-xl ${pathName === "/jobs" ? "text-[#00BFFF]" : "text-gray-400"}`}
+                  className={`mr-7 text-xl ${
+                    pathName === "/jobs" ? "text-[#00BFFF]" : "text-gray-400"
+                  }`}
                 />
-                <span className={`mr-2 ${pathName === "/jobs" ? "text-[#00BFFF]" : "text-gray-400"}`}>Jobs</span>
+                <span
+                  className={`mr-2 ${
+                    pathName === "/jobs" ? "text-[#00BFFF]" : "text-gray-400"
+                  }`}
+                >
+                  Jobs
+                </span>
               </Link>
             </li>
+
+            <li className="flex items-center p-2 hover:bg-gray-100 rounded cursor-pointer ml-1">
+              <Link href="/chat" passHref>
+                <FontAwesomeIcon
+                  icon={faMessage}
+                  className={`mr-7 text-xl ${
+                    pathName === "/chat" ? "text-[#00BFFF]" : "text-gray-400"
+                  }`}
+                />
+                <span
+                  className={`ml-[0.7px] ${
+                    pathName === "/chat" ? "text-[#00BFFF]" : "text-gray-400"
+                  }`}
+                >
+                  Chat
+                </span>
+              </Link>
+            </li>
+            {/* <li className="flex items-center p-2 hover:bg-gray-100 rounded cursor-pointer ml-1">
+              <Link href="/chat" passHref>
+                <FontAwesomeIcon
+                  icon={faMessage}
+                  className={`mr-7 text-xl ${
+                    pathName === "/chat" ? "text-[#00BFFF]" : "text-gray-400"
+                  }`}
+                />
+                <span
+                  className={`mr-2 ${
+                    pathName === "/chat" ? "text-[#00BFFF]" : "text-gray-400"
+                  }`}
+                >
+                  Chat
+                </span>
+              </Link>
+            </li> */}
             <li className="flex items-center p-2 hover:bg-gray-100 rounded cursor-pointer ml-1">
               <Link href="/additionalServices" passHref>
                 <FontAwesomeIcon
                   icon={faWrench}
-                  className={`mr-7 text-xl ${pathName === "/additionalServices" ? "text-[#00BFFF]" : "text-gray-400"}`}
+                  className={`mr-7 text-xl ${
+                    pathName === "/additionalServices"
+                      ? "text-[#00BFFF]"
+                      : "text-gray-400"
+                  }`}
                 />
-                <span className={`mr-2 ${pathName === "/additionalServices" ? "text-[#00BFFF]" : "text-gray-400"}`}>Additional Services</span>
+                <span
+                  className={`mr-2 ${
+                    pathName === "/additionalServices"
+                      ? "text-[#00BFFF]"
+                      : "text-gray-400"
+                  }`}
+                >
+                  Additional Services
+                </span>
               </Link>
             </li>
             <li className="flex items-center p-2 hover:bg-gray-100 rounded cursor-pointer ml-1">
               <Link href="/settings" passHref>
                 <FontAwesomeIcon
                   icon={faGear}
-                  className={`mr-7 text-xl ${pathName === "/settings" ? "text-[#00BFFF]" : "text-gray-400"}`}
+                  className={`mr-7 text-xl ${
+                    pathName === "/settings"
+                      ? "text-[#00BFFF]"
+                      : "text-gray-400"
+                  }`}
                 />
-                <span className={`mr-2 ${pathName === "/settings" ? "text-[#00BFFF]" : "text-gray-400"}`}>Settings</span>
+                <span
+                  className={`mr-2 ${
+                    pathName === "/settings"
+                      ? "text-[#00BFFF]"
+                      : "text-gray-400"
+                  }`}
+                >
+                  Settings
+                </span>
               </Link>
             </li>
           </ul>
@@ -207,54 +346,6 @@ const Sidebar = () => {
 };
 
 export default Sidebar;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
