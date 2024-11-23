@@ -85,7 +85,7 @@ const LoginScreen = () => {
             <Link href="/dashboard">
               <button
                 type="submit"
-                className="w-full mt-3 py-3 text-white bg-[#00BFFF] rounded-lg shadow-lg hover:bg-[#00A4D3] focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200 transform hover:scale-105 font-semibold"
+                className="w-full mt-3 py-3 text-white bg-[#00BFFF] rounded-lg shadow-lg hover:text-gray-200  focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200 transform hover:scale-100 font-semibold"
               >
                 Log In
               </button>

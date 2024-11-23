@@ -1,436 +1,6 @@
-// "use client";
-
-// import { useState } from "react";
-// import Image from "next/image";
-// import {
-//   Table,
-//   TableBody,
-//   TableCaption,
-//   TableCell,
-//   TableFooter,
-//   TableHead,
-//   TableHeader,
-//   TableRow,
-// } from "@/components/ui/table";
-
-// interface Invoice {
-//   Name: string;
-//   email: string;
-//   PhoneNo: string;
-//   role: string;
-//   address: string;
-//   gender: string;
-//   dateBirth: string;
-// }
-
-// const invoices: Invoice[] = [
-//   {
-//     Name: "John Doe",
-//     email: "john.doe@example.com",
-//     PhoneNo: "(123) 456-7890",
-//     role: "Manager",
-//     address: "123 Main St, Springfield",
-//     gender: "Male",
-//     dateBirth: "1985-01-15",
-//   },
-//   {
-//     Name: "Jane Smith",
-//     email: "jane.smith@example.com",
-//     PhoneNo: "(987) 654-3210",
-//     role: "Developer",
-//     address: "456 Oak St, Metropolis",
-//     gender: "Female",
-//     dateBirth: "1990-06-23",
-//   },{
-//     Name: "Jane Smith",
-//     email: "jane.smith@example.com",
-//     PhoneNo: "(987) 654-3210",
-//     role: "Developer",
-//     address: "456 Oak St, Metropolis",
-//     gender: "Female",
-//     dateBirth: "1990-06-23",
-//   },{
-//     Name: "Jane Smith",
-//     email: "jane.smith@example.com",
-//     PhoneNo: "(987) 654-3210",
-//     role: "Developer",
-//     address: "456 Oak St, Metropolis",
-//     gender: "Female",
-//     dateBirth: "1990-06-23",
-//   },{
-//     Name: "Jane Smith",
-//     email: "jane.smith@example.com",
-//     PhoneNo: "(987) 654-3210",
-//     role: "Developer",
-//     address: "456 Oak St, Metropolis",
-//     gender: "Female",
-//     dateBirth: "1990-06-23",
-//   },{
-//     Name: "Jane Smith",
-//     email: "jane.smith@example.com",
-//     PhoneNo: "(987) 654-3210",
-//     role: "Developer",
-//     address: "456 Oak St, Metropolis",
-//     gender: "Female",
-//     dateBirth: "1990-06-23",
-//   },
-// ];
-
-// export function TableDemo() {
-//   const [showOptions, setShowOptions] = useState<number | null>(null);
-
-//   const handleActionClick = (index: number) => {
-//     setShowOptions(showOptions === index ? null : index);
-//   };
-
-//   return (
-//     <div className="overflow-x-auto p-8 relative"> 
-//       <Table className="min-w-full border border-gray-200 rounded-lg shadow-md">
-//         <TableHeader>
-//           <TableRow className="bg-gray-100">
-//             <TableHead className="p-2 text-left text-xs md:text-sm lg:text-base">
-//               Name
-//             </TableHead>
-//             <TableHead className="p-2 text-left text-xs md:text-sm lg:text-base">
-//               Email Address
-//             </TableHead>
-//             <TableHead className="p-2 text-left text-xs md:text-sm lg:text-base hidden md:table-cell">
-//               Phone Number
-//             </TableHead>
-//             <TableHead className="p-2 text-left text-xs md:text-sm lg:text-base hidden md:table-cell">
-//               Role
-//             </TableHead>
-//             <TableHead className="p-2 text-left text-xs md:text-sm lg:text-base hidden lg:table-cell">
-//               Address
-//             </TableHead>
-//             <TableHead className="p-2 text-left text-xs md:text-sm lg:text-base hidden lg:table-cell">
-//               Gender
-//             </TableHead>
-//             <TableHead className="p-2 text-right text-xs md:text-sm lg:text-base hidden lg:table-cell">
-//               Date of Birth
-//             </TableHead>
-//             <TableHead className="p-2 text-xs md:text-sm lg:text-base">
-//               Actions
-//             </TableHead>
-//           </TableRow>
-//         </TableHeader>
-//         <TableBody>
-//           {invoices.map((invoice, index) => (
-//             <TableRow
-//               key={index}
-//               className="even:bg-gray-50 hover:bg-gray-100 transition-colors relative"
-//             >
-//               <TableCell className="p-2 font-medium text-xs md:text-sm lg:text-base">
-//                 {invoice.Name}
-//               </TableCell>
-//               <TableCell className="p-2 text-xs md:text-sm lg:text-base">
-//                 {invoice.email}
-//               </TableCell>
-//               <TableCell className="p-2 text-xs md:text-sm lg:text-base hidden md:table-cell">
-//                 {invoice.PhoneNo}
-//               </TableCell>
-//               <TableCell className="p-2 text-xs md:text-sm lg:text-base hidden md:table-cell">
-//                 {invoice.role}
-//               </TableCell>
-//               <TableCell className="p-2 text-xs md:text-sm lg:text-base hidden lg:table-cell">
-//                 {invoice.address}
-//               </TableCell>
-//               <TableCell className="p-2 text-xs md:text-sm lg:text-base hidden lg:table-cell">
-//                 {invoice.gender}
-//               </TableCell>
-//               <TableCell className="p-2 text-right text-xs md:text-sm lg:text-base hidden lg:table-cell">
-//                 {invoice.dateBirth}
-//               </TableCell>
-
-//               <TableCell className="p-2 text-center relative">
-//                 <button onClick={() => handleActionClick(index)}>
-//                   <Image src="/assets/categoriesIcons/dots.svg" 
-//                   width={10}
-//                   height={10} 
-//                   alt="Options" className="w-6 h-6 mr-2" />
-//                 </button>
-
-//                 {showOptions === index && (
-//                   <div className="absolute right-14 top-[-40px] w-32 bg-white border border-gray-200 rounded-lg shadow-md z-10">
-//                     <button
-//                       className="flex items-center w-full p-2 hover:bg-gray-100"
-//                       onClick={() => {
-//                         console.log("Edit clicked");
-//                         setShowOptions(null);
-//                       }}
-//                     >
-//                       <Image
-//                         src="/assets/categoriesIcons/edit.svg"
-//                         width={10}
-//                         height={10}
-//                         alt="Edit"
-//                         className="w-4 h-4 mr-2"
-//                       />
-//                       <span>Edit</span>
-//                     </button>
-//                     <button
-//                       className="flex items-center w-full p-2 hover:bg-gray-100"
-//                       onClick={() => {
-//                         console.log("Delete clicked");
-//                         setShowOptions(null);
-//                       }}
-//                     >
-//                       <Image
-//                         src="/assets/categoriesIcons/delete.svg"
-//                         width={10}
-//                         height={10}
-//                         alt="Delete"
-//                         className="w-4 h-4 mr-2"
-//                       />
-//                       <span>Delete</span>
-//                     </button>
-//                   </div>
-//                 )}
-//               </TableCell>
-//             </TableRow>
-//           ))}
-//         </TableBody>
-//       </Table>
-//     </div>
-//   );
-// }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// "use client";
-
-// import { useState } from "react";
-// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-
-// import {
-//   Table,
-//   TableBody,
-//   TableCell,
-//   TableHead,
-//   TableHeader,
-//   TableRow,
-// } from "@/components/ui/table";
-// import {
-//   faEllipsisV,
-//   faEdit,
-//   faTrashAlt,
-// } from "@fortawesome/free-solid-svg-icons";
-
-
-// interface Invoice {
-//   Name: string;
-//   email: string;
-//   PhoneNo: string;
-//   role: string;
-//   address: string;
-//   gender: string;
-//   dateBirth: string;
-// }
-
-// const invoices: Invoice[] = [
-//   {
-//     Name: "John Doe",
-//     email: "john.doe@example.com",
-//     PhoneNo: "(123) 456-7890",
-//     role: "Manager",
-//     address: "123 Main St, Springfield",
-//     gender: "Male",
-//     dateBirth: "1985-01-15",
-//   },
-//   {
-//     Name: "Jane Smith",
-//     email: "jane.smith@example.com",
-//     PhoneNo: "(987) 654-3210",
-//     role: "Developer",
-//     address: "456 Oak St, Metropolis",
-//     gender: "Female",
-//     dateBirth: "1990-06-23",
-//   },
-// ];
-
-// export function TableDemo() {
-//   const [expandedRow, setExpandedRow] = useState<number | null>(null);
-//   const [activeMenu, setActiveMenu] = useState<number | null>(null);
-
-//   const handleToggleMoreInfo = (index: number) => {
-//     setExpandedRow(expandedRow === index ? null : index);
-//   };
-
-//   const toggleMenu = (index: number) => {
-//     setActiveMenu(activeMenu === index ? null : index);
-//   };
-
-//   return (
-//     <div className="overflow-x-auto p-8">
-//       <Table className="min-w-full border border-gray-200 rounded-lg shadow-md">
-//         <TableHeader>
-//           <TableRow className="bg-gray-100">
-//             <TableHead className="p-2 text-left text-sm">Name</TableHead>
-//             <TableHead className="p-2 text-left text-sm">Email</TableHead>
-//             <TableHead className="p-2 text-left text-sm hidden md:table-cell">
-//               Phone No
-//             </TableHead>
-//             <TableHead className="p-2 text-left text-sm hidden md:table-cell">
-//               Role
-//             </TableHead>
-//             <TableHead className="p-2 text-left text-sm hidden lg:table-cell">
-//               Address
-//             </TableHead>
-//             <TableHead className="p-2 text-left text-sm hidden lg:table-cell">
-//               Gender
-//             </TableHead>
-//             <TableHead className="p-2 text-right text-sm hidden lg:table-cell">
-//               Date of Birth
-//             </TableHead>
-//             <TableHead className="p-2 text-center text-sm">Actions</TableHead>
-//           </TableRow>
-//         </TableHeader>
-//         <TableBody>
-//           {invoices.map((invoice, index) => (
-//             <>
-//               <TableRow
-//                 key={index}
-//                 className="even:bg-gray-50 hover:bg-gray-100 transition-colors"
-//               >
-//                 <TableCell className="p-2 text-sm font-medium">
-//                   {invoice.Name}
-//                 </TableCell>
-//                 <TableCell className="p-2 text-sm">{invoice.email}</TableCell>
-//                 <TableCell className="p-2 text-sm hidden md:table-cell">
-//                   {invoice.PhoneNo}
-//                 </TableCell>
-//                 <TableCell className="p-2 text-sm hidden md:table-cell">
-//                   {invoice.role}
-//                 </TableCell>
-//                 <TableCell className="p-2 text-sm hidden lg:table-cell">
-//                   {invoice.address}
-//                 </TableCell>
-//                 <TableCell className="p-2 text-sm hidden lg:table-cell">
-//                   {invoice.gender}
-//                 </TableCell>
-//                 <TableCell className="p-2 text-sm hidden lg:table-cell">
-//                   {invoice.dateBirth}
-//                 </TableCell>
-//                 <TableCell className="p-2 text-center relative">
-//                   {/* Three-dot menu with icons */}
-//                   <button
-//                     className="text-gray-500 hover:text-gray-700"
-//                     onClick={() => toggleMenu(index)}
-//                   >
-//                     <FontAwesomeIcon icon={faEllipsisV} className="w-5 h-5" /> {/* Ellipsis icon */}
-//                   </button>
-//                   {activeMenu === index && (
-//                     <div className="absolute top-2  z-20 bg-white border border-gray-200 shadow-lg rounded-md text-sm transition-all duration-300 opacity-100 scale-100">
-//                       <button
-//                         className="block px-4 py-2 hover:bg-gray-100 w-full text-left text-gray-700"
-//                         onClick={() => console.log("Edit", index)}
-//                       >
-//                         <FontAwesomeIcon icon={faEdit} className="inline w-4 h-4 mr-2" />
-//                         Edit
-//                       </button>
-//                       <button
-//                         className="block px-4 py-2 hover:bg-gray-100 w-full text-left "
-//                         onClick={() => console.log("Delete", index)}
-//                       >
-//                         <FontAwesomeIcon icon={faTrashAlt} className="inline w-4 h-4 mr-2" />
-//                         Delete
-//                       </button>
-//                     </div>
-//                   )}
-//                   {/* Show More Info button only on mobile */}
-//                   <button
-//                     className="text-blue-500 hover:underline md:hidden"
-//                     onClick={() => handleToggleMoreInfo(index)}
-//                   >
-//                     {expandedRow === index ? "Hide Info" : "More Info"}
-//                   </button>
-//                 </TableCell>
-//               </TableRow>
-//               {/* Collapsible Row for Mobile */}
-//               {expandedRow === index && (
-//                 <TableRow className="md:hidden">
-//                   <TableCell colSpan={3} className="p-2 bg-gray-50 text-sm">
-//                     <div className="flex flex-col gap-2">
-//                       <div>
-//                         <strong>Phone No:</strong> {invoice.PhoneNo}
-//                       </div>
-//                       <div>
-//                         <strong>Role:</strong> {invoice.role}
-//                       </div>
-//                       <div>
-//                         <strong>Address:</strong> {invoice.address}
-//                       </div>
-//                       <div>
-//                         <strong>Gender:</strong> {invoice.gender}
-//                       </div>
-//                       <div>
-//                         <strong>Date of Birth:</strong> {invoice.dateBirth}
-//                       </div>
-//                     </div>
-//                   </TableCell>
-//                 </TableRow>
-//               )}
-//             </>
-//           ))}
-//         </TableBody>
-//       </Table>
-//     </div>
-//   );
-// }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 "use client";
 
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   Table,
@@ -440,7 +10,13 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { faEllipsisV, faEdit, faTrashAlt, faInfoCircle } from "@fortawesome/free-solid-svg-icons";
+import {
+  faEllipsisV,
+  faEdit,
+  faTrashAlt,
+  faChevronDown,
+  faChevronUp,
+} from "@fortawesome/free-solid-svg-icons";
 
 interface Invoice {
   Name: string;
@@ -471,6 +47,88 @@ const invoices: Invoice[] = [
     gender: "Female",
     dateBirth: "1990-06-23",
   },
+  {
+    Name: "Jane Smith",
+    email: "jane.smith@example.com",
+    PhoneNo: "(987) 654-3210",
+    role: "Developer",
+    address: "456 Oak St, Metropolis",
+    gender: "Female",
+    dateBirth: "1990-06-23",
+  },
+  {
+    Name: "Jane Smith",
+    email: "jane.smith@example.com",
+    PhoneNo: "(987) 654-3210",
+    role: "Developer",
+    address: "456 Oak St, Metropolis",
+    gender: "Female",
+    dateBirth: "1990-06-23",
+  },
+  {
+    Name: "Jane Smith",
+    email: "jane.smith@example.com",
+    PhoneNo: "(987) 654-3210",
+    role: "Developer",
+    address: "456 Oak St, Metropolis",
+    gender: "Female",
+    dateBirth: "1990-06-23",
+  },
+  {
+    Name: "Jane Smith",
+    email: "jane.smith@example.com",
+    PhoneNo: "(987) 654-3210",
+    role: "Developer",
+    address: "456 Oak St, Metropolis",
+    gender: "Female",
+    dateBirth: "1990-06-23",
+  },
+  {
+    Name: "Jane Smith",
+    email: "jane.smith@example.com",
+    PhoneNo: "(987) 654-3210",
+    role: "Developer",
+    address: "456 Oak St, Metropolis",
+    gender: "Female",
+    dateBirth: "1990-06-23",
+  },
+  {
+    Name: "Jane Smith",
+    email: "jane.smith@example.com",
+    PhoneNo: "(987) 654-3210",
+    role: "Developer",
+    address: "456 Oak St, Metropolis",
+    gender: "Female",
+    dateBirth: "1990-06-23",
+  },
+  {
+    Name: "Jane Smith",
+    email: "jane.smith@example.com",
+    PhoneNo: "(987) 654-3210",
+    role: "Developer",
+    address: "456 Oak St, Metropolis",
+    gender: "Female",
+    dateBirth: "1990-06-23",
+  },
+  {
+    Name: "Jane Smith",
+    email: "jane.smith@example.com",
+    PhoneNo: "(987) 654-3210",
+    role: "Developer",
+    address: "456 Oak St, Metropolis",
+    gender: "Female",
+    dateBirth: "1990-06-23",
+  },
+
+  {
+    Name: "Jane Smith",
+    email: "jane.smith@example.com",
+    PhoneNo: "(987) 654-3210",
+    role: "Developer",
+    address: "456 Oak St, Metropolis",
+    gender: "Female",
+    dateBirth: "1990-06-23",
+  },
 ];
 
 export function TableDemo() {
@@ -481,73 +139,112 @@ export function TableDemo() {
     setExpandedRow(expandedRow === index ? null : index);
   };
 
+  const handleClickOutside = (e: MouseEvent) => {
+    if (openEditDelete !== null) {
+      setOpenEditDelete(null);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("click", handleClickOutside);
+    return () => document.removeEventListener("click", handleClickOutside);
+  }, [openEditDelete]);
+
   return (
-    <div className="overflow-x-auto p-8">
-      <Table className="min-w-full border border-gray-200 rounded-lg">
-        <TableHeader>
-          <TableRow className="bg-gray-100">
-            <TableHead className="p-2 text-left text-sm">Name</TableHead>
-            <TableHead className="p-2 text-left text-sm">Email</TableHead>
-            <TableHead className="p-2 text-left text-sm hidden md:table-cell">
-              Phone No
-            </TableHead>
-            <TableHead className="p-2 text-left text-sm hidden md:table-cell">
-              Role
-            </TableHead>
-            <TableHead className="p-2 text-left text-sm hidden lg:table-cell">
-              Address
-            </TableHead>
-            <TableHead className="p-2 text-left text-sm hidden lg:table-cell">
-              Gender
-            </TableHead>
-            <TableHead className="p-2 text-right text-sm hidden lg:table-cell">
-              Date of Birth
-            </TableHead>
-            <TableHead className="p-2 text-center text-sm">Actions</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {invoices.map((invoice, index) => (
-            <>
-              <TableRow
-                key={index}
-                className="even:bg-gray-50 hover:bg-gray-100 transition-colors"
-              >
-                <TableCell className="p-2 text-sm font-medium">
-                  {invoice.Name}
-                </TableCell>
-                <TableCell className="p-2 text-sm">{invoice.email}</TableCell>
-                <TableCell className="p-2 text-sm hidden md:table-cell">
-                  {invoice.PhoneNo}
-                </TableCell>
-                <TableCell className="p-2 text-sm hidden md:table-cell">
-                  {invoice.role}
-                </TableCell>
-                <TableCell className="p-2 text-sm hidden lg:table-cell">
-                  {invoice.address}
-                </TableCell>
-                <TableCell className="p-2 text-sm hidden lg:table-cell">
-                  {invoice.gender}
-                </TableCell>
-                <TableCell className="p-2 text-sm hidden lg:table-cell">
-                  {invoice.dateBirth}
-                </TableCell>
-                <TableCell className="p-2 text-center relative">
-                  <div className="flex items-center justify-center gap-2">
-                    {/* Edit/Delete Actions */}
-                    <button
-                      className="text-gray-500 hover:text-gray-700"
-                      onClick={() =>
-                        setOpenEditDelete(openEditDelete === index ? null : index)
-                      }
-                    >
-                      <FontAwesomeIcon icon={faEllipsisV} className="w-5 h-5" />
-                    </button>
+    <div className="bg-[#F5F7FA] min-h-screen w-full px-8">
+      <div className="overflow-hidden rounded-lg shadow-lg w-full mt-4">
+        <Table className="min-w-full divide-y divide-gray-200">
+          <TableHeader>
+            <TableRow className="bg-gray-200 hover:bg-gray-200">
+              <TableHead className="px-6 py-4 text-left text-xs sm:text-sm font-semibold text-gray-700">
+                Name
+              </TableHead>
+              <TableHead className="px-6 py-4 text-left text-xs sm:text-sm font-semibold text-gray-700">
+                Email
+              </TableHead>
+              <TableHead className="px-6 py-4 text-left text-xs sm:text-sm font-semibold text-gray-700 hidden md:table-cell">
+                Phone No
+              </TableHead>
+              <TableHead className="px-6 py-4 text-left text-xs sm:text-sm font-semibold text-gray-700 hidden md:table-cell">
+                Role
+              </TableHead>
+              <TableHead className="px-6 py-4 text-left text-xs sm:text-sm font-semibold text-gray-700 hidden lg:table-cell">
+                Address
+              </TableHead>
+              <TableHead className="px-6 py-4 text-left text-xs sm:text-sm font-semibold text-gray-700 hidden lg:table-cell">
+                Gender
+              </TableHead>
+              <TableHead className="px-6 py-4 text-left text-xs sm:text-sm font-semibold text-gray-700 hidden lg:table-cell">
+                Date of Birth
+              </TableHead>
+              <TableHead className="px-6 py-4 text-center text-xs sm:text-sm font-semibold text-gray-700">
+                Actions
+              </TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody className="divide-y divide-gray-200">
+            {invoices.map((invoice, index) => (
+              <React.Fragment key={index}>
+                <TableRow className="hover:bg-gray-50 focus-within:bg-gray-100 focus-within:outline focus-within:outline-2 focus-within:outline-none transition duration-300 ease-in-out">
+                  <TableCell className="px-6 py-4 text-sm font-medium text-gray-800">
+                    {invoice.Name}
+                  </TableCell>
+                  <TableCell className="px-6 py-4 text-sm text-gray-600">
+                    {invoice.email}
+                  </TableCell>
+                  <TableCell className="px-6 py-4 text-sm text-gray-600 hidden md:table-cell">
+                    {invoice.PhoneNo}
+                  </TableCell>
+                  <TableCell className="px-6 py-4 text-sm text-gray-600 hidden md:table-cell">
+                    <span className="px-3 py-1 rounded-full text-xs font-medium bg-blue-100 border text-[#00BFFF]">
+                      {invoice.role}
+                    </span>
+                  </TableCell>
+                  <TableCell className="px-6 py-4 text-sm text-gray-600 hidden lg:table-cell">
+                    {invoice.address}
+                  </TableCell>
+                  <TableCell className="px-6 py-4 text-sm text-gray-600 hidden lg:table-cell">
+                    {invoice.gender}
+                  </TableCell>
+                  <TableCell className="px-6 py-4 text-sm text-gray-600 hidden lg:table-cell">
+                    {invoice.dateBirth}
+                  </TableCell>
+                  <TableCell className="px-6 py-4 text-center text-sm font-medium relative">
+                    <div className="flex items-center justify-center space-x-3">
+                      <button
+                        className="md:hidden text-[#00BFFF] hover:text-[#00BFFF] transition-colors duration-200 focus:outline-none flex items-center"
+                        onClick={() => handleToggleMoreInfo(index)}
+                      >
+                        <FontAwesomeIcon
+                          icon={
+                            expandedRow === index ? faChevronUp : faChevronDown
+                          }
+                          className="w-5 h-5"
+                        />
+                        <span className="ml-1 text-sm">More</span>
+                      </button>
+                      <button
+                        className="text-gray-400 hover:text-gray-600 transition-colors duration-200 focus:outline-none"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setOpenEditDelete(
+                            openEditDelete === index ? null : index
+                          );
+                        }}
+                      >
+                        <FontAwesomeIcon
+                          icon={faEllipsisV}
+                          className="w-5 h-5"
+                        />
+                      </button>
+                    </div>
+
                     {openEditDelete === index && (
-                      <div className="absolute w-36 bg-white border  border-gray-200 rounded-lg shadow-md z-20">
+                      <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl py-1 z-10 border border-gray-100">
                         <button
-                          className="flex items-center w-full p-2 hover:bg-gray-100"
-                          onClick={() => {
+                          className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors duration-150 w-full"
+                          onClick={(e) => {
+                            e.stopPropagation();
                             console.log("Edit clicked");
                             setOpenEditDelete(null);
                           }}
@@ -556,11 +253,12 @@ export function TableDemo() {
                             icon={faEdit}
                             className="w-4 h-4 mr-2"
                           />
-                          <span>Edit</span>
+                          Edit
                         </button>
                         <button
-                          className="flex items-center w-full p-2 hover:bg-gray-100"
-                          onClick={() => {
+                          className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors duration-150 w-full"
+                          onClick={(e) => {
+                            e.stopPropagation();
                             console.log("Delete clicked");
                             setOpenEditDelete(null);
                           }}
@@ -569,92 +267,67 @@ export function TableDemo() {
                             icon={faTrashAlt}
                             className="w-4 h-4 mr-2"
                           />
-                          <span>Delete</span>
+                          Delete
                         </button>
                       </div>
                     )}
-                    {/* More Info Button */}
-                    <button
-                      className="text-blue-500 hover:text-blue-700 block md:hidden"
-                      onClick={() => handleToggleMoreInfo(index)}
-                    >
-                      <FontAwesomeIcon
-                        icon={faInfoCircle}
-                        className="w-5 h-5"
-                      />
-                    </button>
-                  </div>
-                </TableCell>
-              </TableRow>
-              {expandedRow === index && (
-                <TableRow className="md:hidden">
-                  <TableCell colSpan={8} className="p-2 bg-gray-50 text-sm">
-                    <div className="flex flex-col gap-2">
-                      <div>
-                        <strong>Phone No:</strong> {invoice.PhoneNo}
-                      </div>
-                      <div>
-                        <strong>Role:</strong> {invoice.role}
-                      </div>
-                      <div>
-                        <strong>Address:</strong> {invoice.address}
-                      </div>
-                      <div>
-                        <strong>Gender:</strong> {invoice.gender}
-                      </div>
-                      <div>
-                        <strong>Date of Birth:</strong> {invoice.dateBirth}
-                      </div>
-                    </div>
                   </TableCell>
                 </TableRow>
-              )}
-            </>
-          ))}
-        </TableBody>
-      </Table>
+
+                {/* Expanded Row for More Info */}
+                {expandedRow === index && (
+                  <TableRow className="md:hidden">
+                    <TableCell colSpan={8} className="px-6 py-4 bg-gray-50">
+                      <div className="space-y-3 text-sm">
+                        <div className="flex justify-between items-center border-b border-gray-200 pb-2">
+                          <span className="font-medium text-gray-600">
+                            Phone:
+                          </span>
+                          <span className="text-gray-800">
+                            {invoice.PhoneNo}
+                          </span>
+                        </div>
+                        <div className="flex justify-between items-center border-b border-gray-200 pb-2">
+                          <span className="font-medium text-gray-600">
+                            Role:
+                          </span>
+                          <span className="px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                            {invoice.role}
+                          </span>
+                        </div>
+                        <div className="flex justify-between items-center border-b border-gray-200 pb-2">
+                          <span className="font-medium text-gray-600">
+                            Address:
+                          </span>
+                          <span className="text-gray-800">
+                            {invoice.address}
+                          </span>
+                        </div>
+                        <div className="flex justify-between items-center border-b border-gray-200 pb-2">
+                          <span className="font-medium text-gray-600">
+                            Gender:
+                          </span>
+                          <span className="text-gray-800">
+                            {invoice.gender}
+                          </span>
+                        </div>
+                        <div className="flex justify-between items-center pb-2">
+                          <span className="font-medium text-gray-600">
+                            Date of Birth:
+                          </span>
+                          <span className="text-gray-800">
+                            {invoice.dateBirth}
+                          </span>
+                        </div>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                )}
+              </React.Fragment>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
     </div>
   );
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

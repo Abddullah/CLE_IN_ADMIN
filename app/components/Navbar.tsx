@@ -129,7 +129,7 @@ const Navbar = () => {
                   <div className="items-center text-center">
                     <Button
                       variant="outline"
-                      className="border-[#4BB1D3] w-[150px] text-blue-500 hover:bg-blue-500 hover:text-white"
+                      className="border-[#00BFFF] border-2   w-[150px] text-[#00BFFF] hover:bg-[#00BFFF] hover:text-white"
                     >
                       Show all
                     </Button>

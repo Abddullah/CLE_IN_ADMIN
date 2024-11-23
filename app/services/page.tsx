@@ -19,13 +19,13 @@ function page() {
         </div>
 
         <div className="flex justify-between w-full px-4 sm:px-8 md:px-12 lg:px-9 space-x-4 mt-6">
-          <button className="flex-1 py-3 text-white bg-[#00BFFF] hover:bg-[#00BFFF]">
+          <button className="flex-1 py-3 rounded-md text-white bg-[#00BFFF] hover:bg-[#00BFFF]">
             Active
           </button>
-          <button className="flex-1 py-3 text-white bg-[#859090] hover:bg-[#859090]">
+          <button className="flex-1 py-3 rounded-md text-white bg-[#859090] hover:bg-[#859090]">
             Moderate
           </button>
-          <button className="flex-1 py-3 text-white bg-[#859090] hover:bg-[#859090]">
+          <button className="flex-1 py-3  text-white bg-[#859090] hover:bg-[#859090]">
             Pending
           </button>
         </div>
