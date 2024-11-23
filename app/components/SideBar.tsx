@@ -27,36 +27,7 @@ const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const sidebarRef = useRef<HTMLDivElement>(null);
 
-  const toggleSidebar = () => {
-    setIsOpen(!isOpen);
-  };
-
-  const handleClickOutside = (event: MouseEvent) => {
-    if (sidebarRef.current) {
-      setIsOpen(false);
-    }
-  };
-
-  useEffect(() => {
-    if (isOpen) {
-      document.addEventListener("mousedown", handleClickOutside);
-    } else {
-      document.removeEventListener("mousedown", handleClickOutside);
-    }
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [isOpen]);
-
   const path = usePathname();
-
-  const hidePath = ["/"];
-
-  if (hidePath.includes(path)) {
-    return null;
-  }
-
   useEffect(() => {
     if (path.includes("services")) {
       setPathName("/services");
@@ -82,6 +53,38 @@ const Sidebar = () => {
     } 
   }, [path]);
 
+
+  const toggleSidebar = () => {
+    setIsOpen(!isOpen);
+  };
+
+  const handleClickOutside = (event: MouseEvent) => {
+    if (sidebarRef.current) {
+      setIsOpen(false);
+      return
+    }
+  };
+
+  useEffect(() => {
+    if (isOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isOpen]);
+
+
+  const hidePath = ["/"];
+
+  if (hidePath.includes(path)) {
+    return null;
+  }
+
+ 
   console.log(path);
   
 
@@ -346,6 +349,45 @@ const Sidebar = () => {
 };
 
 export default Sidebar;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

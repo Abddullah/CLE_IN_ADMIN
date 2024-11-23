@@ -3,72 +3,70 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBell, faSearch } from "@fortawesome/free-solid-svg-icons";
 import Image from "next/image";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { usePathname } from "next/navigation";
 
+const pathMapping: Record<string, string> = {
+  services: "Services",
+  categories: "Categories", 
+  settings: "Settings",
+  bookings: "Bookings",
+  jobs: "Jobs",
+  users: "Users",
+  logout: "Logout",
+  chat: "Chat",
+  dashboard: "Dashboard",
+  additionalServices: "Additional Services",
+};
+
+const hidePaths = ["/"];
+
 const Navbar = () => {
+  const pathname = usePathname();
+  const notificationsRef = useRef<HTMLDivElement>(null);
+
   const [searchTerm, setSearchTerm] = useState("");
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   const [pathName, setPathName] = useState("");
-  const notificationsRef = useRef<HTMLDivElement>(null);
 
-  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(event.target.value);
-  };
+  const handleSearchChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      setSearchTerm(event.target.value);
+    },
+    []
+  );
 
-  const toggleNotifications = () => {
-    setIsNotificationsOpen(!isNotificationsOpen);
-  };
-
-  const handleClickOutside = (event: MouseEvent) => {
-    if (
-      notificationsRef.current &&
-      !notificationsRef.current.contains(event.target as Node)
-    ) {
-      setIsNotificationsOpen(false);
-    }
-  };
+  const toggleNotifications = useCallback(() => {
+    setIsNotificationsOpen(prev => !prev);
+  }, []);
 
   useEffect(() => {
+    const matchedPath = Object.keys(pathMapping).find(key =>
+      pathname.includes(key)
+    );
+    setPathName(matchedPath ? pathMapping[matchedPath] : "");
+  }, [pathname]);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        notificationsRef.current &&
+        !notificationsRef.current.contains(event.target as Node)
+      ) {
+        setIsNotificationsOpen(false);
+      }
+    };
+
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
 
-  const path = usePathname();
-  const hidePath = ["/"];
-
-  if (hidePath.includes(path)) {
+  if (hidePaths.includes(pathname)) {
     return null;
   }
-
-  useEffect(() => {
-    if (path.includes("services")) {
-      setPathName("Services");
-    } else if (path.includes("categories")) {
-      setPathName("Categories");
-    } else if (path.includes("settings")) {
-      setPathName("Settings");
-    } else if (path.includes("bookings")) {
-      setPathName("Bookings");
-    } else if (path.includes("jobs")) {
-      setPathName("Jobs");
-    } else if (path.includes("users")) {
-      setPathName("Users");
-    } else if (path.includes("/logout")) {
-      setPathName("Settings");
-    } else if (path.includes("/chat")) {
-      setPathName("Chat");
-    } else if (path.includes("/dashboard")) {
-      setPathName("Dashboard");
-    } else if (path.includes("additionalServices")) {
-      setPathName("Additional Services");
-    } else {
-      setPathName("");
-    }
-  }, [path]);
 
   return (
     <aside>
@@ -77,7 +75,7 @@ const Navbar = () => {
           {pathName}
         </div>
 
-        <div className="flex-1 gap-3 mt-2 max-w-[75%] sm:max-w-[50%] md:max-w-[40%] lg:max-w-[30%] relative ml-auto sm:mr-4 md:mr-9 px-2 ">
+        <div className="flex-1 gap-3 mt-2 max-w-[75%] sm:max-w-[50%] md:max-w-[40%] lg:max-w-[30%] relative ml-auto sm:mr-4 md:mr-9 px-2">
           <input
             type="text"
             value={searchTerm}
@@ -87,7 +85,7 @@ const Navbar = () => {
           />
           <FontAwesomeIcon
             icon={faSearch}
-            className="absolute left-5 top-1/2 transform -translate-y-1/2 text-gray-400 "
+            className="absolute left-5 top-1/2 transform -translate-y-1/2 text-gray-400"
           />
         </div>
 
@@ -118,7 +116,7 @@ const Navbar = () => {
           {isNotificationsOpen && (
             <div
               ref={notificationsRef}
-              className="absolute right-0 top-12 w-80 bg-white border border-gray-200 rounded-lg shadow-lg z-50 overflow-y-auto max-h-90 "
+              className="absolute right-0 top-12 w-80 bg-white border border-gray-200 rounded-lg shadow-lg z-50 overflow-y-auto max-h-90"
             >
               <div className="p-4">
                 <h3 className="text-lg font-semibold text-gray-800">
@@ -126,28 +124,7 @@ const Navbar = () => {
                 </h3>
                 <div className="space-y-4 mt-2">
                   {Array.from({ length: 3 }).map((_, index) => (
-                    <div
-                      key={index}
-                      className="flex items-start p-3 bg-gray-100 rounded-lg hover:bg-gray-200 transition duration-150 ease-in-out"
-                    >
-                      <Image
-                        src="/assets/Mask Group.png"
-                        alt="Notification Icon"
-                        width={40}
-                        height={40}
-                        className="rounded-full mr-3"
-                      />
-                      <div>
-                        <p className="text-sm font-medium text-gray-700">
-                          Notification received
-                        </p>
-                        <p className="text-xs text-gray-400">Today | 9:00 AM</p>
-                        <p className="text-sm text-gray-600 mt-1">
-                          Lorem ipsum dolor sit amet, consectetur adipiscing
-                          elit.
-                        </p>
-                      </div>
-                    </div>
+                    <NotificationCard key={index} />
                   ))}
                   <div className="items-center text-center">
                     <Button
@@ -166,5 +143,24 @@ const Navbar = () => {
     </aside>
   );
 };
+
+const NotificationCard = () => (
+  <div className="flex items-start p-3 bg-gray-100 rounded-lg hover:bg-gray-200 transition duration-150 ease-in-out">
+    <Image
+      src="/assets/Mask Group.png"
+      alt="Notification Icon"
+      width={40}
+      height={40}
+      className="rounded-full mr-3"
+    />
+    <div>
+      <p className="text-sm font-medium text-gray-700">Notification received</p>
+      <p className="text-xs text-gray-400">Today | 9:00 AM</p>
+      <p className="text-sm text-gray-600 mt-1">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+      </p>
+    </div>
+  </div>
+);
 
 export default Navbar;

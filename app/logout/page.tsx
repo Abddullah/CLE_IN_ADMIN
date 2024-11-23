@@ -8,6 +8,11 @@ function page() {
   
   const [confirmLogout, setConfirmLogout] = useState(false);
 
+  const handleLogout = () => {
+    router.push("/")
+    
+  }
+
 
 
   return (
@@ -19,7 +24,7 @@ function page() {
           </p>
           <div className="flex justify-center gap-4 mt-8 flex-col sm:flex-col">
             <button
-              onClick={() => {setConfirmLogout(true)}}
+              onClick={() => {handleLogout()}}
               className="w-[16rem] sm:w-[20rem] bg-[#00BFFF] text-white py-2 px-4 rounded hover:bg-[#00BFFF] transition-all duration-300"
             >
               Yes
