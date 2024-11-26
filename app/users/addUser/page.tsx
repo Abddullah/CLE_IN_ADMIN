@@ -1,6 +1,6 @@
-'use client'
+"use client";
 
-import React, { useRef, useState , useEffect} from "react";
+import React from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
@@ -9,82 +9,65 @@ import {
   SelectContent,
   SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useForm, SubmitHandler, Controller } from "react-hook-form";
 
-
-
-function page() {
-
-  let [data , setData] = useState({});
-  let [userName , setUserName] = useState("");
-  let [email , setEmail] = useState("");
-  let [role , setRole] = useState("");
-
-  const nameValue = useRef<HTMLInputElement>(null);
-  const emailValue = useRef<HTMLInputElement>(null);
-  
-  
-
-  const handleUserName =() => {
-    if(nameValue.current){
-      setUserName(nameValue.current.value)
-      return
-    }
+function AddUserPage() {
+  enum UserRole {
+    PROVIDER = "Provider",
+    USER = "User",
   }
 
-  const handleEmail =() => {
-    if(emailValue.current){
-      setEmail(emailValue.current.value)
-      return
-    }
-  }
-
-  const handleRole = (value: string) => {
-    setRole(value);
+  type FormInputs = {
+    username: string;
+    email: string;
+    password: string;
+    confirmPassword: string;
+    roleRequired: string;
+    role: UserRole;
   };
 
+  const {
+    register,
+    handleSubmit,
+    control,
+    formState: { errors },
+    watch,
+    setValue,
+  } = useForm<FormInputs>();
 
-const handleData = ()=> {
+  const onSubmit: SubmitHandler<FormInputs> = (data) => console.log(data);
 
-  if(!email || !userName || !role){
-    alert("Please fill all fields")
-  }else{
-    data = {
-      userName:userName,
-      email:email,
-      role:role
-    }
-  
-    setData({...data})
-  
-    console.log(data);
-    
-  }
-  
-  
-}
-
-  
+  const password = watch("password");
 
   return (
-    <>
-    
-    <div className="bg-[#F5F7FA] min-h-screen w-full flex items-start justify-start pt-8">
-        <div className="w-full max-w-md px-4 sm:px-8 md:px-12 lg:px-16">
-          <h1 className="text-2xl font-bold mt-2">Add Users</h1>
-
+    <div className="bg-[#F5F7FA] min-h-screen w-full flex items-start justify-start">
+      <div className="w-full max-w-md px-4 sm:px-8 md:px-12 lg:px-16">
+        <form onSubmit={handleSubmit(onSubmit)}>
           <div className="grid w-full max-w-sm items-center gap-1.5 mt-6">
-            <Label htmlFor="name" className="text-lg font-semibold">
+            <Label htmlFor="username" className="text-lg font-semibold">
               Name
             </Label>
             <Input
-              type="text" placeholder="Username"
+              type="text"
+              placeholder="Username"
+              {...register("username", {
+                required: "Username is required",
+                minLength: {
+                  value: 8,
+                  message: "Username must be at least 3 characters",
+                },
+              })}
               className="h-[50px] rounded-lg border-[#4BB1D3] focus:border-blue-500 focus:outline-none"
-              id="Name" ref={nameValue} onChange={handleUserName}
+              id="username"
             />
+            {errors.username && (
+              <span className="text-red-600 text-sm">
+                {errors.username.message}
+              </span>
+            )}
           </div>
 
           <div className="grid w-full max-w-sm items-center gap-1.5 mt-3">
@@ -93,10 +76,22 @@ const handleData = ()=> {
             </Label>
             <Input
               type="email"
-              placeholder="Email Address "
+              placeholder="Email Address"
+              {...register("email", {
+                required: "Email is required",
+                pattern: {
+                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                  message: "Invalid email address",
+                },
+              })}
               className="h-[50px] rounded-lg border-[#4BB1D3] focus:border-blue-500 focus:outline-none"
-              id="email" ref={emailValue} onChange={handleEmail}
+              id="email"
             />
+            {errors.email && (
+              <span className="text-red-600 text-sm">
+                {errors.email.message}
+              </span>
+            )}
           </div>
 
           <div className="grid w-full max-w-sm items-center gap-1.5 mt-3">
@@ -106,9 +101,21 @@ const handleData = ()=> {
             <Input
               type="password"
               placeholder="Password"
+              {...register("password", {
+                required: "Password is required",
+                minLength: {
+                  value: 6,
+                  message: "Password must be at least 6 characters",
+                },
+              })}
               className="h-[50px] rounded-lg border-[#4BB1D3] focus:border-blue-500 focus:outline-none"
               id="password"
             />
+            {errors.password && (
+              <span className="text-red-600 text-sm">
+                {errors.password.message}
+              </span>
+            )}
           </div>
 
           <div className="grid w-full max-w-sm items-center gap-1.5 mt-3">
@@ -118,47 +125,64 @@ const handleData = ()=> {
             <Input
               type="password"
               placeholder="Confirm Password"
+              {...register("confirmPassword", {
+                required: "Please confirm your password",
+                validate: (value) =>
+                  value === password || "Passwords do not match",
+              })}
               className="h-[50px] rounded-lg border-[#4BB1D3] focus:border-blue-500 focus:outline-none"
               id="confirmPassword"
             />
+            {errors.confirmPassword && (
+              <span className="text-red-600 text-sm">
+                {errors.confirmPassword.message}
+              </span>
+            )}
           </div>
 
           <div className="grid w-full max-w-sm items-center gap-1.5 mt-3">
-            <Label className="text-md font-semibold" htmlFor="role">
+            <label className="text-md font-semibold" htmlFor="role">
               Role
-            </Label>
-            {/* <Input
-              type="text"
-              className="h-[50px] rounded-lg border-[#4BB1D3] focus:border-blue-500 focus:outline-none"
-              id="role" ref={roleValue} onChange={handleRole}
-            /> */}
+            </label>
 
-<Select required onValueChange={handleRole} value={role}  >
-              <SelectTrigger className="w-full h-[55px] rounded-lg border border-[#4BB1D3] bg-gray-50 mt-1 pr-6 outline-[#4BB1D3] focus:border-[#4BB1D3] focus:outline-none focus:border-none">
-                <SelectValue placeholder="Please Select Role" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectItem value="User">User</SelectItem>
-                  <SelectItem value="Provider">Provider</SelectItem>
-                  
-                </SelectGroup>
-              </SelectContent>
-            </Select>
+            <Controller
+              name="role"
+              control={control}
+              rules={{
+                required: "Role is required",
+              }}
+              render={({ field: { value, onChange } }) => (
+                <Select value={value} onValueChange={onChange}>
+                  <SelectTrigger className="w-full h-[55px] rounded-lg border border-[#4BB1D3] bg-gray-50 mt-1 pr-6 outline-[#4BB1D3] focus:border-[#4BB1D3] focus:outline-none">
+                    <SelectValue placeholder="Please Select Role" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectItem value="User">User</SelectItem>
+                      <SelectItem value="Provider">Provider</SelectItem>
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              )}
+            />
+
+            {errors.role && (
+              <p className="text-red-500 text-sm mt-1">{errors.role.message}</p>
+            )}
           </div>
 
           <div className="mt-6">
-            <Button onClick={handleData} className="border-[#4BB1D3] w-full h-[40px] mt-5 text-white bg-[#00BFFF] rounded-lg outline-none hover:bg-[#00A0E0] transition duration-200 ease-in-out sm:w-[100px] sm:h-[45px]">
-              <span>Add User</span>
+            <Button
+              type="submit"
+              className="border-[#4BB1D3] mb-4 w-full h-[40px] mt-5 text-white bg-[#00BFFF] rounded-lg outline-none hover:bg-[#00A0E0] transition duration-200 ease-in-out sm:w-[100px] sm:h-[45px]"
+            >
+              Add User
             </Button>
           </div>
-        </div>
+        </form>
       </div>
-   
-   
-     
-    </>
+    </div>
   );
 }
 
-export default page;
+export default AddUserPage;
