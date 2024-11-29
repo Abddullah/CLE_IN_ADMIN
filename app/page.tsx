@@ -1,9 +1,12 @@
 'use client'
 
-import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+
+
+
+
 
 const LoginScreen = () => {
 
@@ -15,14 +18,18 @@ const LoginScreen = () => {
 
   }
 
+  
+
 
   return (
     <div className="min-h-screen flex bg-[#00BFFF]">
       {/* Left Section - Welcome Admin (Visible only on larger screens) */}
+      
       <div className="hidden md:flex w-1/2 flex-col justify-center items-center text-white p-10">
         <h1 className="text-5xl font-extrabold mb-4">Welcome Admin</h1>
         <p className="text-xl font-medium mb-6">
-          Manage your platform with ease and security.
+       Manage your platform with ease and security
+      
         </p>
         <Image
           src="/assets/security-log.gif"
@@ -32,6 +39,7 @@ const LoginScreen = () => {
           className="object-contain"
         />
       </div>
+       
 
       {/* Right Section - Login Form */}
       <div className="w-full md:w-1/2 flex justify-center items-center bg-white px-2 py-10 sm:px-10">
@@ -51,7 +59,7 @@ const LoginScreen = () => {
             Admin Login
           </h2>
           <p className="text-center text-gray-600 mb-6">
-            Please enter your credentials
+           Please enter your credentials
           </p>
 
           <form className="space-y-6">

@@ -25,7 +25,7 @@ function page() {
           <button className="flex-1 py-3 rounded-md text-white bg-[#859090] hover:bg-[#859090]">
             Moderate
           </button>
-          <button className="flex-1 py-3  text-white bg-[#859090] hover:bg-[#859090]">
+          <button className="flex-1 py-3 rounded-md  text-white bg-[#859090] hover:bg-[#859090]">
             Pending
           </button>
         </div>

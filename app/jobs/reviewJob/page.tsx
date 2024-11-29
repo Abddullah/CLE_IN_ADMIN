@@ -2,99 +2,107 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
-function page() {
+function Page() {
   return (
-    <>
-      <div className="bg-[#F5F7FA] min-h-screen w-full flex items-start justify-start pt-2">
-        <div className="w-full max-w-7xl px-8 lg:px-16 mt-6">
-          <div>
-            <h1 className="text-2xl font-semibold">Review & Confirm Job</h1>
+    <div className="min-h-screen bg-gradient-to-b from-[#F5F7FA] to-white">
+      <div className="container px-4 sm:px-6 lg:px-8 py-12">
+        <div className="max-w-4xl">
+          <h1 className="text-1xl md:text-2xl font-bold text-gray-900 mb-8 tracking-tight">
+            Review & Confirm Booking
+          </h1>
 
-            {/* Service Section */}
-            <div className="mt-4">
-              <h2 className="text-lg font-semibold">Service</h2>
-              <p className="mt-2 ">Cleaning and Services</p>
-            </div>
-            <div className="mt-4">
-              <h2 className="text-lg font-semibold">Description</h2>
-              <p className="mt-2 ">This is a text description</p>
-            </div>
-            <div className="mt-4">
-              <h2 className="text-lg font-semibold">Cleaners</h2>
-              <p className="mt-2 ">3</p>
-            </div>
-            <div className="mt-4">
-              <h2 className="text-lg font-semibold">Work Frequency</h2>
-              <p className="mt-2 ">Weekly</p>
-            </div>
-            <div className="mt-4">
-              <h2 className="text-lg font-semibold">Room Area Size</h2>
-              <p className="mt-2 ">51 - 100 m2</p>
-            </div>
-            <div className="mt-4">
-              <h2 className="text-lg font-semibold">Number of Rooms</h2>
-              <p className="mt-2 ">1 Room</p>
-            </div>
-            <div className="mt-4">
-              <h2 className="text-lg font-semibold">
-                Needs Cleaning Materials?
-              </h2>
-              <p className="mt-2 ">Yes Please</p>
-            </div>
-            <div className="mt-4">
-              <h2 className="text-lg font-semibold">Price</h2>
-              <p className="mt-2 ">€ 30/hr</p>
-            </div>
-            <div className="mt-4">
-              <h2 className="text-lg font-semibold">Selected Date</h2>
-              <p className="mt-2 ">8,Jan,2024</p>
-            </div>
-            <div className="mt-4">
-              <h2 className="text-lg font-semibold">Selected Time</h2>
-              <p className="mt-2 ">10:00 AM - 12:00 PM</p>
-            </div>
-            <div className="mt-4">
-              <h2 className="text-lg font-semibold">Selected Location</h2>
-              <p className="mt-2 ">Jameria Residence</p>
-            </div>
+          <div className="bg-white border-2 rounded-2xl shadow-xl p-8 mb-10 transition-all duration-300 hover:shadow-2xl">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {/* Service Details */}
+              <div className="space-y-8">
+                <div className="transform transition-all duration-300 hover:translate-x-2">
+                  <h2 className="text-xl font-semibold text-gray-900 mb-3">Service</h2>
+                  <p className="text-gray-700 text-lg">Premium Cleaning Services</p>
+                </div>
+                <div className="transform transition-all duration-300 hover:translate-x-2">
+                  <h2 className="text-xl font-semibold text-gray-900 mb-3">Description</h2>
+                  <p className="text-gray-700 text-lg">Deep cleaning with eco-friendly products</p>
+                </div>
+                <div className="transform transition-all duration-300 hover:translate-x-2">
+                  <h2 className="text-xl font-semibold text-gray-900 mb-3">Professional Cleaners</h2>
+                  <p className="text-gray-700 text-lg">3 Certified Experts</p>
+                </div>
+                <div className="transform transition-all duration-300 hover:translate-x-2">
+                  <h2 className="text-xl font-semibold text-gray-900 mb-3">Service Frequency</h2>
+                  <p className="text-gray-700 text-lg">Weekly Premium Service</p>
+                </div>
+                <div className="transform transition-all duration-300 hover:translate-x-2">
+                  <h2 className="text-xl font-semibold text-gray-900 mb-3">Coverage Area</h2>
+                  <p className="text-gray-700 text-lg">51 - 100 m² (Professional Grade)</p>
+                </div>
+              </div>
 
-            <div className="max-w-sm w-full bg-white shadow-lg rounded-lg p-6 mt-6 border border-gray-300">
-              <h2 className="text-xl font-semibold text-gray-800 mb-4 text-start">
-                Payment Summary
-              </h2>
-              {/* Amount */}
-              <div className="flex justify-between items-center py-2 border-b">
-                <span className="text-gray-600">Amount</span>
-                <span className="text-gray-800 font-medium">€150.00</span>
-              </div>
-              {/* VAT */}
-              <div className="flex justify-between items-center py-2 border-b">
-                <span className="text-gray-600">VAT</span>
-                <span className="text-gray-800 font-medium">€22.50</span>
-              </div>
-              {/* Total */}
-              <div className="flex justify-between items-center py-2 mt-4">
-                <span className="text-gray-800 font-semibold text-lg">
-                  Total Amount
-                </span>
-                <span className="text-[#00BFFF] font-bold text-lg">
-                  €172.50
-                </span>
+              {/* Additional Details */}
+              <div className="space-y-8">
+                <div className="transform transition-all duration-300 hover:translate-x-2">
+                  <h2 className="text-xl font-semibold text-gray-900 mb-3">Accommodation</h2>
+                  <p className="text-gray-700 text-lg">1 Luxury Suite</p>
+                </div>
+                <div className="transform transition-all duration-300 hover:translate-x-2">
+                  <h2 className="text-xl font-semibold text-gray-900 mb-3">Equipment & Materials</h2>
+                  <p className="text-gray-700 text-lg">Premium Cleaning Supplies Included</p>
+                </div>
+                <div className="transform transition-all duration-300 hover:translate-x-2">
+                  <h2 className="text-xl font-semibold text-gray-900 mb-3">Professional Rate</h2>
+                  <p className="text-gray-700 text-lg">€30/hr (Premium Service)</p>
+                </div>
+                <div className="transform transition-all duration-300 hover:translate-x-2">
+                  <h2 className="text-xl font-semibold text-gray-900 mb-3">Appointment Date</h2>
+                  <p className="text-gray-700 text-lg">Monday, January 8, 2024</p>
+                </div>
+                <div className="transform transition-all duration-300 hover:translate-x-2">
+                  <h2 className="text-xl font-semibold text-gray-900 mb-3">Service Duration</h2>
+                  <p className="text-gray-700 text-lg">10:00 AM - 12:00 PM (2 hours)</p>
+                </div>
+                <div className="transform transition-all duration-300 hover:translate-x-2">
+                  <h2 className="text-xl font-semibold text-gray-900 mb-3">Service Location</h2>
+                  <p className="text-gray-700 text-lg">Jameria Luxury Residence</p>
+                </div>
               </div>
             </div>
+          </div>
 
-            <div className="mt-8 flex justify-center items-center">
-              <Link href={"/jobs"}>
-                <Button className="w-[250px] mb-4 mt-6 h-[45px] text-white bg-[#00BFFF] rounded-lg outline-none hover:bg-[#00A0E0] transition duration-200 ease-in-out">
-                  <span>Book</span>
-                </Button>
-              </Link>
+          {/* Payment Summary Card */}
+          <div className="bg-white border-2 rounded-2xl shadow-xl p-8 max-w-md mb-10 transition-all duration-300 hover:shadow-2xl">
+            <h2 className="text-2xl font-bold text-gray-900 mb-8">
+              Payment Summary
+            </h2>
+            <div className="space-y-6">
+              <div className="flex justify-between items-center py-4 border-b border-gray-200">
+                <span className="text-lg text-gray-700">Service Amount</span>
+                <span className="text-xl text-gray-900 font-semibold">€150.00</span>
+              </div>
+              <div className="flex justify-between items-center py-4 border-b border-gray-200">
+                <span className="text-lg text-gray-700">VAT (15%)</span>
+                <span className="text-xl text-gray-900 font-semibold">€22.50</span>
+              </div>
+              <div className="flex justify-between items-center pt-6">
+                <span className="text-xl font-bold text-gray-900">Total</span>
+                <span className="text-2xl font-bold text-[#00BFFF]">€172.50</span>
+              </div>
             </div>
+          </div>
+
+          {/* Book Button */}
+          <div className="mt-8 flex justify-center items-center">
+            <Link href={"/jobs/"}>
+              <Button
+                type="submit"
+                className="w-[250px] mb-4 mt-6 h-[45px] text-white bg-[#00BFFF] rounded-lg outline-none hover:bg-[#00A0E0] transition duration-200 ease-in-out"
+              >
+                <span>Next</span>
+              </Button>
+            </Link>
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }
 
-export default page;
+export default Page;

@@ -16,6 +16,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useRouter } from "next/navigation";
+import { useForm, SubmitHandler, Controller } from "react-hook-form";
+
 
 function page() {
   interface Props {
@@ -26,6 +28,34 @@ function page() {
     descriptionValue: string;
     slotTimes: object;
   }
+  type FormInputs = {
+    provider: string;
+    category: string;
+    subcategory: string;
+    fixRate: string;  
+    description:string;
+    
+    
+  };
+
+  const {
+    register,
+    handleSubmit,
+    control,
+    formState: { errors },
+    setValue,
+    watch,
+    clearErrors
+
+  } = useForm<FormInputs>();
+
+  const onSubmit: SubmitHandler<FormInputs> = (data) => {
+    console.log(data);
+    alert("Form submitted sucessfully")
+    
+  }
+
+
   const [selectedCategory, setSelectedCategory] = useState<string>("");
   const [subCategories, setSubCategories] = useState<string[]>([]);
   const [provider, setProvider] = useState("");
@@ -139,42 +169,24 @@ function page() {
     console.log("Checked Slot Times:", checkedSlotTimes);
   };
 
-  const nextBtn = () => {
-    if (
-      !category ||
-      !subCategory ||
-      !provider ||
-      !fixRate ||
-      !descriptionValue ||
-      !slotTimes
-    ) {
-      alert("Please fill all the fields");
-    } else {
-      formData = {
-        provider,
-        category,
-        subCategory,
-        fixRate,
-        descriptionValue,
-        slotTimes,
-      };
-
-      setFormData({ ...formData });
-      alert("Data Submitted Sucessfully!");
-
-      console.log(formData);
-      router.push("/services/reviewService")
-    }
-  };
+ 
 
   return (
     <>
-      <div className="bg-[#F5F7FA] min-h-screen w-full flex items-start justify-start pt-2">
-        <div className="w-full max-w-6xl px-8 lg:px-16 mt-6">
+      <div className="bg-[#F5F7FA] min-h-screen w-full flex items-start justify-start">
+        <div className="max-w-7xl mx-auto p-4 sm:p-6 lg">
+        <form onSubmit={handleSubmit(onSubmit)} className="w-full max-w-6xl px-8 lg:px-16 mt-6">
           <h1 className="text-2xl font-bold mt-2">Add Services</h1>
 
           <div className="grid w-full items-center gap-1.5 mt-6">
-            <Select required onValueChange={handleProvider} value={provider}>
+          <Controller
+                name="provider"
+                control={control}
+                rules={{
+                  required: "Provider name is required",
+                }}
+                render={({ field: { value, onChange } }) => (
+            <Select  onValueChange={onChange} value={value}>
               <SelectTrigger className="w-full h-[55px] rounded-lg border border-[#4BB1D3] bg-gray-50 mt-1 pr-6 outline-[#4BB1D3] focus:border-[#4BB1D3] focus:outline-none focus:border-none">
                 <SelectValue placeholder="Select Provider Name" />
               </SelectTrigger>
@@ -190,6 +202,13 @@ function page() {
                 </SelectGroup>
               </SelectContent>
             </Select>
+                )}
+              />
+              {errors.provider && (
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.provider.message}
+                </p>
+              )}
           </div>
 
           <div className="grid w-full items-center gap-1.5 mt-3">
@@ -197,8 +216,15 @@ function page() {
             <label className="text-md font-semibold" htmlFor="category">
               Category
             </label>
+            <Controller
+            name="category"
+            control={control}
+            rules={{
+              required: "Category is required",
+            }}
+            render={({ field }) => (
             <Select
-              required
+              
               onValueChange={handleCategoryChange}
               value={selectedCategory}
             >
@@ -216,16 +242,30 @@ function page() {
                 </SelectGroup>
               </SelectContent>
             </Select>
+            )}
+            />
+            {errors.category && (
+            <p className="text-red-500 mt-2 text-sm">{errors.category.message}</p>
+          )}
+
 
             {subCategories.length > 0 && (
               <div className="grid w-full items-center gap-1.5 mt-4">
                 <label className="text-md font-semibold" htmlFor="subCategory">
                   Subcategory
                 </label>
+                <Controller
+              name="subcategory"
+              control={control}
+              rules={{
+                required: "Subcategory is required",
+              }}
+              render={({ field: { value, onChange } }) => (
+               
                 <Select
-                  required
-                  value={subCategory}
-                  onValueChange={handleSubCategory}
+                  
+                  value={value}
+                  onValueChange={onChange}
                 >
                   <SelectTrigger className="w-full h-[55px] rounded-lg border p-4 pr-6 border-[#4BB1D3] bg-gray-50 outline-[#4BB1D3] focus:border-blue-500 focus:outline-none">
                     <SelectValue placeholder="Select Subcategory" />
@@ -241,6 +281,13 @@ function page() {
                     </SelectGroup>
                   </SelectContent>
                 </Select>
+              )}
+              />
+               {errors.subcategory && (
+              <p className="text-red-500 mt-2 text-sm">{errors.subcategory.message}</p>
+            )}
+            
+                 
               </div>
             )}
           </div>
@@ -250,8 +297,14 @@ function page() {
               <label className="text-md font-semibold" htmlFor="AdFixedRate">
                 Ad Fixed Rate
               </label>
-
-              <Select required value={fixRate} onValueChange={handleFixRate}>
+              <Controller
+                name="fixRate"
+                control={control}
+                rules={{
+                  required: "Fix Rate is required",
+                }}
+                render={({ field: { value, onChange } }) => (
+              <Select  value={value} onValueChange={onChange}>
                 <SelectTrigger className="w-full h-[55px] rounded-lg border border-[#4BB1D3] bg-gray-50 mt-1 pr-6 outline-[#4BB1D3] focus:border-[#4BB1D3] focus:outline-none focus:border-none">
                   <SelectValue placeholder="Add Fix Rate" />
                 </SelectTrigger>
@@ -272,18 +325,24 @@ function page() {
                   </SelectGroup>
                 </SelectContent>
               </Select>
+                )}
+                />
+                 {errors.fixRate && (
+              <p className="text-red-500 mt-2 text-sm">{errors.fixRate.message}</p>
+            )}
             </div>
           </div>
 
           <div className="grid w-full items-center gap-1.5 mt-3">
             <p className="text-md font-semibold">Description</p>
             <Textarea
-              required
-              onChange={handleDescription}
-              ref={description}
+              
+              
+              {...register("description", { required: true })}
               className="w-full h-[85px] rounded-lg border-[#4BB1D3] focus:border-blue-500 focus:outline-none"
               placeholder="Description"
             />
+            {errors.description && <span className="text-red-600 text-sm">description is required</span>}
           </div>
 
           <div className="grid w-full items-center gap-1.5 mt-3">
@@ -353,7 +412,7 @@ function page() {
             <h1 className="text-xl font-semibold mt-6 text-gray-800 mb-6">
               Select Slot Time
             </h1>
-            <form onSubmit={handleFormSubmit}>
+           
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6">
                 {[
                   "Monday",
@@ -385,7 +444,7 @@ function page() {
                     <div className="flex space-x-4 w-2/3 justify-end gap-1">
                       <input
                         type="text"
-                        required
+                        
                         className="w-[70px] sm:w-[105px] md:w-[105px] lg:w-[100px] h-[40px] rounded-lg bg-transparent focus:outline-none px-3 border-2 border-[#4BB1D3] focus:border-blue-500 placeholder-gray-400"
                         placeholder="Open"
                         id={`open-${day.toLowerCase()}`}
@@ -401,7 +460,7 @@ function page() {
 
                       <input
                         type="text"
-                        required
+                        
                         className="w-[70px] sm:w-[105px] md:w-[105px] lg:w-[100px] h-[40px] rounded-lg bg-transparent focus:outline-none px-3 border-2 border-[#4BB1D3] focus:border-blue-500 placeholder-gray-400"
                         placeholder="Close"
                         id={`close-${day.toLowerCase()}`}
@@ -418,23 +477,39 @@ function page() {
                   </div>
                 ))}
               </div>
-            </form>
+            
           </div>
 
           <div className="mt-6 flex justify-center items-center">
             {/* <Link href={"/services/reviewService"}> */}
             <Button
-              onClick={nextBtn}
+             type="submit"
               className="w-[200px] h-[45px] mb-6 mt-2 text-white bg-[#00BFFF] rounded-lg outline-none hover:bg-[#00A0E0] transition duration-200 ease-in-out"
             >
               <span>Next</span>
             </Button>
             {/* </Link> */}
           </div>
-        </div>
+        </form>
+      </div>
       </div>
     </>
   );
 }
 
 export default page;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

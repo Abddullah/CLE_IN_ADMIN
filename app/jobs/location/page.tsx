@@ -2,8 +2,17 @@
 import React, { useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { useForm, SubmitHandler } from "react-hook-form"
+
 
 function page() {
+
+  type Inputs = {
+    location: string
+    locationRequired: string
+    instruction:string
+    instructionRequired: string
+  }
   let [data, setData] = useState({});
   let [location, setLocation] = useState("");
   let [comment, setComment] = useState("");
@@ -39,11 +48,17 @@ function page() {
     alert("Data submitted Sucessfully")
   }
   };
-
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm<Inputs>()
+  const onSubmit: SubmitHandler<Inputs> = (data) => console.log(data)
   return (
     <>
       <div className="bg-[#F5F7FA] min-h-screen w-full flex items-start justify-start pt-2">
-        <div className="w-full max-w-7xl px-8 lg:px-16 mt-6">
+        <form onSubmit={handleSubmit(onSubmit)} className="w-full max-w-7xl px-8 lg:px-16 mt-6">
           {/* Location Field */}
           <div className="mb-4">
             <label
@@ -73,13 +88,15 @@ function page() {
               <input
                 type="text"
                 id="location"
-                name="location"
+                
+                {...register("locationRequired", { required: true })}
                 placeholder="Enter your location"
                 className="w-full pl-10 pr-4 py-2 border border-[#00BFFF] rounded-md shadow-sm focus:outline-none focus:ring-1  focus:ring-[#00BFFF]"
-                ref={locationValue}
-                onChange={handleLocation}
+                
               />
+              
             </div>
+            {errors.locationRequired && <span className="text-red-600">Location is required</span>}
           </div>
 
           {/* Any Specific Instruction? Textarea */}
@@ -92,27 +109,30 @@ function page() {
             </label>
             <textarea
               id="instructions"
-              name="instructions"
+             
               rows={4}
               placeholder="Write here..."
-              ref={commentValue}
-              onChange={handleComment}
+             
               className="w-full mt-2 p-3 border border-[#00BFFF] rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-[#00BFFF] focus:border-[#00BFFF]"
+              {...register("instructionRequired", { required: true })}
+              
               
             ></textarea>
+             {errors.instructionRequired && <span className="text-red-600">Please provide any specific instructions</span>}
+            
           </div>
 
           <div className="mt-8 flex justify-center items-center">
-            <Link href={"/jobs/reviewJob"}>
+            {/* <Link href={"/jobs/reviewJob"}> */}
               <Button
-                onClick={handleData}
+                type="submit"
                 className="w-[250px] mb-4 mt-6 h-[45px] text-white bg-[#00BFFF] rounded-lg outline-none hover:bg-[#00A0E0] transition duration-200 ease-in-out"
               >
                 <span>Next</span>
               </Button>
-            </Link>
+            {/* </Link> */}
           </div>
-        </div>
+        </form>
       </div>
     </>
   );
