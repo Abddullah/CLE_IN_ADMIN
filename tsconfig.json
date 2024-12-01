@@ -24,7 +24,7 @@
       "@reduxjs/toolkit": ["./node_modules/@reduxjs/toolkit"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "next-i18next.config.js"],
   "exclude": ["node_modules"]
 }
 

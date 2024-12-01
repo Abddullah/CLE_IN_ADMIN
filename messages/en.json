@@ -1,0 +1,317 @@
+{
+  "loginPage": {
+    "welcome_admin": "Welcome Admin",
+    "manage_platform": "Manage your platform with ease and security",
+    "company_logo_alt": "Company Logo",
+    "admin_login": "Admin Login",
+    "enter_credentials": "Please enter your credentials",
+    "email_address": "Email Address",
+    "enter_email": "Enter your email",
+    "password": "Password",
+    "enter_password": "Enter your password",
+    "login_button": "Log In"
+  },
+  
+    "navbar": {
+      "services": "Services",
+      "categories": "Categories",
+      "settings": "Settings",
+      "bookings": "Bookings",
+      "jobs": "Jobs",
+      "users": "Users",
+      "logout": "Logout",
+      "chat": "Chat",
+      "dashboard": "Dashboard",
+      "additional_services": "Additional Services",
+      "search_placeholder": "Search for something",
+      "notifications": "Notifications",
+      "notification_received": "Notification received",
+      "notification_time": "Today | 9:00 AM",
+      "notification_message": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      "show_all": "Show all",
+      "user_profile_alt": "User Profile",
+      "notification_icon_alt": "Notification Icon"
+    },
+    "sideBar": {
+    "dashboard": "Dashboard",
+    "categories": "Categories",
+    "additional_services": "Additional Services",
+    "users": "Users",
+    "bookings": "Bookings",
+    "services": "Services",
+    "jobs": "Jobs",
+    "chat": "Chat",
+    "settings": "Settings",
+    "logout": "Logout",
+    "logo_alt": "Logo",
+    "notification_icon_alt": "Notification Icon",
+    "notification_received": "Notification Received",
+    "notification_time": "Time of Notification",
+    "notification_message": "You have received a new notification."
+  },
+  "dashboard": {
+    "totalBooking": "Total Booking",
+    "totalIncome": "Total Income",
+    "totalUsers": "Total Users",
+    "totalProvider": "Total Provider",
+    "totalIncomeTitle": "Total Income",
+    "totalBookingTitle": "Total Booking"
+  },
+  "category":{
+    
+      "add_button": "ADD",
+      "cleaning_at_house": "Cleaning at house",
+      "cleaning_at_company": "Cleaning at Company",
+      "cleaning_at_hospital": "Cleaning at hospital",
+      "cleaning_at_factory": "Cleaning at Factory"
+    
+    
+  },
+  "AddCategory":{
+    "add_category": "Add Category",
+    "name": "Name",
+    "category_name_placeholder": "Category Name",
+    "category_name_required": "Category name is required",
+    "upload_image": "Upload Image",
+    "save_button": "Save"
+  },
+   "Users": {
+      "name": "Name",
+      "email": "Email",
+      "phoneNo": "Phone No",
+      "role": "Role",
+      "address": "Address",
+      "gender": "Gender",
+      "dateOfBirth": "Date of Birth",
+      "actions": "Actions",
+      "more": "More",
+      "edit": "Edit",
+      "delete": "Delete",
+      "phone": "Phone:",
+      "roleLabel": "Role:",
+      "addressLabel": "Address:",
+      "genderLabel": "Gender:",
+      "dateOfBirthLabel": "Date of Birth:",
+      "add_users": "Add User",
+      "emailAdress": "Email Address",
+      "email_placeholder": "Email Address",
+      "email_required_error": "Email is required",
+      "email_pattern_error": "Invalid email address",
+     
+  "username_placeholder": "Username",
+  "username_required_error": "Username is required",
+  "username_min_length_error": "Username must be at least 3 characters",
+      
+      "password": "Password",
+      "password_placeholder": "Password",
+      "password_required_error": "Password is required",
+      "password_min_length_error": "Password must be at least 6 characters",
+      
+      "confirm_password": "Confirm Password",
+      "confirm_password_placeholder": "Confirm Password",
+      "confirm_password_required_error": "Please confirm your password",
+      "confirm_password_validate_error": "Passwords do not match",
+      "role_placeholder": "Please Select Role",
+      "role_required_error": "Role is required",
+      
+      "add_user_button": "Add User",
+      "user_role_user": "User",
+      "user_role_provider": "Provider"
+     
+    },
+    "Bookings":{
+      "booking_details_header": "Booking Details",
+      "time_slot": "Time Slot",
+      "user_bookings": "User Bookings",
+      "no_bookings_available": "No bookings available",
+      "clock_icon_alt": "Clock Icon",
+      "pick_a_date": "Pick a date",
+      "we_clean_room_with_efforts_and_dedication": "We clean room with 100% efforts and dedication",
+      "booking_calendar": "Booking Calendar",
+      "previous_day": "Previous Day",
+      "next_day": "Next Day"
+
+    },
+    "chats":{
+      "chats": "Chats",
+      "select_a_user": "Select a user to start chatting",
+      "status_online": "Online",
+      "status_offline": "Offline",
+      "send_message": "Send Message",
+      "type_message": "Type your message...",
+      "message":"I'm doing great! How about you?"
+
+
+    },
+    
+
+
+
+    "Settings": {
+    "privacy_policy": "Privacy Policy",
+    "terms_and_conditions": "Terms and Conditions",
+    "heading": "Privacy Policy",
+    "paragraph": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem ipsum dolor sit amet consectetur adipisicing elit. At earum officiis animi libero quo consectetur minima distinctio exercitationem iste totam veniam fugiat harum saepe, voluptate laborum facilis nostrum quia veritatis.",
+    "select_language":"Language",
+    "choose_language_description":"Choose a Language"
+  },
+  "Services":{
+    "addServices": "Add Services",
+    "selectProvider": "Select Provider Name",
+    "providerRequired": "Provider name is required",
+    "category":"Category",
+    "categories":"Categories",
+    "SubCategories":"Sub Categories",
+    "selectCategory": "Select Category",
+    "categoryRequired": "Category is required",
+    "selectSubCategory": "Select Subcategory",
+    "subcategoryRequired": "Subcategory is required",
+    "adFixedRate": "Ad Fixed Rate",
+    "fixRateRequired": "Fix Rate is required",
+    "description": "Description",
+    "descriptionRequired": "Description is required",
+    "photos": "Photos",
+    "formSubmitted": "Form submitted successfully",
+    
+      "pageTitle": "Review & Confirm Service",
+      "imageAlt": "image",
+      "title": "Title",
+      "serviceTitle": "Cleaning at Home",
+      "descriptionTitle": "Description",
+      "descriptionText": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Blanditiis assumenda necessitatibus expedita, dicta iure eius dolorem voluptatum officia aut neque sint distinctio quia quasi sed recusandae voluptatibus voluptas magni error?",
+      
+        "titleJob": "Job Details",
+        "priceLabel": "Price",
+        "cleanersLabel": "Cleaners",
+        "workFrequencyLabel": "Work Frequency",
+        "workFrequencyValue": "Weekly",
+        "roomAreaSizeLabel": "Room Area Size",
+        "roomAreaSizeValue": "51-100m2",
+        "numberOfRoomsLabel": "Number of Rooms",
+        "numberOfRoomsValue": "3 Rooms",
+        "cleaningMaterialsLabel": "Need Cleaning Materials?",
+        "cleaningMaterialsValue": "Yes Please",
+        "Location": "Location",
+    "mapAlt": "map",
+      "label": "Customer info",
+    "buttonLabel": "i",
+    "post": "POST",
+    "cleaningAtOffice": "Cleaning at Office",
+  "cleaningAtFactory": "Cleaning at Factory",
+  "cleaningAtHospital": "Cleaning at Hospital",
+  "cleaningAtCompany": "Cleaning at Company",
+  "FixRate":"Fix Rate",
+  "active":"Active",
+  "moderate":"Moderate",
+  "Pending":"Pending",
+  "add_button": "ADD",
+  "select_time_slots": "Select Time Slots",
+  "select_one":"Please select at least one day",
+  "select_Both":"Both open and close times are required",
+  "next":"Next"
+  
+      
+  },
+  "Jobs":{
+    "AddJobs": "Add Jobs",
+    "Provider": "Select Provider Name",
+    "HowManyHours": "How many hours do you need?",
+    "PleaseSelectHour": "Please select the hour you required",
+    "HowManyProfessionals": "How many professionals do you need?",
+    "PleaseSelectProfessional": "Please select the professional you required",
+    "SelectCategory": "Select Category",
+    "categories":"Categories",
+    "Category": "Category",
+    "Subcategory": "Subcategory",
+    "Subcategories":"Subcategories",
+    "RoomAreaSize": "Room Area Size",
+    "ProviderRequired": "Provider name is required",
+    "HourRequired": "Please select the hour you required",
+    "ProfessionalRequired": "Please select the professional you required",
+    "CategoryRequired": "Category is required",
+    "SubcategoryRequired": "Subcategory is required",
+    "RoomSizeRequired": "Room Size is required",
+    "FormSubmittedSuccessfully": "Form submitted successfully",
+    "NumberOfRoom":"Number of Room",
+    "RequiredNumberOfRoom":"Number of Room is required",
+    "NeedCleaningMaterials":"Need Cleaning Materials",
+    "No":"No,I have them",
+    "yes":"Yes,Please",
+    "RequiredCleaningMaterial":"Please select an option.",
+    "SelectAdditional":"Select Additional Services",
+    "photos": "Photos",
+    "Location": "Location",
+    "RequiredLocation":"Location is required",
+    "next":"Next",
+    "specificInstruction":"Any Specific Instruction?",
+    "RequiredInstruction":"Please provide any specific instructions",
+    "LocationPlacholder":"Enter your location",
+    "InstructionPlaceholder":"Write here...",
+    "WhatWouldYouLike":"When would you like to scehedule your service?",
+    "selectDate":"Select Date",
+    "selectTime":"Select Time",
+    "pageTitle": "Review & Confirm Booking",
+   
+      "title": "Service Details",
+      "service": "Service",
+      "serviceDescription": "Premium Cleaning Services",
+      "description": "Description",
+      "descriptionDetails": "Deep cleaning with eco-friendly products",
+      "professionalCleaners": "Professional Cleaners",
+      "cleanersDetails": "3 Certified Experts",
+      "frequency": "Service Frequency",
+      "frequencyDetails": "Weekly Premium Service",
+      "coverageArea": "Coverage Area",
+      "coverageDetails": "51 - 100 m² (Professional Grade)",
+      "titleService": "Additional Details",
+      "accommodation": "Accommodation",
+      "accommodationDetails": "1 Luxury Suite",
+      "equipment": "Equipment & Materials",
+      "equipmentDetails": "Premium Cleaning Supplies Included",
+      "rate": "Professional Rate",
+      "rateDetails": "€30/hr (Premium Service)",
+      "appointmentDate": "Appointment Date",
+      "appointmentDateDetails": "Monday, January 8, 2024",
+      "duration": "Service Duration",
+      "durationDetails": "10:00 AM - 12:00 PM (2 hours)",
+      "location": "Service Location",
+      "locationDetails": "Jameria Luxury Residence",
+      "Summary": "Payment Summary",
+      "serviceAmount": "Service Amount",
+      "vat": "VAT (15%)",
+      "total": "Total"
+
+  },
+  "AdditionalServices":{
+   "add_additional_services": "Add Additional Services",
+  "title": "Title",
+  "title_placeholder": "e.g: Cupboard Cleaning",
+  "title_required": "Title is required",
+  "price": "Price",
+  "price_placeholder": "Enter Price",
+  "price_required": "Price is required",
+  "add_button": "Add",
+  "edit": "Edit",
+      "delete": "Delete"
+  },
+  "logout":{
+    "are_you_sure_logout": "Are you sure you want to log out?",
+    "yes": "Yes",
+    "no": "No"
+  }
+  
+  
+   
+  
+  
+    
+    
+    
+  }
+  
+  
+  
+  
+
+
+
