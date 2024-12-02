@@ -145,7 +145,7 @@ const Sidebar = () => {
           <button
             className={`w-full text-left px-6 py-3 rounded-lg font-medium text-lg transition-all duration-200 hover:bg-gray-50 focus:outline-none ${
               activeSection === "privacyPolicy"
-                ? "text-blue-600 bg-blue-50 border-l-4 border-blue-500"
+                ? "text-[#00BFFF] bg-blue-50 border-l-4 border-[#00BFFF]"
                 : "text-gray-700"
             }`}
             onClick={() => setActiveSection("privacyPolicy")}
@@ -155,7 +155,7 @@ const Sidebar = () => {
           <button
             className={`w-full text-left px-6 py-3 rounded-lg font-medium text-lg transition-all duration-200 hover:bg-gray-50 focus:outline-none ${
               activeSection === "terms"
-                ? "text-blue-600 bg-blue-50 border-l-4 border-blue-500"
+                ? "text-[#00BFFF] bg-blue-50 border-l-4 border-[#00BFFF]"
                 : "text-gray-700"
             }`}
             onClick={() => setActiveSection("terms")}
@@ -166,7 +166,7 @@ const Sidebar = () => {
           <button
             className={`w-full text-left px-6 py-3 rounded-lg font-medium text-lg transition-all duration-200 hover:bg-gray-50 focus:outline-none ${
               activeSection === "language"
-                ? "text-blue-600 bg-blue-50 border-l-4 border-blue-500"
+                ? "text-[#00BFFF] bg-blue-50 border-l-4 border-[#00BFFF]"
                 : "text-gray-700"
             }`}
             onClick={() => setActiveSection("language")}

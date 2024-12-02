@@ -149,7 +149,7 @@ function page() {
     setSelectedCategory(value);
     setCategory(value);
     setSubCategories(categories[value] || []);
-  };
+  };    
 
   return (
     <>
@@ -176,12 +176,12 @@ function page() {
                     <SelectContent>
                       <SelectGroup>
                         <SelectLabel>{(t('selectProvider'))} </SelectLabel>
-                        <SelectItem value="Haider Ali">Haider Ali</SelectItem>
-                        <SelectItem value="Ahmed">Ahmed</SelectItem>
-                        <SelectItem value="Muzammil">Muzammil</SelectItem>
-                        <SelectItem value="Ashar">Ashar</SelectItem>
-                        <SelectItem value="Abdullah">Abdullah</SelectItem>
-                        <SelectItem value="Jawed">Jawed</SelectItem>
+                        <SelectItem value="Leonardo">Leonardo </SelectItem>
+                        <SelectItem value="Matteo">Matteo</SelectItem>
+                        <SelectItem value="Alessandro">Alessandro</SelectItem>
+                        <SelectItem value="Giovanni">Giovanni</SelectItem>
+                        <SelectItem value="Luca">Luca</SelectItem>
+                        <SelectItem value="Marco">Marco</SelectItem>
                       </SelectGroup>
                     </SelectContent>
                   </Select>

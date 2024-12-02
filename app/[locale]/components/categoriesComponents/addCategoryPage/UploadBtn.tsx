@@ -2,8 +2,11 @@
 
 import Image from "next/image";
 import React from "react";
-
+import { useTranslations } from "next-intl";
+ 
 const UploadButton: React.FC = () => {
+  const t = useTranslations('AddCategory');
+  
   const handleFileInputClick = () => {
     const fileInput = document.getElementById("file-input") as HTMLInputElement;
     if (fileInput) {
@@ -12,6 +15,7 @@ const UploadButton: React.FC = () => {
   };
 
   return (
+    
     <div className="grid w-full max-w-sm items-center gap-1.5">
       <input
         type="file"
@@ -30,7 +34,7 @@ const UploadButton: React.FC = () => {
           height={10}
           alt="upload icon"
         />
-        <span className="mt-1.5 text-[15px]">Choose a File</span>
+        <span className="mt-1.5 text-[15px]">{(t('Choose_a_file'))}</span>
       </button>
     </div>
   );

@@ -155,17 +155,17 @@ function page() {
 
   return (
     <>
-      {/* <div className="bg-[#F5F7FA] h-screen w-full flex items-start justify-start"> */}
-      {/* <div className="bg-[#F5F7FA] min-h-screen w-full flex items-start justify-start">
-       */}
-       <div className="bg-[#F5F7FA] min-h-screen w-full flex items-start justify-start">
-        <div className="max-w-7xl mx-auto p-4 sm:p-6 lg">
+     
+     
+     <div className="bg-[#F5F7FA] min-h-screen w-full flex items-start justify-start relative">
+     <div className="max-w-7xl mx-auto p-4 sm:p-6 lg">
+
           <form
             onSubmit={handleSubmit(onSubmit)}
-            className="w-full max-w-6xl px-8 lg:px-16 mt-6"
+            className="w-full max-w-6xl px-8 lg:px-16 mt-6 mb-0"
           >
             <h1 className="text-2xl font-bold mt-2">{(t('AddJobs'))}</h1>
-            <div className="grid w-full h-full items-center gap-1.5 mt-6">
+           <div className="grid w-full items-center gap-1.5 ">
               <Controller
                 name="provider"
                 control={control}
@@ -180,12 +180,12 @@ function page() {
                     <SelectContent>
                       <SelectGroup>
                         <SelectLabel>{(t('Provider'))}</SelectLabel>
-                        <SelectItem value="Haider Ali">Haider Ali</SelectItem>
-                        <SelectItem value="Ahmed">Ahmed</SelectItem>
-                        <SelectItem value="Muzammil">Muzammil</SelectItem>
-                        <SelectItem value="Ashar">Ashar</SelectItem>
-                        <SelectItem value="Abdullah">Abdullah</SelectItem>
-                        <SelectItem value="Jawed">Jawed</SelectItem>
+                        <SelectItem value="Leonardo">Leonardo </SelectItem>
+                        <SelectItem value="Matteo">Matteo</SelectItem>
+                        <SelectItem value="Alessandro">Alessandro</SelectItem>
+                        <SelectItem value="Giovanni">Giovanni</SelectItem>
+                        <SelectItem value="Luca">Luca</SelectItem>
+                        <SelectItem value="Marco">Marco</SelectItem>
                       </SelectGroup>
                     </SelectContent>
                   </Select>
@@ -198,79 +198,46 @@ function page() {
               )}
             </div>
 
-            <div className="flex flex-col items-start space-y-6 mt-8">
-              <h2 className="text-md font-semibold text-gray-800">
-                {(t('HowManyHours'))}
-              </h2>
+           <div className="flex flex-col mt-6 h-full">
+  <h2 className="text-lg font-semibold text-gray-800">{t('HowManyHours')}</h2>
+  <div className="flex flex-wrap gap-4 mt-3 justify-start">
+    {[1, 2, 3, 4, 5, 6, 7, 8].map((hour) => (
+      <button
+        key={hour}
+        type="button"
+        onClick={() => handleSelectHour(hour)}
+        className={`w-8 h-8 text-lg font-bold rounded-full border transition duration-300 ${selectedHour === hour ? 'bg-[#4BB1D3] text-white' : 'text-[#4BB1D3] border-[#4BB1D3] hover:bg-[#4BB1D3] hover:text-white'}`}
+      >
+        {hour}
+      </button>
+    ))}
+  </div>
+  {errors.hour && (
+    <p className="text-red-500 text-sm mt-1">{errors.hour.message}</p>
+  )}
+</div>
 
-              <Controller
-                name="hour"
-                control={control}
-                rules={{
-                  required: (t('PleaseSelectHour')),
-                }}
-                render={({ field }) => (
-                  <div className="flex space-x-4">
-                    {[1, 2, 3, 4, 5, 6, 7, 8].map((hour) => (
-                      <button
-                        key={hour}
-                        type="button"
-                        onClick={() => handleSelectHour(hour)}
-                        className={`flex items-center justify-center w-10 h-10 text-lg font-bold rounded-full border transition duration-300 ${
-                          selectedHour === hour
-                            ? "bg-[#4BB1D3] text-white border-[#4BB1D3]"
-                            : "text-[#4BB1D3] border-[#4BB1D3] hover:bg-[#4BB1D3] hover:text-white"
-                        }`}
-                      >
-                        {hour}
-                      </button>
-                    ))}
-                  </div>
-                )}
-              />
-              {errors.hour && (
-                <p className="text-red-500 text-sm mt-1">
-                  {errors.hour.message}
-                </p>
-              )}
-            </div>
-            <div className="grid w-full items-center gap-1.5 mt-6">
-              <h2 className="text-md font-semibold text-gray-800">
-               {(t('HowManyProfessionals'))}
-              </h2>
+{/* Professionals Selection */}
+<div className="w-full mt-6 h-full">
+  <h2 className="text-lg font-semibold text-gray-800">{t('HowManyProfessionals')}</h2>
+  <div className="flex space-x-2 mt-2 gap-2">
+    {[1, 2, 3, 4].map((professional) => (
+      <div className="flex mt-2" key={professional}>
+        <button
+          type="button"
+          onClick={() => handleSelectProfessional(professional)}
+          className={`w-8 h-8 text-lg font-bold rounded-full border transition duration-300 ${selectedProfessionals === professional ? 'bg-[#4BB1D3] text-white' : 'text-[#4BB1D3] border-[#4BB1D3] hover:bg-[#4BB1D3] hover:text-white'}`}
+        >
+          {professional}
+        </button>
+      </div>
+    ))}
+  </div>
+  {errors.professional && (
+    <p className="text-red-500 mt-2 text-sm">{errors.professional.message}</p>
+  )}
+</div>
 
-              <Controller
-                name="professional"
-                control={control}
-                rules={{
-                  required: (t('PleaseSelectProfessional')),
-                }}
-                render={({ field }) => (
-                  <div className="flex space-x-4 mt-3  ">
-                    {[1, 2, 3, 4].map((professional) => (
-                      <button
-                        key={professional}
-                        onClick={() => {
-                          handleSelectProfessional(professional);
-                        }}
-                        className={`flex items-center justify-center w-10 h-10 text-lg font-bold rounded-full border transition duration-300 ${
-                          selectedProfessionals === professional
-                            ? "bg-[#4BB1D3] text-white border-[#4BB1D3]"
-                            : "text-[#4BB1D3] border-[#4BB1D3] hover:bg-[#4BB1D3] hover:text-white"
-                        }`}
-                      >
-                        {professional}
-                      </button>
-                    ))}
-                  </div>
-                )}
-              />
-              {errors.professional && (
-                <p className="text-red-500 mt-2 text-sm">
-                  {errors.professional.message}
-                </p>
-              )}
-            </div>
 
             <div className="grid w-full items-center gap-1.5 mt-3">
               <p className="text-xl font-semibold mt-6 mb-4">{(t('SelectCategory'))}</p>
@@ -318,7 +285,7 @@ function page() {
             {subCategories.length > 0 && (
               <div className="grid w-full items-center gap-1.5 mt-4">
                 <label className="text-md font-semibold" htmlFor="subcategory">
-                  {(t('subcategory'))}
+                  {(t('Subcategories'))}
                 </label>
                 <Controller
                   name="subcategory"
@@ -605,7 +572,7 @@ function page() {
             <div className="mt-8 flex justify-center items-center">
               <Button
                 type="submit"
-                className="w-[250px] mb-4 mt-6 h-[45px] text-white bg-[#00BFFF] rounded-lg outline-none hover:bg-[#00A0E0] transition duration-200 ease-in-out"
+                className="w-[250px]  mt-6 h-[45px] text-white bg-[#00BFFF] rounded-lg outline-none hover:bg-[#00A0E0] transition duration-200 ease-in-out"
               >
                 <span>{(t('next'))}</span>
               </Button>
@@ -613,6 +580,7 @@ function page() {
           </form>
         </div>
       </div>
+      
     </>
   );
 }

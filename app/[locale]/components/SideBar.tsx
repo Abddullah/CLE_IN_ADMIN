@@ -139,7 +139,7 @@ const Sidebar = () => {
               
                 <FontAwesomeIcon
                   icon={faHome}
-                  className={`mr-[1.70rem] text-xl ${
+                  className={`mr-[1.68rem] text-xl ${
                     pathName === "dashboard"
                       ? "text-[#00BFFF]"
                       : "text-gray-400"
@@ -332,9 +332,9 @@ const Sidebar = () => {
               <p className="flex items-center">
                 <FontAwesomeIcon
                   icon={faSignOutAlt}
-                  className="text-gray-400 mr-2 mt-2 text-xl"
+                  className="text-gray-400 mr-7 mt-2 text-xl"
                 />
-                <span className="text-gray-500 mt-2 ml-6">  {(t('logout'))}</span>
+                <span className="text-gray-500 mt-2 mr-2">  {(t('logout'))}</span>
               </p>
             </Link>
           </button>

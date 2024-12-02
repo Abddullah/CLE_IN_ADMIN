@@ -32,7 +32,7 @@
     "notification_icon_alt": "Icona Notifica"
   },
   "sideBar": {
-    "dashboard": "Pannello di controllo",
+    "dashboard": "Cruscotto",
     "categories": "Categorie",
     "additional_services": "Servizi aggiuntivi",
     "users": "Utenti",
@@ -61,7 +61,8 @@
     "cleaning_at_house": "Pulizia a casa",
     "cleaning_at_company": "Pulizia in azienda",
     "cleaning_at_hospital": "Pulizia in ospedale",
-    "cleaning_at_factory": "Pulizia in fabbrica"
+    "cleaning_at_factory": "Pulizia in fabbrica",
+    "Choose_a_file":"Scegli un file"
   },
   "AddCategory": {
     "add_category": "Aggiungi Categoria",
@@ -69,7 +70,12 @@
     "category_name_placeholder": "Nome Categoria",
     "category_name_required": "Il nome della categoria è richiesto",
     "upload_image": "Carica Immagine",
-    "save_button": "Salva"
+    "save_button": "Salva",
+    "Choose_a_file":"Scegli un file",
+    "sub_category_Name": "Sottocategoria",
+    "required_Sub_Category": "La sottocategoria è obbligatoria",
+    "add_Subcategory": "Aggiungi Sottocategoria",
+    "sub_category_Placeholder": "Inserisci Sottocategoria"
   },
   "Users": {
     "name": "Nome",
@@ -88,7 +94,7 @@
     "addressLabel": "Indirizzo:",
     "genderLabel": "Genere:",
     "dateOfBirthLabel": "Data di Nascita:",
-    "add_users": "Aggiungi utente",
+    "add_users": "Aggiungi Utente",
 
     "username": "Nome",
     "username_placeholder": "Nome utente",
@@ -171,6 +177,7 @@
   "serviceTitle": "Pulizia a Casa",
   "descriptionTitle": "Descrizione",
   "descriptionText": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Blanditiis assumenda necessitatibus expedita, dicta iure eius dolorem voluptatum officia aut neque sint distinctio quia quasi sed recusandae voluptatibus voluptas magni error?",
+ 
   
     "titleJob": "Dettagli del Lavoro",
     "priceLabel": "Prezzo",
@@ -222,6 +229,7 @@
     "RoomSizeRequired": "La dimensione della stanza è obbligatoria",
     "FormSubmittedSuccessfully": "Modulo inviato con successo",
     "categories":"Categorie",
+    "Select_SubCategory": "Seleziona sottocategoria",
      "NumberOfRoom": "Numero di Stanze",
   "RequiredNumberOfRoom": "Il numero di stanze è obbligatorio",
   "NeedCleaningMaterials": "Ho bisogno di materiali per la pulizia",
@@ -281,7 +289,7 @@
     "price": "Prezzo",
     "price_placeholder": "Inserisci il prezzo",
     "price_required": "Il prezzo è obbligatorio",
-    "add_button": "Aggiungi"
+    "add_button": "AGGIUNGI"
   },
   "logout":{
     "are_you_sure_logout": "Sei sicuro di voler uscire?",

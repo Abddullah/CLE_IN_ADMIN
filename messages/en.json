@@ -64,6 +64,7 @@
       "cleaning_at_company": "Cleaning at Company",
       "cleaning_at_hospital": "Cleaning at hospital",
       "cleaning_at_factory": "Cleaning at Factory"
+     
     
     
   },
@@ -73,7 +74,13 @@
     "category_name_placeholder": "Category Name",
     "category_name_required": "Category name is required",
     "upload_image": "Upload Image",
-    "save_button": "Save"
+    "save_button": "Save",
+    "Choose_a_file":"Choose a File",
+    "sub_category_Name":"Subcategory",
+    "sub_category_Placeholder":"Enter Subcategory",
+    "required_Sub_Category":"Subcategory is required",
+    "add_Subcategory":"Add Subcategory"
+     
   },
    "Users": {
       "name": "Name",
@@ -208,7 +215,28 @@
   "select_time_slots": "Select Time Slots",
   "select_one":"Please select at least one day",
   "select_Both":"Both open and close times are required",
-  "next":"Next"
+  "next":"Next",
+  "officeCleaning": "Office Cleaning",
+  "roomCleaning": "Room Cleaning",
+  "pestControlService": "Pest Control Service",
+  "laundryService": "Laundry Service",
+  "electrician": "Electrician",
+    "plumber": "Plumber",
+    "masonBricklayer": "Mason/Bricklayer",
+    "carpenter": "Carpenter",
+    "painter": "Painter",
+    "airConditioningInstaller": "Air Conditioning Installer",
+    "alarmSystemInstaller": "Alarm System Installer",
+    "solarPanelInstaller": "Solar Panel Installer",
+    "doorWindowInstaller": "Door and Window Installer",
+    "architect": "Architect",
+    "interiorDesigner": "Interior Designer",
+    "buildingContractor": "Building Contractor",
+    "floorLayer": "Floor Layer",
+    "cleaningHygieneServices": "Cleaning and Hygiene Services",
+    "homeMaintenanceServices": "Home Maintenance Services",
+    "installationServices": "Installation Services",
+    "renovationServices": "Renovation Services"
   
       
   },
@@ -223,6 +251,7 @@
     "categories":"Categories",
     "Category": "Category",
     "Subcategory": "Subcategory",
+    "Select_SubCategory":"Select Sub category",
     "Subcategories":"Subcategories",
     "RoomAreaSize": "Room Area Size",
     "ProviderRequired": "Provider name is required",
@@ -290,7 +319,7 @@
   "price": "Price",
   "price_placeholder": "Enter Price",
   "price_required": "Price is required",
-  "add_button": "Add",
+  "add_button": "ADD",
   "edit": "Edit",
       "delete": "Delete"
   },

@@ -1,7 +1,7 @@
 import { DatePicker } from "../../components/bookingComponents/DatePicker";
 import React from "react";
-import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import {Link} from '@/i18n/routing';
 import {useTranslations} from 'next-intl';
 
 
