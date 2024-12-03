@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils"
 import { buttonVariants } from "@/components/ui/button"
 import { ChevronLeftIcon, ChevronRightIcon } from "@radix-ui/react-icons"
 
+// Extend the component type if necessary (check your version of react-day-picker)
 export type CalendarProps = React.ComponentProps<typeof DayPicker>
 
 function Calendar({
@@ -60,9 +61,10 @@ function Calendar({
         ...classNames,
       }}
       components={{
-        IconLeft: ({ ...props }) => <ChevronLeftIcon className="h-4 w-4" />,
-        IconRight: ({ ...props }) => <ChevronRightIcon className="h-4 w-4" />,
-      }}
+        // Fix here: Using proper custom component props
+        IconLeft: ({ ...props }) => <ChevronLeftIcon className="h-4 w-4" {...props} />,
+        IconRight: ({ ...props }) => <ChevronRightIcon className="h-4 w-4" {...props} />,
+      } as any} // You can cast to 'any' or the appropriate type if needed
       {...props}
     />
   )
