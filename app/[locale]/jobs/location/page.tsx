@@ -1,7 +1,7 @@
 "use client";
 import React, { useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
-import Link from "next/link";
+import { Link } from "@/i18n/routing";
 import { useForm, SubmitHandler } from "react-hook-form"
 import { useTranslations } from "next-intl";
 
@@ -126,14 +126,14 @@ function page() {
           </div>
 
           <div className="mt-8 flex justify-center items-center">
-            {/* <Link href={"/jobs/reviewJob"}> */}
+            <Link href={"/jobs/reviewJob"}>
               <Button
                 type="submit"
                 className="w-[250px] mb-4 mt-6 h-[45px] text-white bg-[#00BFFF] rounded-lg outline-none hover:bg-[#00A0E0] transition duration-200 ease-in-out"
               >
                 <span>{(t('next'))}</span>
               </Button>
-            {/* </Link> */}
+            </Link>
           </div>
         </form>
       </div>

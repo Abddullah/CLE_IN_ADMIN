@@ -16,7 +16,7 @@ function page() {
       <Link href={"categories/add"}>
         <div className="flex justify-end overflow-hidden">
           <Button
-            className="border-[#4BB1D3] w-[80px] h-[40px] mt-5 mr-8 text-white bg-[#00BFFF] rounded-xl outline-none hover:bg-[#00BFFF] 
+            className="border-[#4BB1D3] w-[110px] h-[40px] mt-5 mr-8 text-white bg-[#00BFFF] rounded-lg outline-none hover:bg-[#00BFFF] 
       sm:w-[120px] sm:h-[45px] "
           >
             {(t('add_button'))}

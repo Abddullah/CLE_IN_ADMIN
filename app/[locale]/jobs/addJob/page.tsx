@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import Image from "next/image";
-import Link from "next/link";
+import { Link } from "@/i18n/routing";
 import { useState, useEffect } from "react";
 import map from "../../../assets/bookingsIcon/map.svg";
 import {
@@ -570,12 +570,14 @@ function page() {
             </div>
 
             <div className="mt-8 flex justify-center items-center">
+              <Link href={'/location'}>
               <Button
                 type="submit"
                 className="w-[250px]  mt-6 h-[45px] text-white bg-[#00BFFF] rounded-lg outline-none hover:bg-[#00A0E0] transition duration-200 ease-in-out"
               >
                 <span>{(t('next'))}</span>
               </Button>
+              </Link>
             </div>
           </form>
         </div>

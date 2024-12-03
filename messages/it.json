@@ -289,7 +289,9 @@
     "price": "Prezzo",
     "price_placeholder": "Inserisci il prezzo",
     "price_required": "Il prezzo è obbligatorio",
-    "add_button": "AGGIUNGI"
+    "add_button": "AGGIUNGI",
+     "edit": "Modifica",
+  "delete": "Elimina"
   },
   "logout":{
     "are_you_sure_logout": "Sei sicuro di voler uscire?",

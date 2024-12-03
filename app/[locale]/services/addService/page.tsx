@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import Image from "next/image";
 import { useState } from "react";
+import { Link } from "@/i18n/routing";
 import map from "../../../assets/bookingsIcon/map.svg";
 import { useRef } from "react";
 import {
@@ -87,6 +88,7 @@ function page() {
 
     console.log(data);
     alert("Form submitted sucessfully");
+ 
   };
 
   const getTimeError = (day: string) => {
@@ -521,14 +523,14 @@ function page() {
             </div>
 
             <div className="mt-6 flex justify-center items-center">
-              {/* <Link href={"/services/reviewService"}> */}
+              <Link href={"/services/reviewService"}>
               <Button
                 type="submit"
                 className="w-[200px] h-[45px] mb-6 mt-2 text-white bg-[#00BFFF] rounded-lg outline-none hover:bg-[#00A0E0] transition duration-200 ease-in-out"
               >
                 <span>{(t('next'))}</span>
               </Button>
-              {/* </Link> */}
+              </Link>
             </div>
           </form>
         </div>
