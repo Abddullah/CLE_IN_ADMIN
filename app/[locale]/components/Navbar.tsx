@@ -19,6 +19,7 @@ const pathMapping: Record<string, string> = {
   users: "Users",
   logout: "Logout",
   chat: "Chat",
+  payments:"Payments",
   dashboard: "Dashboard",
   additionalServices: "Additional Services",
 };

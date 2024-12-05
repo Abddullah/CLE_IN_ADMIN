@@ -120,7 +120,7 @@ export function TableDemo() {
   }, [openEditDelete]);
 
   return (
-    <div className="bg-[#F5F7FA] min-h-screen w-full px-8">
+    <div className="bg-[#F5F7FA] max-h-screen w-full px-8">
       <div className="overflow-hidden rounded-lg shadow-lg w-full mt-4">
         <Table className="min-w-full divide-y divide-gray-200">
           <TableHeader>

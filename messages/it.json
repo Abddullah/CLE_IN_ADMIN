@@ -40,6 +40,7 @@
     "services": "Servizi",
     "jobs": "Lavori",
     "chat": "Chat",
+    "payments":"Pagamenti",
     "settings": "Impostazioni",
     "logout": "Disconnettersi",
     "logo_alt": "Logo",
@@ -297,7 +298,23 @@
     "are_you_sure_logout": "Sei sicuro di voler uscire?",
     "yes": "Sì",
     "no": "No"
-  }
+  },
+ "Payments": {
+    "name": "Nome",
+    "percentage": "Percentuale",
+    "edit": "Modifica",
+    "delete": "Elimina",
+    "add_button": "AGGIUNGI",
+    "add_payment": "Aggiungi Pagamento",
+    "enter_percentage": "Inserisci Percentuale",
+    "percentage_required": "La percentuale è obbligatoria",
+    "name_required": "Il nome è obbligatorio",
+    "enter_name": "Inserisci Nome",
+    "add_more":"Aggiungi altro"
+}
+
+
+
   
   
   

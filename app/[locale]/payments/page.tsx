@@ -13,15 +13,14 @@ import {useTranslations} from 'next-intl';
 
 
 
-const AdditionalServices = () => {
-  const t = useTranslations('AdditionalServices');
+const Payments = () => {
+  const t = useTranslations('Payments');
   const services = [
-    { name: "Oven", price: "20 Euro" },
-    { name: "Laundry", price: "15 Euro" },
-    { name: "Fridge", price: "30 Euro" },
-    { name: "Ironing", price: "10 Euro" },
-    { name: "Balcony Cupboard", price: "25 Euro" },
-    { name: "Cupboard", price: "18 Euro" },
+    { name: "Text 1", price: "10%" },
+    { name: "Text 2", price: "20%" },
+    { name: "Text 3", price: "60%" },
+    { name: "Text 4", price: "45%" },
+    
   ];
   const [openEditDelete, setOpenEditDelete] = useState<null | number>(null);
 
@@ -31,7 +30,7 @@ const AdditionalServices = () => {
 
   return (
     <div className="bg-[#F5F7FA] min-h-screen w-full">
-      <Link href={"additionalServices/addAdditionalService"}>
+      <Link href={"payments/AddPayments"}>
         <div className="flex justify-end overflow-hidden">
           <Button className="border-[#4BB1D3] w-[80px] h-[40px] mt-5 mr-8 text-white bg-[#00BFFF] rounded-lg outline-none hover:bg-[#00BFFF] sm:w-[100px] sm:h-[45px]">
             {(t('add_button'))}
@@ -83,10 +82,10 @@ const AdditionalServices = () => {
               )}
 
               <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                {service.name}
+                 {(t('name'))}: {service.name}
               </h3>
               <p className="text-lg font-medium text-gray-700 mb-4">
-                {(t('price'))}: {service.price}
+                {t('percentage')}: {service.price}
               </p>
 
             
@@ -98,7 +97,7 @@ const AdditionalServices = () => {
   );
 };
 
-export default AdditionalServices;
+export default Payments;
 
 
 

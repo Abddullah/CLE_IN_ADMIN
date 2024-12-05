@@ -23,6 +23,8 @@
     "@radix-ui/react-toast": "^1.2.2",
     "@reduxjs/toolkit": "^2.3.0",
     "@shadcn/ui": "^0.0.4",
+    "add": "^2.0.6",
+    "calendar": "^0.1.1",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
@@ -36,6 +38,7 @@
     "react-hook-form": "^7.53.2",
     "react-redux": "^9.1.2",
     "recharts": "^2.14.1",
+    "shadcn": "^2.1.6",
     "tailwind-merge": "^2.5.4",
     "tailwindcss-animate": "^1.0.7",
     "yup": "^1.4.0"
