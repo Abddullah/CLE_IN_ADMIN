@@ -310,7 +310,8 @@
     "percentage_required": "La percentuale è obbligatoria",
     "name_required": "Il nome è obbligatorio",
     "enter_name": "Inserisci Nome",
-    "add_more":"Aggiungi altro"
+    "add_more":"Aggiungi altro",
+    "save": "SALVA"
 }
 
 

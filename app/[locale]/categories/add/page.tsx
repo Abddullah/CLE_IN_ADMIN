@@ -122,7 +122,7 @@ function Page() {
             </Button>
           </div>
 
-          <div className="mt-6">
+          <div className="mt-6">            
             <Button
               type="submit"
               className="border-[#4BB1D3] w-full h-[40px] mt-5 text-white bg-[#00BFFF] rounded-lg outline-none hover:bg-[#00A0E0] transition duration-200 ease-in-out sm:w-[100px] sm:h-[45px]"
