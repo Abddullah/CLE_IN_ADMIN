@@ -24,6 +24,7 @@
     "@reduxjs/toolkit": "^2.3.0",
     "@shadcn/ui": "^0.0.4",
     "@types/react-datepicker": "^6.2.0",
+    "@types/react-day-picker": "^5.2.1",
     "add": "^2.0.6",
     "calendar": "^0.1.1",
     "class-variance-authority": "^0.7.0",
