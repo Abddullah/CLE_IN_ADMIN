@@ -4,6 +4,7 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import {Link} from '@/i18n/routing';
 import {useTranslations} from 'next-intl';
+import DatePicker from "../../components/bookingComponents/DatePicker";
 
 
 function page() {
@@ -27,7 +28,7 @@ function page() {
           <div className="mt-5">
             <p className="font-semibold text-md">{(t('selectDate'))}</p>
             <div className="mt-1">
-              <CustomDatePicker/>
+              <DatePicker/>
             </div>
           </div>
 

@@ -4,6 +4,7 @@ import CalendarPicker from "../components/bookingComponents/DatePicker";
 import { BookingTable } from "../components/bookingComponents/BookingChart";
 import Image from "next/image";
 import {useTranslations} from 'next-intl';
+import DatePicker from "../components/bookingComponents/DatePicker";
 
 
 function page() {
@@ -16,7 +17,7 @@ function page() {
         <div className="flex flex-col flex-1">
           <h1 className="text-xl font-semibold text-gray-800">{(t('booking_calendar'))}</h1>
           <div className="mt-2">
-           <CalendarPicker/>
+           <DatePicker/>
             
           </div>
           <div className="flex gap-6 mt-4">
