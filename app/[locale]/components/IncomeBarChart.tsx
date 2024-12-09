@@ -37,7 +37,7 @@ const chartConfig = {
 export function Component() {
   const t = useTranslations('dashboard');
   return (
-    <ChartContainer config={chartConfig} className="min-h-[50px] w-[100%] p-2">
+    <ChartContainer config={chartConfig} className="min-h-[50px] w-[100%]  p-2">
       <BarChart data={chartData} height={150} width={400}>
         <CartesianGrid vertical={false} stroke="#D1D1D4" />
         <XAxis

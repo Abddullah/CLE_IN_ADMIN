@@ -1,5 +1,6 @@
+"use client"
 import React from "react";
-import { DatePicker } from "../components/bookingComponents/DatePicker";
+import CalendarPicker from "../components/bookingComponents/DatePicker";
 import { BookingTable } from "../components/bookingComponents/BookingChart";
 import Image from "next/image";
 import {useTranslations} from 'next-intl';
@@ -15,13 +16,14 @@ function page() {
         <div className="flex flex-col flex-1">
           <h1 className="text-xl font-semibold text-gray-800">{(t('booking_calendar'))}</h1>
           <div className="mt-2">
-            <DatePicker />
+           <CalendarPicker/>
+            
           </div>
           <div className="flex gap-6 mt-4">
-            <button className="text-xs text-blue-600 hover:underline focus:underline">
+            <button className="text-xs text-[#00BFFF] hover:underline focus:underline">
               {(t('previous_day'))}
             </button>
-            <button className="text-xs text-blue-600 hover:underline focus:underline">
+            <button className="text-xs text-[#00BFFF] hover:underline focus:underline">
              {(t('next_day'))}
             </button>
           </div>

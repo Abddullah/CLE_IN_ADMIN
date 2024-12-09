@@ -1,4 +1,5 @@
-import { DatePicker } from "../../components/bookingComponents/DatePicker";
+"use client"
+import CustomDatePicker from "../../components/bookingComponents/DatePicker";
 import React from "react";
 import { Button } from "@/components/ui/button";
 import {Link} from '@/i18n/routing';
@@ -26,7 +27,7 @@ function page() {
           <div className="mt-5">
             <p className="font-semibold text-md">{(t('selectDate'))}</p>
             <div className="mt-1">
-              <DatePicker />
+              <CustomDatePicker/>
             </div>
           </div>
 

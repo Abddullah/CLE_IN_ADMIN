@@ -13,12 +13,12 @@ function page() {
     <>
 
 
-<div className="bg-[#F5F7FA] min-h-screen w-full ">
+<div className="bg-[#F5F7FA] min-h-screen w-full relative">
 
 <div className="flex justify-end">
 <Link href={"users/addUser"}>
           <Button
-            className="border-[#4BB1D3] w-[110px] h-[40px] mt-5 mr-8 text-white bg-[#00BFFF] rounded-lg outline-none hover:bg-[#00BFFF] 
+            className="border-[#4BB1D3] w-[110px] h-[40px] mt-5 mr-4 sm:mr-8 text-white bg-[#00BFFF] rounded-lg outline-none hover:bg-[#00BFFF] 
             sm:w-[120px] sm:h-[45px]"
             >
            {(t('add_users'))}
@@ -29,7 +29,9 @@ function page() {
 
         
     
-     <TableDemo/>
+    <div className='w-full overflow-x-hidden'>
+    <TableDemo/>
+    </div>
    
     </div>
     

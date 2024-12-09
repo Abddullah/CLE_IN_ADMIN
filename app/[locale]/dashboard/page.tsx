@@ -53,7 +53,7 @@ const LoginPage = () => {
         </div>
       </div>
 
-      <div className="bg-white m-4 p-1 flex flex-col gap-3 mt-16 my-4 h-[315px]">
+      <div className="bg-white m-4 p-1 flex flex-col gap-3 mt-16 my-4 h-[315px] w-100 overflow-hidden">
         <p className="text-2xl font-semibold text-left md:text-3xl lg:text-2xl">
          {(t('totalIncome'))}
         </p>
@@ -61,13 +61,13 @@ const LoginPage = () => {
         <Component />
       </div>
 
-      <div className="bg-white m-4 p-1 flex flex-col gap-3 mt-1 my-4">
+      <div className="bg-white w-100 overflow-hidden m-4 p-1 flex flex-col gap-3 mt-1 my-4">
         <p className="text-2xl font-semibold text-left md:text-3xl lg:text-2xl">
         {(t('totalBooking'))}
         </p>
-        <div>
+        
           <ComponentAreaChart />
-        </div>
+        
        
       </div>
    

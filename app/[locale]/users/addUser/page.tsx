@@ -13,13 +13,21 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
-import {useTranslations} from 'next-intl';
+import { useTranslations } from "next-intl";
+import { auth , db } from "../../config/Firebase/FirebaseConfig"; 
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { doc, serverTimestamp, setDoc } from "firebase/firestore";
 
 function AddUserPage() {
-  const t = useTranslations('Users');
+  const t = useTranslations("Users");
+
   enum UserRole {
     PROVIDER = "Provider",
     USER = "User",
+  }
+  enum UserGender {
+    MALE = "Male",
+    FEMALE = "Female",
   }
 
   type FormInputs = {
@@ -27,8 +35,12 @@ function AddUserPage() {
     email: string;
     password: string;
     confirmPassword: string;
+    address: string;
+    phone: string;
     roleRequired: string;
     role: UserRole;
+    gender: UserGender;
+    dob: string;
   };
 
   const {
@@ -40,26 +52,49 @@ function AddUserPage() {
     setValue,
   } = useForm<FormInputs>();
 
-  const onSubmit: SubmitHandler<FormInputs> = (data) => console.log(data);
-
+  const onSubmit: SubmitHandler<FormInputs> = async (data) => {
+    try {
+      // Create user with Firebase Auth
+      const userCredential = await createUserWithEmailAndPassword(auth, data.email, data.password);
+      const user = userCredential.user; // Get the user object containing the UID
+  
+      // Add user data to Firestore with user UID as the document ID
+      await setDoc(doc(db, "users", user.uid), {
+        fullName: data.username,
+        email: data.email,
+        address: data.address,
+        phone: data.phone,
+        role: data.role,
+        gender: data.gender,
+        dob: data.dob,
+        userId:user.uid,
+        createdAt: serverTimestamp(), // Set the creation timestamp
+      });
+  
+      alert("User added successfully!");
+    } catch (error) {
+      console.error("Error adding user: ", error);
+      alert("Error adding user");
+    }
+  };
   const password = watch("password");
 
   return (
-    <div className="bg-[#F5F7FA] min-h-screen w-full flex items-start justify-start">
+    <div className="bg-[#F5F7FA] min-h-screen w-full flex items-start justify-start relative">
       <div className="w-full max-w-md px-4 sm:px-8 md:px-12 lg:px-16">
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="grid w-full max-w-sm items-center gap-1.5 mt-6">
             <Label htmlFor="username" className="text-lg font-semibold">
-             {(t('name'))}
+              {t("name")}
             </Label>
             <Input
               type="text"
-              placeholder={(t('username_placeholder'))}
+              placeholder={t("username_placeholder")}
               {...register("username", {
-                required:(t('username_required_error')),
+                required: t("username_required_error"),
                 minLength: {
                   value: 8,
-                  message: (t("username_min_length_error")),
+                  message: t("username_min_length_error"),
                 },
               })}
               className="h-[50px] rounded-lg border-[#4BB1D3] focus:border-blue-500 focus:outline-none"
@@ -74,16 +109,16 @@ function AddUserPage() {
 
           <div className="grid w-full max-w-sm items-center gap-1.5 mt-3">
             <Label className="text-md font-semibold" htmlFor="email">
-             {(t('emailAdress'))}
+              {t("emailAdress")}
             </Label>
             <Input
               type="email"
-              placeholder={(t('email_placeholder'))}
+              placeholder={t("email_placeholder")}
               {...register("email", {
-                required: (t('email_required_error')),
+                required: t("email_required_error"),
                 pattern: {
                   value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                  message: (t('email_pattern_error')),
+                  message: t("email_pattern_error"),
                 },
               })}
               className="h-[50px] rounded-lg border-[#4BB1D3] focus:border-blue-500 focus:outline-none"
@@ -98,16 +133,16 @@ function AddUserPage() {
 
           <div className="grid w-full max-w-sm items-center gap-1.5 mt-3">
             <Label className="text-md font-semibold" htmlFor="password">
-             {(t('password'))}
+              {t("password")}
             </Label>
             <Input
               type="password"
-              placeholder={(t('password_placeholder'))}
+              placeholder={t("password_placeholder")}
               {...register("password", {
-                required: (t('password_required_error')),
+                required: t("password_required_error"),
                 minLength: {
                   value: 6,
-                  message: (t('password_min_length_error')),
+                  message: t("password_min_length_error"),
                 },
               })}
               className="h-[50px] rounded-lg border-[#4BB1D3] focus:border-blue-500 focus:outline-none"
@@ -122,15 +157,15 @@ function AddUserPage() {
 
           <div className="grid w-full max-w-sm items-center gap-1.5 mt-3">
             <Label className="text-md font-semibold" htmlFor="confirmPassword">
-             {(t('confirm_password'))}
+              {t("confirm_password")}
             </Label>
             <Input
               type="password"
-              placeholder= {(t('confirm_password_placeholder'))}
+              placeholder={t("confirm_password_placeholder")}
               {...register("confirmPassword", {
-                required: (t('confirm_password_required_error')),
+                required: t("confirm_password_required_error"),
                 validate: (value) =>
-                  value === password || ((t('confirm_password_validate_error'))),
+                  value === password || t("confirm_password_validate_error"),
               })}
               className="h-[50px] rounded-lg border-[#4BB1D3] focus:border-blue-500 focus:outline-none"
               id="confirmPassword"
@@ -143,31 +178,123 @@ function AddUserPage() {
           </div>
 
           <div className="grid w-full max-w-sm items-center gap-1.5 mt-3">
-            <label className="text-md font-semibold" htmlFor="role">
-             {(t('role'))}
-            </label>
+            <Label htmlFor="address" className="text-md font-semibold">
+              {t("address")}
+            </Label>
+            <Input
+              type="text"
+              placeholder={t("address")}
+              {...register("address", { required: t("address_required_error") })}
+              className="h-[50px] rounded-lg border-[#4BB1D3] focus:border-blue-500 focus:outline-none"
+              id="address"
+            />
+            {errors.address && (
+              <span className="text-red-600 text-sm">{errors.address.message}</span>
+            )}
+          </div>
+
+          <div className="grid w-full max-w-sm items-center gap-1.5 mt-3">
+            <Label htmlFor="dob" className="text-md font-semibold">
+              {t("dob_placeholder")}
+            </Label>
 
             <Controller
-              name="role"
+              name="dob"
+              defaultValue=""
               control={control}
               rules={{
-                required: (t('role_required_error')),
+                required: t("dob_required_error"),
+              }}
+              render={({ field: { value, onChange } }) => (
+                <Input
+                  type="date"
+                  value={value || ""}
+                  onChange={onChange}
+                  className="w-full h-[55px] rounded-lg border border-[#4BB1D3] bg-gray-50 mt-1 pr-6 outline-[#4BB1D3] focus:border-[#4BB1D3] focus:outline-none"
+                  id="dob"
+                />
+              )}
+            />
+            {errors.dob && <p className="text-red-500 text-sm mt-1">{errors.dob.message}</p>}
+          </div>
+
+          <div className="grid w-full max-w-sm items-center gap-1.5 mt-3">
+            <Label htmlFor="phoneNo" className="text-md font-semibold">
+              {t("phoneNo")}
+            </Label>
+            <Input
+              type="tel"
+              placeholder={t("phoneNo")}
+              {...register("phone", {
+                required: t("phone_required_error"),
+                pattern: {
+                  value: /^(\+39)?\s?\d{2,4}\s?\d{5,10}$/,
+                  message: t("phone_pattern_error"),
+                },
+              })}
+              className="h-[50px] rounded-lg border-[#4BB1D3] focus:border-blue-500 focus:outline-none"
+              id="phoneNo"
+            />
+            {errors.phone && (
+              <span className="text-red-600 text-sm">{errors.phone.message}</span>
+            )}
+          </div>
+
+          <div className="grid w-full max-w-sm items-center gap-1.5 mt-3">
+            <Label htmlFor="gender" className="text-md font-semibold">
+              {t("gender")}
+            </Label>
+
+            <Controller
+              name="gender"
+              control={control}
+              rules={{
+                required: t("gender_required_error"),
               }}
               render={({ field: { value, onChange } }) => (
                 <Select value={value} onValueChange={onChange}>
                   <SelectTrigger className="w-full h-[55px] rounded-lg border border-[#4BB1D3] bg-gray-50 mt-1 pr-6 outline-[#4BB1D3] focus:border-[#4BB1D3] focus:outline-none">
-                    <SelectValue placeholder= {(t('role_placeholder'))} />
+                    <SelectValue placeholder={t("gender_placeholder")} />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectGroup>
-                      <SelectItem value="User">{(t('user_role_user'))}</SelectItem>
-                      <SelectItem value="Provider">{(t('user_role_provider'))}</SelectItem>
+                      <SelectItem value="Male">{t("male")}</SelectItem>
+                      <SelectItem value="Female">{t("female")}</SelectItem>
                     </SelectGroup>
                   </SelectContent>
                 </Select>
               )}
             />
+            {errors.gender && (
+              <p className="text-red-500 text-sm mt-1">{errors.gender.message}</p>
+            )}
+          </div>
 
+          <div className="grid w-full max-w-sm items-center gap-1.5 mt-3">
+            <Label htmlFor="role" className="text-md font-semibold">
+              {t("role")}
+            </Label>
+
+            <Controller
+              name="role"
+              control={control}
+              rules={{
+                required: t("role_required_error"),
+              }}
+              render={({ field: { value, onChange } }) => (
+                <Select value={value} onValueChange={onChange}>
+                  <SelectTrigger className="w-full h-[55px] rounded-lg border border-[#4BB1D3] bg-gray-50 mt-1 pr-6 outline-[#4BB1D3] focus:border-[#4BB1D3] focus:outline-none">
+                    <SelectValue placeholder={t("role_placeholder")} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectItem value="User">{t("user_role_user")}</SelectItem>
+                      <SelectItem value="Provider">{t("user_role_provider")}</SelectItem>
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              )}
+            />
             {errors.role && (
               <p className="text-red-500 text-sm mt-1">{errors.role.message}</p>
             )}
@@ -178,7 +305,7 @@ function AddUserPage() {
               type="submit"
               className="border-[#4BB1D3] mb-4 w-full h-[40px] mt-5 text-white bg-[#00BFFF] rounded-lg outline-none hover:bg-[#00A0E0] transition duration-200 ease-in-out sm:w-[120px] sm:h-[45px]"
             >
-              {(t('add_user_button'))}
+              {t("add_user_button")}
             </Button>
           </div>
         </form>

@@ -41,7 +41,7 @@ const chartConfig = {
 
 export function ComponentAreaChart() {
   return (
-    <Card className="h-[225px]">
+    <Card className="h-[225px] w-full overflow-hidden">
       <CardContent>
         <ChartContainer className="h-[200px] w-[100%]" config={chartConfig}>
           <AreaChart
