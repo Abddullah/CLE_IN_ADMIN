@@ -321,7 +321,14 @@
     "name_required": "Il nome è obbligatorio",
     "enter_name": "Inserisci Nome",
     "add_more":"Aggiungi altro",
-    "save": "SALVA"
+    "save": "SALVA",
+     "activate": "Attiva",
+  "deactivate": "Disattiva",
+  "edit_service":"Modifica Servizio",
+  "no_payment_cards_available":"Nessuna carta di pagamento disponibile",
+  "cancel": "Annulla"
+
+
 }
 
 
