@@ -1,10 +1,12 @@
-"use client";
+"use client"
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useTranslations } from "next-intl";
+import { collection, addDoc, query, getDocs, serverTimestamp } from "firebase/firestore"; 
+import { db } from "../../config/Firebase/FirebaseConfig";
 
 type Field = {
   id: number;
@@ -18,6 +20,8 @@ function Page() {
   const t = useTranslations("Payments");
   const [fields, setFields] = useState<Field[]>([{ id: 1 }, { id: 2 }]);
   const [deletingId, setDeletingId] = useState<number | null>(null);
+  const [showErrorModal, setShowErrorModal] = useState(false); // State to handle error modal visibility
+  const [showSuccessModal, setShowSuccessModal] = useState(false); // State for success modal visibility
 
   const {
     register,
@@ -25,8 +29,43 @@ function Page() {
     formState: { errors },
   } = useForm<InputTitle>();
 
-  const onSubmit: SubmitHandler<InputTitle> = (data) => {
-    console.log(data);
+  // Function to check if any card exists in the "payments" collection
+  const checkExistingCard = async () => {
+    const q = query(collection(db, "payments"));
+    const querySnapshot = await getDocs(q);
+    return !querySnapshot.empty; // If the query is not empty, a card already exists
+  };
+
+  // On form submit
+  const onSubmit: SubmitHandler<InputTitle> = async (data) => {
+    try {
+      // Check if a card already exists
+      const cardExists = await checkExistingCard();
+      if (cardExists) {
+        setShowErrorModal(true); // Show error modal if a card exists
+        return;
+      }
+
+      // Prepare data for Firebase
+      const paymentData = Object.keys(data).reduce((acc, key) => {
+        // Modify field keys to avoid using dashes or spaces
+        const newKey = key.replace(/-/g, "");
+        acc[newKey] = data[key];
+        return acc;
+      }, {} as { [key: string]: any });
+
+      // Add form data to Firebase "payments" collection
+      await addDoc(collection(db, "payments"), {
+        ...paymentData,
+        createdAt: serverTimestamp(),
+      });
+      console.log("Payment saved successfully!");
+
+      // Show success modal after creating the first card
+      setShowSuccessModal(true);
+    } catch (error) {
+      console.error("Error saving payment data: ", error);
+    }
   };
 
   const addMoreFields = () => {
@@ -60,12 +99,12 @@ function Page() {
               </Label>
               <Input
                 type="text"
-                {...register(`name-${field.id}`, { required: true })}
+                {...register(`name${field.id}`, { required: true })} // Changed to name{field.id}
                 placeholder={t("enter_name")}
-                className="h-[50px]  border-[#4BB1D3] mt-2 focus:ring-[#4BB1D3] w-full sm:w-[22rem]"
+                className="h-[50px] border-[#4BB1D3] mt-2 focus:ring-[#4BB1D3] w-full sm:w-[22rem]"
                 id={`name-${field.id}`}
               />
-              {errors[`name-${field.id}`] && (
+              {errors[`name${field.id}`] && (
                 <span className="text-red-600 text-sm mt-1">{t("name_required")}</span>
               )}
 
@@ -74,12 +113,12 @@ function Page() {
               </Label>
               <Input
                 type="text"
-                {...register(`percentage-${field.id}`, { required: true })}
+                {...register(`percentage${field.id}`, { required: true })} // Changed to percentage{field.id}
                 placeholder={t("enter_percentage")}
-                className="h-[50px] border-[#4BB1D3] mt-2 focus:ring-[#4BB1D3]  w-full sm:w-[22rem]"
+                className="h-[50px] border-[#4BB1D3] mt-2 focus:ring-[#4BB1D3] w-full sm:w-[22rem]"
                 id={`percentage-${field.id}`}
               />
-              {errors[`percentage-${field.id}`] && (
+              {errors[`percentage${field.id}`] && (
                 <span className="text-red-600 text-sm mt-1">{t("percentage_required")}</span>
               )}
             </div>
@@ -100,12 +139,12 @@ function Page() {
                 </Label>
                 <Input
                   type="text"
-                  {...register(`name-${field.id}`, { required: true })}
+                  {...register(`name${field.id}`, { required: true })} 
                   placeholder={t("enter_name")}
                   className="h-[50px] border-[#4BB1D3] mt-2 focus:ring-[#4BB1D3] min-w-full"
                   id={`name-${field.id}`}
                 />
-                {errors[`name-${field.id}`] && (
+                {errors[`name${field.id}`] && (
                   <span className="text-red-600 text-sm mt-1">{t("name_required")}</span>
                 )}
               </div>
@@ -116,12 +155,12 @@ function Page() {
                 </Label>
                 <Input
                   type="text"
-                  {...register(`percentage-${field.id}`, { required: true })}
+                  {...register(`percentage${field.id}`, { required: true })} // Changed to percentage{field.id}
                   placeholder={t("enter_percentage")}
                   className="h-[50px] border-[#4BB1D3] mt-2 focus:ring-[#4BB1D3] max-w-full"
                   id={`percentage-${field.id}`}
                 />
-                {errors[`percentage-${field.id}`] && (
+                {errors[`percentage${field.id}`] && (
                   <span className="text-red-600 text-sm mt-1">{t("percentage_required")}</span>
                 )}
               </div>
@@ -155,6 +194,38 @@ function Page() {
           </Button>
         </div>
       </form>
+
+      {/* Error Modal */}
+      {showErrorModal && (
+        <div className="fixed inset-0 flex justify-center items-center bg-gray-500 bg-opacity-50">
+          <div className="bg-white p-6 rounded-lg">
+            <h2 className="text-xl font-semibold text-red-600">Error</h2>
+            <p className="mt-2">Only one card can be created at a time.</p>
+            <button
+              onClick={() => setShowErrorModal(false)}
+              className="mt-4 px-4 py-2 bg-[#00BFFF] text-white rounded"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Success Modal */}
+      {showSuccessModal && (
+        <div className="fixed inset-0 flex justify-center items-center bg-gray-500 bg-opacity-50">
+          <div className="bg-white p-6 rounded-lg">
+            <h2 className="text-xl font-semibold text-green-600">Success</h2>
+            <p className="mt-2">Payment Card Created Successfully!</p>
+            <button
+              onClick={() => setShowSuccessModal(false)}
+              className="mt-4 px-4 py-2 bg-[#00BFFF] text-white rounded-lg"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
