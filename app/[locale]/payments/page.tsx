@@ -1,3 +1,5 @@
+
+
 "use client";
 
 import React, { useState, useEffect } from "react";
@@ -94,7 +96,7 @@ const Payments = () => {
             {services.map((service, index) => (
               <div
                 key={index}
-                className={`relative bg-white p-6 rounded-xl border border-gray-300 shadow-lg hover:shadow-xl transform transition-all duration-300 hover:scale-104 cursor-pointer ${service.active ? 'bg-blue-100 border-blue-200' : ''}`}
+                className={`relative bg-white p-6 rounded-xl border border-gray-300 shadow-lg hover:shadow-xl transform transition-all duration-300 hover:scale-104 cursor-pointer ${service.active ? 'bg-blue-200 border-blue-200' : ''}`}
               >
                 <span className={`absolute top-2 right-8 text-xs px-2 py-1 rounded-full flex items-center ${service.active ? 'bg-blue-400 text-white' : 'bg-red-500 text-white'}`}>
                   <FontAwesomeIcon icon={service.active ? faCheckCircle : faTimesCircle} className="mr-1" />
@@ -211,6 +213,10 @@ const Payments = () => {
         </div>
       )}
     </div>
+
+
+
+
   );
 };
 
