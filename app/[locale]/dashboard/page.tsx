@@ -18,8 +18,8 @@ const LoginPage = () => {
   return (
     <>
     
-     <div className="bg-white m-4 p-1 flex flex-wrap justify-start gap-10 mt-6 my-2 ">
-        <div className="mt-1 w-full sm:w-[48%] lg:w-[28%] xl:w-[20%] ">
+     <div className="p-1 flex flex-wrap justify-center gap-10 mt-6 my-2 ">
+        <div className="mt-1 w-full  sm:w-[48%] lg:w-[28%] xl:w-[20%] ">
           <BookingCard
             title={(t('totalBooking'))}
             totalBookings={10}
