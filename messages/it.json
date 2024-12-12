@@ -76,7 +76,9 @@
     "sub_category_Name": "Sottocategoria",
     "required_Sub_Category": "La sottocategoria è obbligatoria",
     "add_Subcategory": "Aggiungi Sottocategoria",
-    "sub_category_Placeholder": "Inserisci Sottocategoria"
+    "sub_category_Placeholder": "Inserisci Sottocategoria",
+    "no_categories":"Nessuna categoria disponibile"
+
   },
   "Users": {
     "name": "Nome",

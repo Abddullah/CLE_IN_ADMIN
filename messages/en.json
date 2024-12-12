@@ -80,7 +80,8 @@
     "sub_category_Name":"Subcategory",
     "sub_category_Placeholder":"Enter Subcategory",
     "required_Sub_Category":"Subcategory is required",
-    "add_Subcategory":"Add Subcategory"
+    "add_Subcategory":"Add Subcategory",
+    "no_categories":"No categories available"
      
   },
    "Users": {
