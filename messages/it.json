@@ -9,7 +9,8 @@
     "enter_email": "Inserisci la tua email",
     "password": "Password",
     "enter_password": "Inserisci la tua password",
-    "login_button": "Accedi"
+    "login_button": "Accedi",
+    "loading": "Accesso in corso... Attendere."
   },
   "navbar": {
     "services": "Servizi",

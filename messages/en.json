@@ -9,7 +9,8 @@
     "enter_email": "Enter your email",
     "password": "Password",
     "enter_password": "Enter your password",
-    "login_button": "Log In"
+    "login_button": "Log In", 
+    "loading":"Authenticating... Please wait."
   },
   
     "navbar": {
