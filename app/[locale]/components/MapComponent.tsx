@@ -4,7 +4,7 @@
 // import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 
 // // Set your Mapbox token here
-// mapboxgl.accessToken = 'pk.eyJ1Ijoicm9sbiIsImEiOiJjbHUydnB1Y3EwYnFzMmlxZWc2NWFscDJvIn0.9TwHwnZcT6qB2OO6Q4OnFQ';
+// mapboxgl.accessToken = 'ADD_YOUR_MAPBOX_ACCESS_TOKEN';
 
 // interface Location {
 //   lng: number;
