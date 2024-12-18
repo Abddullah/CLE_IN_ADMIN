@@ -1,10 +1,10 @@
-'use client'
-import { configureStore } from "@reduxjs/toolkit";
+import { configureStore } from '@reduxjs/toolkit';
+import locationReducer from '../reducers/locationSlice'; // Correct import path
 
+const store = configureStore({
+  reducer: {
+    location: locationReducer,
+  },
+});
 
-
-export const store = configureStore({
-    reducer: {
-        
-    }
-})
+export default store;

@@ -21,6 +21,7 @@ import {
 import { useRouter } from "next/navigation";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import { useTranslations } from "next-intl";
+import MapComponent from "../../components/MapComponent";
 
 function page() {
   const t = useTranslations('Jobs');
@@ -556,18 +557,13 @@ function page() {
               </div>
             </div>
             {/* location */}
-
             <div className="grid w-full items-center gap-1.5 mt-6">
-              <p className="text-lg font-bold mt-2">{(t('Location'))}</p>
+  <p className="text-lg font-bold mt-2">{t('Location')}</p>
 
-              <Image
-                className="mt-4 w-full h-[180px] object-cover"
-                src="/assets/bookingsIcon/map.svg"
-                width={1000}
-                height={900}
-                alt="map"
-              />
-            </div>
+  <MapComponent/>
+
+  
+</div>
 
             <div className="mt-8 flex justify-center items-center">
               <Link href={'/location'}>

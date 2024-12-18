@@ -8,6 +8,10 @@ import {NextIntlClientProvider} from 'next-intl';
 import {getMessages} from 'next-intl/server';
 import {notFound} from 'next/navigation';
 import {routing} from '@/i18n/routing';
+import ReduxProvider from "./ReduxProvider";
+
+
+
 
 
 
@@ -57,6 +61,8 @@ export const metadata: Metadata = {
         >
         {
           <NextIntlClientProvider messages={messages}>
+            
+<ReduxProvider >
           <div className="flex h-screen">
             <Sidebar />
 
@@ -68,6 +74,7 @@ export const metadata: Metadata = {
                 </div>
             </div>
           </div>
+          </ReduxProvider>
           </NextIntlClientProvider>
         }
       </body>

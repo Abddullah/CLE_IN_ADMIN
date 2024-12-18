@@ -13,7 +13,7 @@ function page() {
     <>
 
 
-<div className="bg-[#F5F7FA] min-h-full w-full relative">
+<div className="bg-[#F5F7FA] min-h-screen w-full relative">
 
 <div className="flex justify-end">
 <Link href={"users/addUser"}>

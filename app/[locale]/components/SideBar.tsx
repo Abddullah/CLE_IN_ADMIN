@@ -14,7 +14,8 @@ import {
   faSignOutAlt,
   faWrench,
   faMessage,
-  faCreditCard
+  faCreditCard,
+  faImage
 } from "@fortawesome/free-solid-svg-icons";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -60,6 +61,9 @@ const Sidebar = () => {
       setPathName("dashboard");
     } else if (path.includes("payments")) {
       setPathName("/payments");
+    }else if (path.includes("banner")) {
+      setPathName("/banner");
+      
     } else if (path.includes('chat')) {
       setPathName("/chat");
       return
@@ -302,6 +306,28 @@ const Sidebar = () => {
                 </span>
               </Link>
             </li>
+
+
+
+            <li className="flex items-center p-2 hover:bg-gray-100 rounded cursor-pointer ml-1">
+              <Link href="/banner" passHref>
+                <FontAwesomeIcon
+                  icon={faImage}
+                  className={`mr-7 text-xl ${
+                    pathName === "/banner" ? "text-[#00BFFF]" : "text-gray-400"
+                  }`}
+                />
+                <span
+                  className={`mr-2 ${
+                    pathName === "/banner" ? "text-[#00BFFF]" : "text-gray-400"
+                  }`}
+                >
+                  
+                  {(t('banner'))}
+                </span>
+              </Link>
+            </li>
+
 
 
            

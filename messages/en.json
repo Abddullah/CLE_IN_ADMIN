@@ -49,7 +49,9 @@
     "notification_icon_alt": "Notification Icon",
     "notification_received": "Notification Received",
     "notification_time": "Time of Notification",
-    "notification_message": "You have received a new notification."
+    "notification_message": "You have received a new notification",
+    "banner":"Banners"
+
   },
   "dashboard": {
     "totalBooking": "Total Booking",
@@ -65,7 +67,10 @@
       "cleaning_at_house": "Cleaning at house",
       "cleaning_at_company": "Cleaning at Company",
       "cleaning_at_hospital": "Cleaning at hospital",
-      "cleaning_at_factory": "Cleaning at Factory"
+      "cleaning_at_factory": "Cleaning at Factory",
+      "add_Subcategory":"Add Subcategory",
+      "update":"Update"
+      
      
     
     
@@ -334,7 +339,13 @@
   "price_required": "Price is required",
   "add_button": "ADD",
   "edit": "Edit",
-      "delete": "Delete"
+      "delete": "Delete",
+      "service_added_successfully": "Additional Service Added Successfully",
+  "additional_service_added_message": "Your additional service has been added successfully to the system.",
+  "close_button": "Close",
+  "no_additional_service": "No additional services available",
+    "save_changes": "Save Changes",
+    "service_name": "Service Name"
   },
   "logout":{
     "are_you_sure_logout": "Are you sure you want to log out?",
@@ -359,6 +370,13 @@
     "edit_service":"Edit Service",
     "no_payment_cards_available":"No Payment cards available",
     "cancel":"Cancel"
+
+  },
+
+  "successModal":{
+    "category_added_sucessfully":"Category Added Successfully",
+    "category_added_message":"Your  category has been added successfully to the system",
+    "close_button":"Close"
 
   }
   

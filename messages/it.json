@@ -48,7 +48,7 @@
     "notification_icon_alt": "Icona della notifica",
     "notification_received": "Notifica ricevuta",
     "notification_time": "Tempo della notifica",
-    "notification_message": "Hai ricevuto una nuova notifica."
+    "notification_message": "Hai ricevuto una nuova notifica.","banner": "striscioni"
   },
   "dashboard": {
     "totalBooking": "Prenotazione Totale",
@@ -64,7 +64,8 @@
     "cleaning_at_company": "Pulizia in azienda",
     "cleaning_at_hospital": "Pulizia in ospedale",
     "cleaning_at_factory": "Pulizia in fabbrica",
-    "Choose_a_file":"Scegli un file"
+    "Choose_a_file":"Scegli un file",
+     "add_Subcategory": "Aggiungi sottocategoria"
   },
   "AddCategory": {
     "add_category": "Aggiungi Categoria",
@@ -305,7 +306,13 @@
     "price_required": "Il prezzo è obbligatorio",
     "add_button": "AGGIUNGI",
      "edit": "Modifica",
-  "delete": "Elimina"
+  "delete": "Elimina",
+  "no_additional_service": "Nessun servizio aggiuntivo disponibile",
+  "service_added_successfully": "Servizio aggiuntivo aggiunto con successo",
+  "additional_service_added_message": "Il tuo servizio aggiuntivo è stato aggiunto con successo al sistema.",
+  "close_button": "Chiudi",
+  "save_changes": "Salva modifiche",
+  "service_name": "Nome del servizio"
   },
   "logout":{
     "are_you_sure_logout": "Sei sicuro di voler uscire?",
@@ -332,7 +339,14 @@
   "cancel": "Annulla"
 
 
+},
+
+"successModal": {
+    "category_added_sucessfully": "Categoria aggiunta con successo",
+    "category_added_message": "La tua categoria è stata aggiunta con successo al sistema",
+    "close_button": "Chiudi"
 }
+
 
 
 

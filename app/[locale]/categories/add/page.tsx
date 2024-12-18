@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useTranslations } from "next-intl";
-import { addDoc, collection } from "firebase/firestore";
+import { addDoc, collection, doc, serverTimestamp , setDoc } from "firebase/firestore";
 import { db } from "../../config/Firebase/FirebaseConfig";
 import SuccessModal from "../../components/categoriesComponents/SucessModal";
 
@@ -31,11 +31,18 @@ function Page() {
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     try {
       // Add data to Firestore
-      await addDoc(collection(db, "categories"), {
+      const docRef = doc(collection(db , "categories"));
+      console.log(docRef.id);
+      
+      const categories =  {
         categoryName: data.categoryName,
-        profile: "",
+        image: "",
         subCategories: data.subCategories,
-      });
+        createdAt:serverTimestamp(),
+        id:docRef.id
+      };
+
+      await setDoc(docRef , categories)
 
       // Show success modal
       setShowModal(true);
