@@ -14,14 +14,14 @@ import {
   SelectGroup,
   SelectItem,
   SelectLabel,
-  SelectTrigger,
+  SelectTrigger, 
   SelectValue,
 } from "@/components/ui/select";
 import { useRouter } from "next/navigation";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import {useTranslations} from 'next-intl';
-import MapComponent from "../../components/MapComponent";
 import { useSelector } from "react-redux";
+import MapComponent from "../../components/map/map";
 
 function page() {
   
@@ -443,12 +443,12 @@ function page() {
             </div>
 
            
+            
             <div className="grid w-full items-center gap-1.5 mt-6">
   <p className="text-lg font-bold mt-2">{t('Location')}</p>
 
   <MapComponent/>
 
- 
 </div>
 
 

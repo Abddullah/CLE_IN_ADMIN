@@ -8,12 +8,12 @@ import { Textarea } from "@/components/ui/textarea";
 import Image from "next/image";
 import { Link } from "@/i18n/routing";
 import { useState, useEffect } from "react";
-import map from "../../../assets/bookingsIcon/map.svg";
+import { useSelector } from "react-redux";
 import {
   Select,
   SelectContent,
   SelectGroup,
-  SelectItem,
+  SelectItem, 
   SelectLabel,
   SelectTrigger,
   SelectValue,
@@ -21,7 +21,7 @@ import {
 import { useRouter } from "next/navigation";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import { useTranslations } from "next-intl";
-import MapComponent from "../../components/MapComponent";
+import MapComponent from "../../components/map/map";
 
 function page() {
   const t = useTranslations('Jobs');
@@ -46,6 +46,7 @@ function page() {
     numberofrooms: string;
     needmaterial: string;
     Additionalservices: string[];
+    location:{lng:number , lat:number}
   };
 
   const {
@@ -81,6 +82,9 @@ function page() {
   const [selectedOption, setSelectedOption] = useState("");
 
   const router = useRouter();
+  const location = useSelector((state: any) => state.location);
+  
+  
 
   const categories: { [key: string]: string[] } = {
     "Cleaning and Hygiene Services": [
@@ -126,6 +130,12 @@ function page() {
     setValue("professional", professional);
     clearErrors("professional");
   };
+
+  useEffect(() => {
+    if (location) {
+      setValue('location', { lng: location.lng, lat: location.lat });
+    }
+  }, [location, setValue]);
 
   const handleSelectOption = (option: string) => {
     setSelectedOption(option);
@@ -566,14 +576,14 @@ function page() {
 </div>
 
             <div className="mt-8 flex justify-center items-center">
-              <Link href={'/location'}>
+              {/* <Link href={'/location'}> */}
               <Button
                 type="submit"
                 className="w-[250px]  mt-6 h-[45px] text-white bg-[#00BFFF] rounded-lg outline-none hover:bg-[#00A0E0] transition duration-200 ease-in-out"
               >
                 <span>{(t('next'))}</span>
               </Button>
-              </Link>
+              {/* </Link> */}
             </div>
           </form>
         </div>

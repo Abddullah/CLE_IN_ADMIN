@@ -39,7 +39,7 @@ const ChatInterface: React.FC = () => {
         </div>
         <div
           className="overflow-y-auto"
-          style={{ height: "calc(100vh - 64px)" }}
+          style={{ height: "calc(100vh - 64px)" }} // Sidebar scroll
         >
           {users.map((user) => (
             <div
@@ -69,9 +69,7 @@ const ChatInterface: React.FC = () => {
 
       {/* Chat Area */}
       <div
-        className={`flex-1 flex flex-col ${
-          showChat ? "block" : "hidden md:flex"
-        }`}
+        className={`flex-1 flex flex-col ${showChat ? "block" : "hidden md:flex"}`}
       >
         {selectedUser ? (
           <>
@@ -117,7 +115,10 @@ const ChatInterface: React.FC = () => {
             </div>
 
             {/* Chat Messages */}
-            <div className="flex-1 overflow-y-auto p-6 space-y-4 bg-gray-100">
+            <div
+              className="flex-1 overflow-y-auto p-6 space-y-4 bg-gray-100"
+              style={{ height: "calc(100vh - 160px)" }} // Message scroll
+            >
               <div className="flex items-start">
                 <div className="w-8 h-8 rounded-full bg-gray-300 flex-shrink-0"></div>
                 <div className="ml-3 bg-white rounded-lg p-4 shadow max-w-[70%]">
