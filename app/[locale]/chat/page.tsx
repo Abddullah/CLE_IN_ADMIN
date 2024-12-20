@@ -19,6 +19,14 @@ const ChatInterface: React.FC = () => {
     { id: 1, name: "John Doe", avatar: "JD", status: t("status_online") },
     { id: 2, name: "Jane Smith", avatar: "JS", status: t("status_offline") },
     { id: 3, name: "Mike Johnson", avatar: "MJ", status: t("status_online") },
+    { id: 4, name: "Alex Turner", avatar: "AT", status: t("status_online") },
+    { id: 5, name: "Emily Davis", avatar: "ED", status: t("status_online") },
+    { id: 6, name: "Chris Lee", avatar: "CL", status: t("status_online") },
+    { id: 7, name: "Sarah Brown", avatar: "SB", status: t("status_online") },
+    { id: 8, name: "David Williams", avatar: "DW", status: t("status_online") },
+    { id: 9, name: "Olivia Martin", avatar: "OM", status: t("status_online") },
+    { id: 10, name: "Ethan Wilson", avatar: "EW", status: t("status_online") },
+    
   ];
 
   const handleUserSelect = (user: User): void => {
@@ -28,53 +36,49 @@ const ChatInterface: React.FC = () => {
 
   return (
     <div className="flex h-screen bg-gray-100">
-      {/* Sidebar */}
+      {/* Sidebar: Chat List */}
       <div
-        className={`h-full w-full md:w-1/3 bg-white shadow-lg border-r transition-transform ${
-          showChat ? "hidden md:block" : "block"
-        }`}
-      >
-        <div className="p-4 border-b">
-          <h2 className="text-lg font-bold text-gray-800">{t("chats")}</h2>
-        </div>
-        <div
-          className="overflow-y-auto"
-          style={{ height: "calc(100vh - 64px)" }} // Sidebar scroll
-        >
-          {users.map((user) => (
-            <div
-              key={user.id}
-              onClick={() => handleUserSelect(user)}
-              className="flex items-center p-4 hover:bg-blue-100 cursor-pointer transition-all border-b"
-            >
-              <div className="w-10 h-10 rounded-full bg-[#00BFFF] flex items-center justify-center">
-                <span className="text-white font-semibold">{user.avatar}</span>
-              </div>
-              <div className="ml-4">
-                <h3 className="font-semibold text-gray-800">{user.name}</h3>
-                <p
-                  className={`text-sm ${
-                    user.status === t("status_online")
-                      ? "text-green-500"
-                      : "text-gray-500"
-                  }`}
-                >
-                  {user.status}
-                </p>
-              </div>
-            </div>
-          ))}
-        </div>
+  className={`h-screen w-full md:w-1/4 bg-white shadow-lg border-r ${
+    showChat ? "hidden md:block" : "block"
+  }`}
+>
+  {/* <div className="p-4 border-b ">
+    <h2 className="text-lg font-bold text-gray-800">{t("chats")}</h2>
+  </div> */}
+  <div className="h-full p-2 space-y-4 fixed overflow-y-auto max-h-screen"> {/* Non-scrollable Chat List */}
+  {users.map((user) => (
+    <div
+      key={user.id}
+      onClick={() => handleUserSelect(user)}
+      className="flex items-center p-4 hover:bg-blue-100 cursor-pointer transition-all border-b mb-2"
+    >
+      <div className="w-10 h-10 rounded-full bg-[#00BFFF] flex items-center justify-center">
+        <span className="text-white font-semibold">{user.avatar}</span>
       </div>
+      <div className="ml-4">
+        <h3 className="font-semibold text-gray-800">{user.name}</h3>
+        <p
+          className={`text-sm ${
+            user.status === t("status_online") ? "text-green-500" : "text-gray-500"
+          }`}
+        >
+          {user.status}
+        </p>
+      </div>
+    </div>
+  ))}
+</div>
+
+</div>
 
       {/* Chat Area */}
       <div
-        className={`flex-1 flex flex-col ${showChat ? "block" : "hidden md:flex"}`}
+        className={`flex-1 flex flex-col ${showChat ? "block" : "hidden md:flex"} space-y-4`}
       >
         {selectedUser ? (
           <>
             {/* Chat Header */}
-            <div className="bg-white p-4 shadow-md flex items-center sticky top-0 z-10">
+            <div className="bg-white p-4 shadow-md flex items-center sticky top-0 z-10 border-b">
               <button
                 className="md:hidden mr-3"
                 onClick={() => setShowChat(false)}
@@ -115,10 +119,7 @@ const ChatInterface: React.FC = () => {
             </div>
 
             {/* Chat Messages */}
-            <div
-              className="flex-1 overflow-y-auto p-6 space-y-4 bg-gray-100"
-              style={{ height: "calc(100vh - 160px)" }} // Message scroll
-            >
+            <div className="flex-1 overflow-y-auto p-6 space-y-4 bg-gray-100"> {/* Scrollable Chat Messages */}
               <div className="flex items-start">
                 <div className="w-8 h-8 rounded-full bg-gray-300 flex-shrink-0"></div>
                 <div className="ml-3 bg-white rounded-lg p-4 shadow max-w-[70%]">
@@ -139,7 +140,7 @@ const ChatInterface: React.FC = () => {
             </div>
 
             {/* Message Input */}
-            <div className="bg-white p-4 border-t shadow-lg sticky bottom-0">
+            <div className="bg-white p-4 border-t shadow-lg sticky bottom-0 z-10">
               <div className="flex items-center space-x-2">
                 <input
                   type="text"
