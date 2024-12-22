@@ -42,7 +42,7 @@ const AdditionalServices: React.FC = () => {
 
   const handleEditDeleteToggle = (index: number) => {
     setOpenEditDelete(openEditDelete === index ? null : index);
-    // setOpenEditDelete(null)
+    
   };
 
   // Function to handle editing a service
@@ -97,123 +97,147 @@ const AdditionalServices: React.FC = () => {
   };
 
   return (
-    <div className="bg-[#F5F7FA] min-h-screen w-full">
-      <Link href={"additionalServices/addAdditionalService"}>
-        <div className="flex justify-end overflow-hidden">
-          <Button className="border-[#4BB1D3] w-[80px] h-[40px] mt-5 mr-8 text-white bg-[#00BFFF] rounded-lg outline-none hover:bg-[#00BFFF] sm:w-[100px] sm:h-[45px]">
-            {t("add_button")}
-          </Button>
-        </div>
-      </Link>
-
-      <div className="container mx-auto px-4 py-8">
-        {/* Show a message if no services are available */}
-        {services.length === 0 ? (
-          <p className="text-center text-lg font-semibold text-gray-600">
-            {t("no_additional_service")}
-          </p>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-6">
-            {services.map((service, index) => (
-              <div
-                key={service.id}
-                className="relative bg-white p-6 rounded-xl border border-gray-300 shadow-lg hover:shadow-xl transform transition-all duration-300 hover:scale-104 cursor-pointer"
-              >
-                <div className="absolute top-4 right-4">
+    <div className="bg-[#F5F7FA] w-full h-full overflow-hidden overflow-y-auto max-h-screen">
+      <div className="flex justify-end">
+    <Link href={"additionalServices/addAdditionalService"}>
+        <Button className="border-[#4BB1D3] w-[80px] h-[40px] mt-5 mr-8 text-white bg-[#00BFFF] rounded-lg outline-none hover:bg-[#00BFFF] sm:w-[100px] sm:h-[45px]">
+          {t("add_button")}
+        </Button>
+    </Link>
+      </div>
+  
+    <div className="container mx-auto px-4 py-8">
+      {/* Show a message if no services are available */}
+      {services.length === 0 ? (
+        <p className="text-center text-lg font-semibold text-gray-600">
+          {t("no_additional_service")}
+        </p>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-6">
+          {services.map((service, index) => (
+            <div
+              key={service.id}
+              className="relative bg-white p-6 rounded-xl border border-gray-300 shadow-lg hover:shadow-xl transform transition-all duration-300 hover:scale-104 cursor-pointer"
+            >
+              <div className="absolute top-4 right-4">
+                <button
+                  className="text-gray-500 hover:text-gray-700 focus:outline-none"
+                  onClick={() => handleEditDeleteToggle(index)}
+                >
+                  <FontAwesomeIcon icon={faEllipsisV} className="text-xl" />
+                </button>
+              </div>
+  
+              {openEditDelete === index && (
+                <div className="absolute right-0 top-8 w-36 bg-white border border-gray-200 rounded-lg shadow-md z-10">
                   <button
-                    className="text-gray-500 hover:text-gray-700 focus:outline-none"
-                    onClick={() => handleEditDeleteToggle(index)}
+                    className="flex items-center w-full p-2 hover:bg-gray-100"
+                    onClick={() => handleEdit(service)}
                   >
-                    <FontAwesomeIcon icon={faEllipsisV} className="text-xl" />
+                    <FontAwesomeIcon icon={faEdit} className="w-4 h-4 mr-2" />
+                    <span>{t("edit")}</span>
+                  </button>
+                  <button
+                    className="flex items-center w-full p-2 hover:bg-gray-100"
+                    onClick={() => handleDeleteService(service.id)} // Delete functionality
+                  >
+                    <FontAwesomeIcon
+                      icon={faTrashAlt}
+                      className="w-4 h-4 mr-2"
+                    />
+                    <span>{t("delete")}</span>
                   </button>
                 </div>
-
-                {openEditDelete === index && (
-                  <div className="absolute right-0 top-8 w-36 bg-white border border-gray-200 rounded-lg shadow-md z-10">
-                    <button
-                      className="flex items-center w-full p-2 hover:bg-gray-100"
-                      onClick={() => handleEdit(service)}
-                    >
-                      <FontAwesomeIcon icon={faEdit} className="w-4 h-4 mr-2" />
-                      <span>{t("edit")}</span>
-                    </button>
-                    <button
-                      className="flex items-center w-full p-2 hover:bg-gray-100"
-                      onClick={() => handleDeleteService(service.id)} // Delete functionality
-                    >
-                      <FontAwesomeIcon
-                        icon={faTrashAlt}
-                        className="w-4 h-4 mr-2"
-                      />
-                      <span>{t("delete")}</span>
-                    </button>
-                  </div>
-                )}
-
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                  {service.title}
-                </h3>
-                <p className="text-lg font-medium text-gray-700 mb-4">
-                  {t("price")}: {service.price}
-                </p>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
-
-      {/* Modal for editing the service */}
-      {isModalOpen && editedService && (
-        <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-96">
-            <h2 className="text-2xl font-semibold text-gray-800 mb-4">{t("edit")}</h2>
-            <div className="mb-4">
-              <label htmlFor="serviceTitle" className="block text-sm font-medium text-gray-600">
-                {t("service_name")}
-              </label>
-              <input
-                id="serviceTitle"
-                type="text"
-                value={editedService.title}
-                onChange={(e) =>
-                  setEditedService({ ...editedService, title: e.target.value })
-                }
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
+              )}
+  
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                {service.title}
+              </h3>
+              <p className="text-lg font-medium text-gray-700 mb-4">
+                {t("price")}: {service.price}
+              </p>
             </div>
-            <div className="mb-4">
-              <label htmlFor="servicePrice" className="block text-sm font-medium text-gray-600">
-                {t("price")}
-              </label>
-              <input
-                id="servicePrice"
-                type="text"
-                value={editedService.price}
-                onChange={(e) =>
-                  setEditedService({ ...editedService, price: e.target.value })
-                }
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-            <div className="flex justify-end">
-              <Button
-                className="mr-2 text-white bg-[#00BFFF] rounded-lg hover:bg-[#00BFFF] "
-                onClick={handleUpdateService}
-              >
-                {t("save_changes")}
-              </Button>
-              <Button
-                className="text-white border border-gray-300 rounded-lg bg-red-500 hover:bg-red-500"
-                onClick={() => setIsModalOpen(false)}
-              >
-                {t("close_button")}
-              </Button>
-            </div>
-          </div>
+          ))}
         </div>
       )}
     </div>
+  
+    {/* Modal for editing the service */}
+    {isModalOpen && editedService && (
+      <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center overflow-auto">
+        <div className="bg-white p-6 rounded-lg shadow-lg w-96 max-h-full overflow-y-auto">
+          <h2 className="text-2xl font-semibold text-gray-800 mb-4">{t("edit")}</h2>
+          <div className="mb-4">
+            <label htmlFor="serviceTitle" className="block text-sm font-medium text-gray-600">
+              {t("service_name")}
+            </label>
+            <input
+              id="serviceTitle"
+              type="text"
+              value={editedService.title}
+              onChange={(e) =>
+                setEditedService({ ...editedService, title: e.target.value })
+              }
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+          <div className="mb-4">
+            <label htmlFor="servicePrice" className="block text-sm font-medium text-gray-600">
+              {t("price")}
+            </label>
+            <input
+              id="servicePrice"
+              type="text"
+              value={editedService.price}
+              onChange={(e) =>
+                setEditedService({ ...editedService, price: e.target.value })
+              }
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+          <div className="flex justify-end">
+            <Button
+              className="mr-2 text-white bg-[#00BFFF] rounded-lg hover:bg-[#00BFFF] "
+              onClick={handleUpdateService}
+            >
+              {t("save_changes")}
+            </Button>
+            <Button
+              className="text-white border border-gray-300 rounded-lg bg-red-500 hover:bg-red-500"
+              onClick={() => setIsModalOpen(false)}
+            >
+              {t("close_button")}
+            </Button>
+          </div>
+        </div>
+      </div>
+    )}
+  </div>
+  
   );
 };
 
 export default AdditionalServices;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

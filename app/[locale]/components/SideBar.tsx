@@ -101,7 +101,6 @@ const Sidebar = () => {
   }
 
  
-  console.log(path);
   
 
   return (

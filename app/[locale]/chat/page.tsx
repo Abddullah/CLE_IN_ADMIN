@@ -24,9 +24,6 @@ const ChatInterface: React.FC = () => {
     { id: 6, name: "Chris Lee", avatar: "CL", status: t("status_online") },
     { id: 7, name: "Sarah Brown", avatar: "SB", status: t("status_online") },
     { id: 8, name: "David Williams", avatar: "DW", status: t("status_online") },
-    { id: 9, name: "Olivia Martin", avatar: "OM", status: t("status_online") },
-    { id: 10, name: "Ethan Wilson", avatar: "EW", status: t("status_online") },
-    
   ];
 
   const handleUserSelect = (user: User): void => {
@@ -38,38 +35,32 @@ const ChatInterface: React.FC = () => {
     <div className="flex h-screen bg-gray-100">
       {/* Sidebar: Chat List */}
       <div
-  className={`h-screen w-full md:w-1/4 bg-white shadow-lg border-r ${
-    showChat ? "hidden md:block" : "block"
-  }`}
->
-  {/* <div className="p-4 border-b ">
-    <h2 className="text-lg font-bold text-gray-800">{t("chats")}</h2>
-  </div> */}
-  <div className="h-full p-2 space-y-4 fixed overflow-y-auto max-h-screen"> {/* Non-scrollable Chat List */}
-  {users.map((user) => (
-    <div
-      key={user.id}
-      onClick={() => handleUserSelect(user)}
-      className="flex items-center p-4 hover:bg-blue-100 cursor-pointer transition-all border-b mb-2"
-    >
-      <div className="w-10 h-10 rounded-full bg-[#00BFFF] flex items-center justify-center">
-        <span className="text-white font-semibold">{user.avatar}</span>
+        className={`h-screen w-full sm:w-1/3 md:w-1/4 bg-white shadow-lg border-r ${showChat ? "hidden md:block" : "block"}`}
+      >
+        <div className="h-full p-2 space-y-4 fixed overflow-y-auto max-w-screen">
+          {users.map((user) => (
+            <div
+              key={user.id}
+              onClick={() => handleUserSelect(user)}
+              className="flex items-center p-4 hover:bg-blue-100 cursor-pointer transition-all border-b mb-2"
+            >
+              <div className="w-10 h-10 rounded-full bg-[#00BFFF] flex items-center justify-center">
+                <span className="text-white font-semibold">{user.avatar}</span>
+              </div>
+              <div className="ml-4">
+                <h3 className="font-semibold text-gray-800">{user.name}</h3>
+                <p
+                  className={`text-sm ${
+                    user.status === t("status_online") ? "text-green-500" : "text-gray-500"
+                  }`}
+                >
+                  {user.status}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
-      <div className="ml-4">
-        <h3 className="font-semibold text-gray-800">{user.name}</h3>
-        <p
-          className={`text-sm ${
-            user.status === t("status_online") ? "text-green-500" : "text-gray-500"
-          }`}
-        >
-          {user.status}
-        </p>
-      </div>
-    </div>
-  ))}
-</div>
-
-</div>
 
       {/* Chat Area */}
       <div

@@ -139,13 +139,13 @@ function Page() {
 
   return (
     <div className="bg-[#F5F7FA] h-full w-full">
-      <Link href={"categories/add"}>
         <div className="flex justify-end overflow-hidden">
+      <Link href={"categories/add"}>
           <Button className="border-[#4BB1D3] w-[110px] h-[40px] mt-5 mr-8 text-white bg-[#00BFFF] rounded-lg outline-none hover:bg-[#00BFFF] sm:w-[120px] sm:h-[45px]">
             {t("add_button")}
           </Button>
-        </div>
       </Link>
+        </div>
 
       <div className="flex justify-center sm:justify-start flex-wrap gap-5 px-6">
         {categories.map((category) => (

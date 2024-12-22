@@ -114,7 +114,7 @@ function Page() {
                 {t("percentage")}
               </Label>
               <Input
-                type="text"
+                type="number"
                 {...register(`percentage${field.id}`, { required: true })} // Changed to percentage{field.id}
                 placeholder={t("enter_percentage")}
                 className="h-[50px] border-[#4BB1D3] mt-2 focus:ring-[#4BB1D3] w-full sm:w-[22rem]"
