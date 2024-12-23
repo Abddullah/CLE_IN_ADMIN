@@ -48,7 +48,9 @@
     "notification_icon_alt": "Icona della notifica",
     "notification_received": "Notifica ricevuta",
     "notification_time": "Tempo della notifica",
-    "notification_message": "Hai ricevuto una nuova notifica.","banner": "striscioni"
+    "notification_message": "Hai ricevuto una nuova notifica.","banner": "striscioni",
+    "configurations": "Configurazioni"
+
   },
   "dashboard": {
     "totalBooking": "Prenotazione Totale",
@@ -312,7 +314,31 @@
   "additional_service_added_message": "Il tuo servizio aggiuntivo è stato aggiunto con successo al sistema.",
   "close_button": "Chiudi",
   "save_changes": "Salva modifiche",
-  "service_name": "Nome del servizio"
+  "service_name": "Nome del servizio",
+  "additionalService": "Servizio Aggiuntivo",
+    "HourlyRates": "Tariffe Orarie",
+    "RoomAreaSize": "Dimensione dell'Area della Stanza",
+    "NumberOfRoom": "Numero di Stanze",
+    "hourly_rate_title": "ad esempio: Pulizia oraria",
+"add_hourly_rate": "Aggiungi tariffe orarie",
+"no_rate_available": "Nessuna tariffa disponibile",
+"error_occured": "Si è verificato un errore",
+"error_message": "È possibile creare solo una scheda alla volta",
+"room_size_title": "ad es. : 20 - 70 m2",
+"add_room_size": "Aggiungi dimensione stanza",
+"room_sucess": "Dimensione stanza aggiunta con successo",
+"room_added_message": "La dimensione della tua stanza è stata aggiunta con successo",
+"no_room_size_available": "Nessuna dimensione stanza disponibile",
+"no_no_of_rooms": "Nessun numero di stanze disponibile",
+"add_no_of_rooms": "Aggiungi numero di stanze",
+"no_of_rooms_title": "es: Studio",
+"add_no_of_rooms_success": "Numero di stanze aggiunto con successo",
+"success_message": "Il numero di stanze è stato aggiunto con successo"
+
+
+
+
+
   },
   "logout":{
     "are_you_sure_logout": "Sei sicuro di voler uscire?",

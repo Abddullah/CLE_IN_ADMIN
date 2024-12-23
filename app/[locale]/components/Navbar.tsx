@@ -22,6 +22,7 @@ const pathMapping: Record<string, string> = {
   payments:"Payments",
   dashboard: "Dashboard",
   additionalServices: "Additional Services",
+  configuration:"Configurations",
   banner:"Banners"
 };
  

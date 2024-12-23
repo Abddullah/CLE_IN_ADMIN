@@ -47,15 +47,10 @@ const LoginScreen = () => {
         }
       }
     } catch (error: any) {
+     
       const errorCode = error.code;
-      console.log("error code ==>" , errorCode);
-      console.log("path ==>" , path);
-      
-      
-
-      const languageCode = path;
-
-      const errorMessage = await getFirebaseErrorMessage(
+      const languageCode = path.replace('/', '');
+           const errorMessage = await getFirebaseErrorMessage(
         errorCode,
         languageCode
       );

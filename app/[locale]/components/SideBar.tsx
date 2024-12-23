@@ -55,8 +55,8 @@ const Sidebar = () => {
       setPathName("/users");
     } else if (path === "/logout") {
       setPathName("/logout");
-    } else if (path.includes("additionalServices")) {
-      setPathName("/additionalServices");
+    } else if (path.includes("configuration")) {
+      setPathName("/configuration");
     } else if (path.includes("dashboard")) {
       setPathName("dashboard");
     } else if (path.includes("payments")) {
@@ -185,24 +185,24 @@ const Sidebar = () => {
               </Link>
             </li>
             <li className="flex items-center p-2 hover:bg-gray-100 rounded cursor-pointer ml-1">
-              <Link href="/additionalServices" passHref>
+              <Link href="/configuration" passHref>
                 <FontAwesomeIcon
                   icon={faWrench}
                   className={`mr-7 text-xl ${
-                    pathName === "/additionalServices"
+                    pathName === "/configuration"
                       ? "text-[#00BFFF]"
                       : "text-gray-400"
                   }`}
                 />
                 <span
                   className={`mr-2 ${
-                    pathName === "/additionalServices"
+                    pathName === "/configuration"
                       ? "text-[#00BFFF]"
                       : "text-gray-400"
                   }`}
                 >
                  
-                 {(t('additional_services'))}
+                 {(t('configurations'))}
                 </span>
               </Link>
             </li>

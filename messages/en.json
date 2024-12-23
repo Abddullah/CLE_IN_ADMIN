@@ -37,6 +37,7 @@
     "dashboard": "Dashboard",
     "categories": "Categories",
     "additional_services": "Additional Services",
+    "configurations":"Configurations",
     "users": "Users",
     "bookings": "Bookings",
     "services": "Services",
@@ -51,6 +52,7 @@
     "notification_time": "Time of Notification",
     "notification_message": "You have received a new notification",
     "banner":"Banners"
+    
 
   },
   "dashboard": {
@@ -345,7 +347,29 @@
   "close_button": "Close",
   "no_additional_service": "No additional services available",
     "save_changes": "Save Changes",
-    "service_name": "Service Name"
+    "service_name": "Service Name",
+    "additionalService":"Additional Service",
+    "HourlyRates":"Hourly Rates",
+    "RoomAreaSize":"Room Area Size",
+    "NumberOfRoom":"Number of Room",
+    "hourly_rate_title":"e.g : Hourly Cleaning",
+    "add_hourly_rate":"Add Hourly Rates",
+    "rate_added_sucessfully":"Rates Added Sucessfully",
+    "rate_added_message":"Your Rates has been added sucessfully",
+    "no_rate_available":"No Rates Available",
+    "error_occured":"Error Occured",
+"error_message":"Only one card can be created at time",
+"room_size_title":"e.g : 20 - 70 m2",
+"add_room_size":"Add Room Size",
+"room_sucess":"Room Size Added Sucessfully",
+"room_added_message":"Your Room Size has been added sucessfully",
+"no_room_size_available":"No Room Sizes available",
+"no_no_of_rooms":"No Number of Rooms available",
+"add_no_of_rooms":"Add Number of Rooms",
+"no_of_rooms_title":"e.g : Studio",
+"add_no_of_rooms_success":"Number of Rooms Added Sucessfully",
+"sucess_message":"No.of Rooms has been added sucessfully"
+
   },
   "logout":{
     "are_you_sure_logout": "Are you sure you want to log out?",

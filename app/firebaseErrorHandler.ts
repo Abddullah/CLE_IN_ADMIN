@@ -72,7 +72,13 @@ interface Translations {
   const getFirebaseErrorMessage = async (
     errorCode: string,
     languageCode: keyof Translations = "en"
+   
+    
   ): Promise<string> => {
+    console.log(errorCode);
+    console.log(languageCode);
+    
+    
     const errorMessage = translations[languageCode]?.[errorCode];
     return errorMessage || translations.en["auth/internal-error"];
   };

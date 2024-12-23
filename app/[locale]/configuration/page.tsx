@@ -8,6 +8,7 @@ import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/routing";
 import { collection, getDocs, updateDoc, doc, deleteDoc } from "firebase/firestore"; // Added deleteDoc for deleting a service
 import { db } from "../config/Firebase/FirebaseConfig";
+import { usePathname, useRouter } from "next/navigation";
 
 interface Service {
   id: string;
@@ -39,6 +40,26 @@ const AdditionalServices: React.FC = () => {
 
     fetchServices();
   }, []);
+
+  const router = useRouter();
+
+  const path = usePathname();
+
+  let lang = "";
+
+  if(path.includes('en')){
+    lang = 'en'
+  }else{
+    lang = 'it'
+  }
+
+  
+  
+
+  const handleNavigation = (path:string) => {
+    router.push(`/${lang}${path}`); // Navigate with current locale
+  };
+
 
   const handleEditDeleteToggle = (index: number) => {
     setOpenEditDelete(openEditDelete === index ? null : index);
@@ -98,9 +119,27 @@ const AdditionalServices: React.FC = () => {
 
   return (
     <div className="bg-[#F5F7FA] w-full h-full overflow-hidden overflow-y-auto max-h-screen">
+      <div className="flex justify-between w-full px-4 sm:px-4 md:px-12 lg:px-9 space-x-4 mt-6">
+          <button className="flex-1 py-4 rounded-md text-white bg-[#00BFFF] hover:bg-[#00BFFF]">
+            {(t('additionalService'))}
+          </button>
+         
+          <button onClick={() => {
+            handleNavigation('/configuration/hourlyRate')
+          }}className="flex-1 py-4 rounded-md text-white bg-[#00BFFF] hover:bg-[#00BFFF]">
+          {(t('HourlyRates'))}
+          </button>
+         
+          <button onClick={() => {handleNavigation('/configuration/roomAreaSize')}} className="flex-1 py-4 rounded-md  text-white bg-[#00BFFF] hover:bg-[#00BFFF]">
+          {(t('RoomAreaSize'))}
+          </button>
+          <button onClick={() => {handleNavigation('/configuration/noOfRoom')}} className="flex-1 py-4 rounded-md  text-white bg-[#00BFFF] hover:bg-[#00BFFF]">
+          {(t('NumberOfRoom'))}
+          </button>
+        </div>
       <div className="flex justify-end">
-    <Link href={"additionalServices/addAdditionalService"}>
-        <Button className="border-[#4BB1D3] w-[80px] h-[40px] mt-5 mr-8 text-white bg-[#00BFFF] rounded-lg outline-none hover:bg-[#00BFFF] sm:w-[100px] sm:h-[45px]">
+    <Link href={"configuration/addAdditionalService"}>
+        <Button className="border-[#4BB1D3] w-[80px] h-[40px] mt-8 mr-8 text-white bg-[#00BFFF] rounded-lg outline-none hover:bg-[#00BFFF] sm:w-[100px] sm:h-[45px]">
           {t("add_button")}
         </Button>
     </Link>
@@ -218,7 +257,6 @@ const AdditionalServices: React.FC = () => {
 };
 
 export default AdditionalServices;
-
 
 
 
