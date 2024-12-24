@@ -368,7 +368,11 @@
 "add_no_of_rooms":"Add Number of Rooms",
 "no_of_rooms_title":"e.g : Studio",
 "add_no_of_rooms_success":"Number of Rooms Added Sucessfully",
-"sucess_message":"No.of Rooms has been added sucessfully"
+"sucess_message":"No.of Rooms has been added sucessfully",
+"service":"Service",
+"rooms":"Rooms",
+"area":"Area",
+"rate":"Rate"
 
   },
   "logout":{

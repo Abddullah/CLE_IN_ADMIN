@@ -18,6 +18,7 @@ import {
 } from "firebase/firestore";
 import { db } from "../../config/Firebase/FirebaseConfig";
 import { useRouter } from "next/navigation";
+import { useRef } from "react";
 
 interface Invoice {
   Name: string;
@@ -78,6 +79,8 @@ export function TableDemo() {
   const toggleMenu = (index: number) => {
     setActiveMenu((prev) => (prev === index ? null : index));
   };
+  const menuRef = useRef<HTMLDivElement>(null);
+
 
   const openEditModal = (invoice: Invoice) => {
     setSelectedInvoice(invoice);
@@ -94,6 +97,8 @@ export function TableDemo() {
       [name]: value,
     }));
   };
+
+ 
 
   const updateInvoice = async () => {
     setIsModalOpen(true)
@@ -122,13 +127,19 @@ export function TableDemo() {
     setIsModalOpen(false);
   };
 
-  const handleBackdropClick = (e: React.MouseEvent) => {
-    if (e.target === e.currentTarget) {
-      setIsModalOpen(false);
-      
+  const handleOutsideClick = (e: MouseEvent) => {
+    if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+      setActiveMenu(null);
     }
   };
 
+  
+  useEffect(() => {
+    document.addEventListener("click", handleOutsideClick);
+    return () => {
+      document.removeEventListener("click", handleOutsideClick);
+    };
+  }, []);
   useEffect(() => {
     fetchInvoices();
   }, []);
@@ -138,7 +149,7 @@ export function TableDemo() {
       {isModalOpen && (
         <div
           className="fixed inset-0 bg-gray-500 bg-opacity-75 flex justify-center items-center z-50"
-          onClick={handleBackdropClick}
+          
         >
           <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-md sm:max-w-lg">
             <h2 className="text-xl font-semibold mb-4">Edit User</h2>
@@ -319,15 +330,21 @@ export function TableDemo() {
                 </tr>
               )}
 
-              <td className="px-4 py-3 text-sm relative">
+              <td className="px-4 py-3 text-lg relative">
+                <div ref={menuRef}>
                 <button
-                  onClick={() => toggleMenu(index)}
+                 onClick={() => setActiveMenu(activeMenu === index ? null : index)
+                  
+                 
+                  
+                 }
                   className="text-gray-500 hover:text-gray-800"
                 >
                   <FontAwesomeIcon icon={faEllipsisV} />
                 </button>
+               
                 {activeMenu === index && (
-                  <div className="absolute right-0 mt-2 bg-white border rounded-md shadow-lg w-40 z-50" onClick={handleBackdropClick}>
+                  <div className="absolute right-0 mt-2 bg-white border rounded-md shadow-lg w-40 z-50">
                     <button
                       className="w-full px-4 py-2 text-sm text-gray-700 flex items-center space-x-2 hover:bg-gray-100"
                       onClick={() => openEditModal(invoice)}
@@ -343,12 +360,19 @@ export function TableDemo() {
                       <span>Delete</span>
                     </button>
                   </div>
-                )}
+                
+              )}
+              </div>
               </td>
             </tr>
+           
           ))}
         </tbody>
       </table>
     </div>
   );
 }
+
+
+
+

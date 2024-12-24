@@ -333,7 +333,11 @@
 "add_no_of_rooms": "Aggiungi numero di stanze",
 "no_of_rooms_title": "es: Studio",
 "add_no_of_rooms_success": "Numero di stanze aggiunto con successo",
-"success_message": "Il numero di stanze è stato aggiunto con successo"
+"success_message": "Il numero di stanze è stato aggiunto con successo",
+"service": "Servizio",
+  "rooms": "Camere",
+  "area": "Area",
+  "rate": "Tariffa"
 
 
 

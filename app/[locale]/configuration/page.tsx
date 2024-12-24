@@ -9,6 +9,7 @@ import { Link } from "@/i18n/routing";
 import { collection, getDocs, updateDoc, doc, deleteDoc } from "firebase/firestore"; // Added deleteDoc for deleting a service
 import { db } from "../config/Firebase/FirebaseConfig";
 import { usePathname, useRouter } from "next/navigation";
+import ConfigurationTab from "../components/ConfigurationTab";
 
 interface Service {
   id: string;
@@ -119,44 +120,21 @@ const AdditionalServices: React.FC = () => {
 
   return (
     <div className="bg-[#F5F7FA] w-full h-full overflow-hidden overflow-y-auto max-h-screen">
-      <div className="flex justify-between w-full px-4 sm:px-4 md:px-12 lg:px-9 space-x-4 mt-6">
-          <button className="flex-1 py-4 rounded-md text-white bg-[#00BFFF] hover:bg-[#00BFFF]">
-            {(t('additionalService'))}
-          </button>
-         
-          <button onClick={() => {
-            handleNavigation('/configuration/hourlyRate')
-          }}className="flex-1 py-4 rounded-md text-white bg-[#00BFFF] hover:bg-[#00BFFF]">
-          {(t('HourlyRates'))}
-          </button>
-         
-          <button onClick={() => {handleNavigation('/configuration/roomAreaSize')}} className="flex-1 py-4 rounded-md  text-white bg-[#00BFFF] hover:bg-[#00BFFF]">
-          {(t('RoomAreaSize'))}
-          </button>
-          <button onClick={() => {handleNavigation('/configuration/noOfRoom')}} className="flex-1 py-4 rounded-md  text-white bg-[#00BFFF] hover:bg-[#00BFFF]">
-          {(t('NumberOfRoom'))}
-          </button>
-        </div>
-      <div className="flex justify-end">
-    <Link href={"configuration/addAdditionalService"}>
-        <Button className="border-[#4BB1D3] w-[80px] h-[40px] mt-8 mr-8 text-white bg-[#00BFFF] rounded-lg outline-none hover:bg-[#00BFFF] sm:w-[100px] sm:h-[45px]">
-          {t("add_button")}
-        </Button>
-    </Link>
-      </div>
+      <ConfigurationTab/>
+     
   
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto px-5 py-8">
       {/* Show a message if no services are available */}
       {services.length === 0 ? (
         <p className="text-center text-lg font-semibold text-gray-600">
           {t("no_additional_service")}
         </p>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-6">
+        <div className="grid grid-cols-1 sm:mx-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-6 ">
           {services.map((service, index) => (
             <div
               key={service.id}
-              className="relative bg-white p-6 rounded-xl border border-gray-300 shadow-lg hover:shadow-xl transform transition-all duration-300 hover:scale-104 cursor-pointer"
+              className="relative  bg-white p-6 rounded-xl border border-gray-300 shadow-lg hover:shadow-xl transform transition-all duration-300 hover:scale-104 cursor-pointer"
             >
               <div className="absolute top-4 right-4">
                 <button
@@ -190,16 +168,24 @@ const AdditionalServices: React.FC = () => {
               )}
   
               <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                {service.title}
+                {t('service')}: {service.title}
               </h3>
               <p className="text-lg font-medium text-gray-700 mb-4">
-                {t("price")}: {service.price}
+                {t("price")}: {service.price} €
               </p>
             </div>
           ))}
         </div>
       )}
     </div>
+
+    <div className="absolute bottom-8 right-8">
+        <Link href={"configuration/addAdditionalService"}>
+          <button className="w-14 h-14 flex items-center justify-center bg-[#00BFFF] text-white text-3xl rounded-full shadow-lg hover:bg-[#009ACD] focus:outline-none focus:ring-4 focus:ring-blue-300">
+            +
+          </button>
+        </Link>
+      </div>
   
     {/* Modal for editing the service */}
     {isModalOpen && editedService && (

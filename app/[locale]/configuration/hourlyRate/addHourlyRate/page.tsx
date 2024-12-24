@@ -21,8 +21,6 @@ function page() {
   const t = useTranslations("AdditionalServices");
 
   type InputTitle = {
-    title: string;
-    titleRequired: string;
     price: number;
     priceRequired: number;
   };
@@ -54,7 +52,6 @@ function page() {
       const docRef = doc(collection(db, "hourlyRates"));
 
       const AdditionalService = {
-        title: data.titleRequired,
         rate: data.priceRequired,
         createdAt: serverTimestamp(),
         id: docRef.id,
@@ -85,21 +82,7 @@ function page() {
         >
           <h1 className="text-2xl font-bold mb-4">{t("add_hourly_rate")}</h1>
 
-          <div className="grid w-full max-w-sm items-center gap-1.5 mt-8">
-            <Label htmlFor="text" className="font-semibold text-md">
-              {t("title")}
-            </Label>
-            <Input
-              type="text"
-              {...register("titleRequired", { required: true })}
-              placeholder={t("hourly_rate_title")}
-              className="h-[50px] border-[#4BB1D3]"
-              id="title"
-            />
-            {errors.titleRequired && (
-              <span className="text-red-600">{t("title_required")}</span>
-            )}
-          </div>
+        
 
           <div className="grid w-full max-w-sm items-center gap-1.5 mt-4">
             <Label htmlFor="text" className="font-semibold text-md">
