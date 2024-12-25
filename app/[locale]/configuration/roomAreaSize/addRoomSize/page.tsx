@@ -16,6 +16,7 @@ import {
 import { db } from "@/app/[locale]/config/Firebase/FirebaseConfig";
 import getFirebaseErrorMessage from "@/app/firebaseErrorHandler";
 import { usePathname } from "next/navigation";
+import { useRouter } from "@/i18n/routing";
 
 function page() {
   const t = useTranslations("AdditionalServices");
@@ -35,6 +36,7 @@ function page() {
   } = useForm<InputTitle>();
   const [showModal, setShowModal] = useState(false); // State to control modal visibility
   const [errorModal, setErrorModal] = useState(false); // State to control error modal visibility
+  const router = useRouter()
 
   const path = usePathname();
   const language = path.replace("/configuration/hourlyRate/addHourlyRate", "");
@@ -56,8 +58,12 @@ function page() {
       };
       await setDoc(docRef, AdditionalService);
       reset();
-
+      
       setShowModal(true);
+      setTimeout(() => {
+        router.push('/configuration/roomAreaSize')
+
+      }, 3000)
     } catch (e: any) {
       const errorCode = e.code;
       const errorMessage = await getFirebaseErrorMessage(errorCode, lang);
@@ -69,6 +75,7 @@ function page() {
   const closeModal = () => {
     setShowModal(false);
     setErrorModal(false);
+    router.push('/configuration/roomAreaSize')
   };
 
   return (

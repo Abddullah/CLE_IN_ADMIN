@@ -38,7 +38,7 @@ const ChatInterface: React.FC = () => {
         className={`h-screen w-full sm:w-1/3 md:w-1/4 bg-white shadow-lg border-r ${showChat ? "hidden md:block" : "block"}`}
       >
        <div className="relative h-full max-w-full">
-  <div className="h-full p-2 space-y-4 fixed overflow-y-auto w-full sm:max-w-[285px] lg:max-w-[285px] max-w-full">
+  <div className="h-full p-2 space-y-4 fixed overflow-y-auto w-full sm:max-w-[50%] lg:max-w-[50%] max-w-full">
     {users.map((user) => (
       <div
         key={user.id}

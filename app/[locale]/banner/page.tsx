@@ -41,16 +41,17 @@ const SliderPage = () => {
   
 
   return (
-    <div className="bg-[#F5F7FA] h-full w-full">
-  <div className="flex justify-end mb-4">
-    <Link href={"banner/addBanner"}>
-      <div className="flex justify-end overflow-hidden">
-        <Button className="border-[#4BB1D3] w-[110px] h-[40px] mt-5 mr-8 text-white bg-[#00BFFF] rounded-lg outline-none hover:bg-[#00BFFF] sm:w-[120px] sm:h-[45px]">
-          ADD
-        </Button>
-      </div>
-    </Link>
-  </div>
+    <div className="bg-[#F5F7FA] h-full w-full overflow-hidden">
+  
+
+  <div className="absolute bottom-8 right-8 z-10">
+                          <Link href={"banner/addBanner"}>
+                            <button className="w-14 h-14 flex items-center justify-center bg-[#00BFFF] text-white text-3xl rounded-full shadow-lg hover:bg-[#009ACD] focus:outline-none focus:ring-4 focus:ring-blue-300">
+                              +
+                            </button>
+                          </Link>
+                        </div>
+  
 
  
  

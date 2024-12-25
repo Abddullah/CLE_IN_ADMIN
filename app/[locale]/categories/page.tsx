@@ -139,13 +139,15 @@ function Page() {
 
   return (
     <div className="bg-[#F5F7FA] h-full w-full">
-        <div className="flex justify-end overflow-hidden">
-      <Link href={"categories/add"}>
-          <Button className="border-[#4BB1D3] w-[110px] h-[40px] mt-5 mr-8 text-white bg-[#00BFFF] rounded-lg outline-none hover:bg-[#00BFFF] sm:w-[120px] sm:h-[45px]">
-            {t("add_button")}
-          </Button>
-      </Link>
-        </div>
+      
+
+         <div className="absolute bottom-8 right-8 z-10">
+            <Link href={"categories/add"}>
+              <button className="w-14 h-14 flex items-center justify-center bg-[#00BFFF] text-white text-3xl rounded-full shadow-lg hover:bg-[#009ACD] focus:outline-none focus:ring-4 focus:ring-blue-300">
+                +
+              </button>
+            </Link>
+          </div>
 
       <div className="flex justify-center sm:justify-start flex-wrap gap-5 px-6">
         {categories.map((category) => (

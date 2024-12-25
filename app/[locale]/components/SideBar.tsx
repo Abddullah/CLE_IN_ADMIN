@@ -376,7 +376,7 @@ const Sidebar = () => {
           </ul>
         </nav>
 
-        <div className="absolute bottom-4 left-0 w-full px-9">
+        <div className="absolute bottom-0 left-0 w-full px-9">
           <button className="flex items-center w-full p-2 hover:bg-red-100 rounded cursor-pointer">
             <Link href="/logout" passHref>
               <p className="flex items-center">

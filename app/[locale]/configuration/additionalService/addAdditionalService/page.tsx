@@ -6,8 +6,8 @@ import { Label } from "@/components/ui/label";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useTranslations } from "next-intl";
 import {  addDoc, collection, serverTimestamp , doc , setDoc} from "firebase/firestore"; // import Firebase methods
-import { db } from "../../config/Firebase/FirebaseConfig";
-
+import { db } from "@/app/[locale]/config/Firebase/FirebaseConfig";
+import { useRouter } from "@/i18n/routing";
 function page() {
   const t = useTranslations("AdditionalServices");
 
@@ -20,6 +20,7 @@ function page() {
 
   const { register, handleSubmit, formState: { errors } } = useForm<InputTitle>();
   const [showModal, setShowModal] = useState(false); // State to control modal visibility
+  const router = useRouter();
 
   const onSubmit: SubmitHandler<InputTitle> = async (data) => {
     try {
@@ -36,9 +37,14 @@ function page() {
 
       await setDoc(docRef , AdditionalService)
       console.log("Data added successfully");
+      
 
       
       setShowModal(true);
+      setTimeout(() => {
+        router.push('/configuration/additionalService')
+
+      },3000)
     } catch (e) {
       console.error("Error adding document: ", e);
     }
@@ -47,6 +53,7 @@ function page() {
   // Close modal
   const closeModal = () => {
     setShowModal(false);
+    router.push('/configuration/additionalService')
   };
 
   return (
@@ -119,7 +126,6 @@ function page() {
 }
 
 export default page;
-
 
 
 

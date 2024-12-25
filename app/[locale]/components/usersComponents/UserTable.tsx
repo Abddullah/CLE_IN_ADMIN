@@ -80,6 +80,8 @@ export function TableDemo() {
     setActiveMenu((prev) => (prev === index ? null : index));
   };
   const menuRef = useRef<HTMLDivElement>(null);
+ 
+  
 
 
   const openEditModal = (invoice: Invoice) => {
@@ -127,19 +129,23 @@ export function TableDemo() {
     setIsModalOpen(false);
   };
 
-  const handleOutsideClick = (e: MouseEvent) => {
-    if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
-      setActiveMenu(null);
-    }
-  };
-
-  
   useEffect(() => {
-    document.addEventListener("click", handleOutsideClick);
-    return () => {
-      document.removeEventListener("click", handleOutsideClick);
+    const handleClickOutside = (event:any) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setActiveMenu(null); // Close the menu
+      }
     };
-  }, []);
+ 
+    // Attach event listener
+    document.addEventListener("mousedown", handleClickOutside);
+
+    // Cleanup on component unmount
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [menuRef, setActiveMenu]); 
+  
+  
   useEffect(() => {
     fetchInvoices();
   }, []);
@@ -330,40 +336,46 @@ export function TableDemo() {
                 </tr>
               )}
 
-              <td className="px-4 py-3 text-lg relative">
-                <div ref={menuRef}>
-                <button
-                 onClick={() => setActiveMenu(activeMenu === index ? null : index)
-                  
-                 
-                  
-                 }
-                  className="text-gray-500 hover:text-gray-800"
-                >
-                  <FontAwesomeIcon icon={faEllipsisV} />
-                </button>
-               
-                {activeMenu === index && (
-                  <div className="absolute right-0 mt-2 bg-white border rounded-md shadow-lg w-40 z-50">
-                    <button
-                      className="w-full px-4 py-2 text-sm text-gray-700 flex items-center space-x-2 hover:bg-gray-100"
-                      onClick={() => openEditModal(invoice)}
-                    >
-                      <FontAwesomeIcon icon={faEdit} />
-                      <span>Edit</span>
-                    </button>
-                    <button
-                      className="w-full px-4 py-2 text-sm text-gray-700 flex items-center space-x-2 hover:bg-gray-100"
-                      onClick={() => deleteInvoice(invoice.docId)}
-                    >
-                      <FontAwesomeIcon icon={faTrashAlt} />
-                      <span>Delete</span>
-                    </button>
-                  </div>
-                
-              )}
-              </div>
-              </td>
+<td className="relative px-4 py-3 text-sm">
+  <div className="relative">
+    {/* Button to toggle the dropdown */}
+    <button
+      className="p-2"
+      onClick={(e) => {
+        toggleMenu(index); 
+        e.stopPropagation();
+      }}
+    >
+      <FontAwesomeIcon icon={faEllipsisV} />
+    </button>
+
+    {/* Dropdown menu */}
+    {activeMenu === index && (
+      <div
+    
+        className="absolute top-6 right-0 mt-2 bg-white border rounded shadow-lg z-50"
+        ref={menuRef}
+        style={{ minWidth: "150px" }}
+      >
+        <button
+          onClick={() => openEditModal(invoice)}
+          className="block w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100"
+        >
+          <FontAwesomeIcon icon={faEdit} className="mr-2" />
+          Edit
+        </button>
+        <button
+          onClick={() => deleteInvoice(invoice.docId)}
+          className="block w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-red-100"
+        >
+          <FontAwesomeIcon icon={faTrashAlt} className="mr-2" />
+          Delete
+        </button>
+      </div>
+    )}
+  </div>
+</td>
+
             </tr>
            
           ))}
@@ -372,6 +384,32 @@ export function TableDemo() {
     </div>
   );
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

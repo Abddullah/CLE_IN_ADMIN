@@ -9,16 +9,16 @@ function page() {
   return (
     <>
       <div className="bg-[#F5F7FA] min-h-screen w-full">
-        <div className="flex justify-end">
-          <Link href={"services/addService"}> 
-            <Button
-              className="border-[#4BB1D3] w-[110px] h-[40px] mt-5 mr-8 text-white bg-[#00BFFF] rounded-lg outline-none hover:bg-[#00BFFF] 
-      sm:w-[120px] sm:h-[45px]"
-            >
-              {(t('add_button'))}
-            </Button>
-          </Link>
-        </div>
+       
+        
+<div className="absolute bottom-8 right-8 z-10">
+            <Link href={"services/addService"}>
+              <button className="w-14 h-14 flex items-center justify-center bg-[#00BFFF] text-white text-3xl rounded-full shadow-lg hover:bg-[#009ACD] focus:outline-none focus:ring-4 focus:ring-blue-300">
+                +
+              </button>
+            </Link>
+          </div>
+
 
         <div className="flex justify-between w-full px-4 sm:px-8 md:px-12 lg:px-9 space-x-4 mt-6">
           <button className="flex-1 py-3 rounded-md text-white bg-[#00BFFF] hover:bg-[#00BFFF]">
