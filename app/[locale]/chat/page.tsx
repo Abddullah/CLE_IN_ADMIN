@@ -37,32 +37,31 @@ const ChatInterface: React.FC = () => {
       <div
         className={`h-screen w-full sm:w-1/3 md:w-1/4 bg-white shadow-lg border-r ${showChat ? "hidden md:block" : "block"}`}
       >
-       <div className="relative h-full max-w-full">
-  <div className="h-full p-2 space-y-4 fixed overflow-y-auto w-full sm:max-w-[50%] lg:max-w-[50%] max-w-full">
-    {users.map((user) => (
-      <div
-        key={user.id}
-        onClick={() => handleUserSelect(user)}
-        className="flex items-center p-4 hover:bg-blue-100 cursor-pointer transition-all border-b mb-2 w-full"
-      >
-        <div className="w-10 h-10 rounded-full bg-[#00BFFF] flex items-center justify-center">
-          <span className="text-white font-semibold">{user.avatar}</span>
+        <div className="relative h-full max-w-full">
+          <div className="h-full p-2 space-y-4 fixed overflow-y-auto w-full sm:max-w-[50%] lg:max-w-[50%] max-w-full">
+            {users.map((user) => (
+              <div
+                key={user.id}
+                onClick={() => handleUserSelect(user)}
+                className={`flex items-center p-4 cursor-pointer transition-all mb-2 w-full `}
+              >
+                <div className="w-10 h-10 rounded-full bg-[#00BFFF] flex items-center justify-center">
+                  <span className="text-white font-semibold">{user.avatar}</span>
+                </div>
+                <div className="ml-4">
+                  <h3 className="font-semibold text-gray-800">{user.name}</h3>
+                  <p
+                    className={`text-sm ${
+                      user.status === t("status_online") ? "text-green-500" : "text-gray-500"
+                    }`}
+                  >
+                    {user.status}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
-        <div className="ml-4">
-          <h3 className="font-semibold text-gray-800">{user.name}</h3>
-          <p
-            className={`text-sm ${
-              user.status === t("status_online") ? "text-green-500" : "text-gray-500"
-            }`}
-          >
-            {user.status}
-          </p>
-        </div>
-      </div>
-    ))}
-  </div>
-</div>
-
       </div>
 
       {/* Chat Area */}
@@ -160,8 +159,8 @@ const ChatInterface: React.FC = () => {
             </div>
           </>
         ) : (
-          <div className="flex items-center justify-center flex-1">
-            <p className="text-gray-500">{t("select_a_user")}</p>
+          <div className="flex items-center justify-center flex-1 z-20">
+            <p className="text-gray-500 z-10">{t("select_a_user")}</p>
           </div>
         )}
       </div>

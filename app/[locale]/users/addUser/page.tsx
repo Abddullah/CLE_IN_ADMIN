@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
@@ -17,8 +17,9 @@ import { useTranslations } from "next-intl";
 import { auth , db } from "../../config/Firebase/FirebaseConfig"; 
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { doc, serverTimestamp, setDoc } from "firebase/firestore";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { useState } from "react";
+import { useRouter } from "@/i18n/routing";
 
 function AddUserPage() {
   const t = useTranslations("Users");
@@ -59,6 +60,9 @@ function AddUserPage() {
 
 const router = useRouter()
 const path = usePathname();
+
+
+
   const onSubmit: SubmitHandler<FormInputs> = async (data) => {
     try {
       // Create user with Firebase Auth
@@ -79,14 +83,13 @@ const path = usePathname();
       });
       reset()
       setIsSuccessModalOpen(true)
+
+      setTimeout(() =>{
+        router.push('/users')
+      },3000)
   
       
-     if(path==='en'){
-      router.push('en/users')
-      
-     }else if(path === 'it'){
-      router.push('it/users')
-     }
+    
     } catch (error) {
       
       setIsErrorModalOpen(true)
@@ -337,7 +340,10 @@ const path = usePathname();
             <p className="mt-2">User has been created successfully in the system.</p>
             <div className="mt-4 flex justify-end">
               <Button
-                onClick={() => setIsSuccessModalOpen(false)}
+                onClick={() => {
+                  setIsSuccessModalOpen(false)
+                  router.push('/users')
+                }}
                 className="bg-green-500 text-white hover:bg-green-400"
               >
                 Close

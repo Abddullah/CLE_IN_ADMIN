@@ -48,6 +48,21 @@ body {
 }
 
 
+
+.scrollbar::-webkit-scrollbar {
+  width: 8px; /* Adjust width of scrollbar */
+}
+.scrollbar::-webkit-scrollbar-thumb {
+  background-color: #00BFFF; /* Color of the scrollbar */
+  border-radius: 5px;
+}
+.scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: #007bff; /* Hover effect */
+}
+.scrollbar::-webkit-scrollbar-track {
+  background-color: rgba(0, 0, 0, 0.1); /* Track color */
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;

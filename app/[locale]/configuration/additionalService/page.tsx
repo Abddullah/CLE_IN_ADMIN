@@ -160,27 +160,32 @@ const AdditionalServices: React.FC = () => {
                   </button>
                 </div>
 
-                {openEditDelete === index && (
-                  <div ref={menuRef} className="absolute right-0 top-8 w-36 bg-white border border-gray-200 rounded-lg shadow-md z-10">
-                    <button
-                      className="flex items-center w-full p-2 hover:bg-gray-100"
-                      onClick={() => handleEdit(service)}
-                    >
-                      <FontAwesomeIcon icon={faEdit} className="w-4 h-4 mr-2" />
-                      <span>{t("edit")}</span>
-                    </button>
-                    <button
-                      className="flex items-center w-full p-2 hover:bg-gray-100"
-                      onClick={() => handleDeleteService(service.id)} // Delete functionality
-                    >
-                      <FontAwesomeIcon
-                        icon={faTrashAlt}
-                        className="w-4 h-4 mr-2"
-                      />
-                      <span>{t("delete")}</span>
-                    </button>
-                  </div>
-                )}
+               
+
+
+                 {openEditDelete === index && (
+                                      <div
+                                    
+                                        className="absolute top-6 right-0 mt-2 bg-white border rounded shadow-lg z-50"
+                                        ref={menuRef}
+                                        style={{ minWidth: "150px" }}
+                                      >
+                                        <button
+                                          onClick={() => handleEdit(service)}
+                                          className="block w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100"
+                                        >
+                                          <FontAwesomeIcon icon={faEdit} className="mr-2" />
+                                          Edit
+                                        </button>
+                                        <button
+                                          onClick={() => handleDeleteService(service.id)}
+                                          className="block w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-red-100"
+                                        >
+                                          <FontAwesomeIcon icon={faTrashAlt} className="mr-2" />
+                                          Delete
+                                        </button>
+                                      </div>
+                                    )}
 
                 <h3 className="text-lg font-semibold text-gray-900 mb-2">
                   {t('service')}: {service.title}

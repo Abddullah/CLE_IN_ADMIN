@@ -9,6 +9,7 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { useTranslations } from "next-intl";
 import { collection, addDoc, query, getDocs, serverTimestamp } from "firebase/firestore"; 
 import { db } from "../../config/Firebase/FirebaseConfig";
+import { useRouter } from "@/i18n/routing";
 
 type Field = {
   id: number;
@@ -24,6 +25,7 @@ function Page() {
   const [deletingId, setDeletingId] = useState<number | null>(null);
   const [showErrorModal, setShowErrorModal] = useState(false); // State to handle error modal visibility
   const [showSuccessModal, setShowSuccessModal] = useState(false); // State for success modal visibility
+  const router = useRouter();
 
   const {
     register,
@@ -65,6 +67,10 @@ function Page() {
 
       // Show success modal after creating the first card
       setShowSuccessModal(true);
+      setTimeout(()=>{
+        router.push('/payments')
+
+      },3000)
     } catch (error) {
       console.error("Error saving payment data: ", error);
     }
@@ -220,7 +226,10 @@ function Page() {
             <h2 className="text-xl font-semibold text-green-600">Success</h2>
             <p className="mt-2">Payment Card Created Successfully!</p>
             <button
-              onClick={() => setShowSuccessModal(false)}
+              onClick={() => {
+                setShowSuccessModal(false)
+                router.push('/payments')
+              }}
               className="mt-4 px-4 py-2 bg-[#00BFFF] text-white rounded-lg"
             >
               Close
