@@ -11,7 +11,7 @@ import { doc, getDoc } from "firebase/firestore";
 import getFirebaseErrorMessage from "../firebaseErrorHandler";
 
 interface UserData {
-  role: string;
+  role: any;
 }
 
 const LoginScreen = () => {
@@ -37,9 +37,12 @@ const LoginScreen = () => {
       const user = userCredential.user;
       const userDocRef = doc(db, "users", user.uid);
       const userDocSnap = await getDoc(userDocRef);
+      
 
       if (userDocSnap.exists()) {
         const userData = userDocSnap.data() as UserData;
+       localStorage.setItem('currentUser' , JSON.stringify(userData))
+        
         if (userData.role === "admin") {
           router.push("/en/dashboard");
         } else {
