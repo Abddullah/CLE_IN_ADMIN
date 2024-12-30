@@ -162,8 +162,8 @@
     "chats":{
       "chats": "Chats",
       "select_a_user": "Select a user to start chatting",
-      "status_online": "Online",
-      "status_offline": "Offline",
+      "status_online": "online",
+      "status_offline": "offline",
       "send_message": "Send Message",
       "type_message": "Type your message...",
       "message":"I'm doing great! How about you?"

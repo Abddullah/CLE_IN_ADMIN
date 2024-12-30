@@ -53,7 +53,7 @@ const Sidebar = () => {
       setPathName("/jobs");
     } else if (path.includes("users")) {
       setPathName("/users");
-    } else if (path === "/logout") {
+    } else if (path.includes("logout")) {
       setPathName("/logout");
     } else if (path.includes("configuration")) {
       setPathName("/configuration");
@@ -349,10 +349,32 @@ const Sidebar = () => {
           </span>
         </Link>
       </li>
+
+      <li className="flex items-center p-2 hover:bg-gray-100 rounded cursor-pointer ml-1">
+        <Link href="/logout" passHref>
+          <FontAwesomeIcon
+            icon={faSignOutAlt}
+            className={`mr-7 text-xl ${
+              pathName === "/logout"
+                ? "text-[#00BFFF]"
+                : "text-gray-400"
+            }`}
+          />
+          <span
+            className={`mr-2 ${
+              pathName === "/logout"
+                ? "text-[#00BFFF]"
+                : "text-gray-400"
+            }`}
+          >
+            {(t("logout"))}
+          </span>
+        </Link>
+      </li>
     </ul>
   </nav>
 
-  <div className="bottom-0 left-0 w-full px-9">
+  {/* <div className="bottom-0 left-0 w-full px-9">
     <button className="flex items-center w-full p-2 hover:bg-red-100 rounded cursor-pointer">
       <Link href="/logout" passHref>
         <p className="flex items-center">
@@ -364,7 +386,7 @@ const Sidebar = () => {
         </p>
       </Link>
     </button>
-  </div>
+  </div> */}
 </div>
 
 
