@@ -1,11 +1,11 @@
 "use client";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import { db } from "../config/Firebase/FirebaseConfig";
 import { useTranslations } from "next-intl";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faPaperPlane
-} from "@fortawesome/free-solid-svg-icons";
+import InfiniteScroll from "react-infinite-scroll-component";
+
+import { faPaperPlane } from "@fortawesome/free-solid-svg-icons";
 
 import {
   collection,
@@ -15,6 +15,9 @@ import {
   getDoc,
   setDoc,
   arrayUnion,
+  orderBy,
+  limit,
+  startAfter,
 } from "firebase/firestore";
 import moment from "moment";
 
@@ -43,10 +46,12 @@ const ChatInterface: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState<string>("");
   const buttonRef = useRef<HTMLButtonElement | null>(null);
-  const [currentUser, setCurrentUser] = useState<{ userId: string } | null>(null);
-  const [lastVisible, setLastVisible] = useState<any>(null); // To keep track of the last document
-  const [loading, setLoading] = useState<boolean>(false);
-
+  const [hasMore, setHasMore] = useState(true);
+  const [currentUser, setCurrentUser] = useState<{ userId: string } | null>(
+    null
+  );
+  const [lastVisible, setLastVisible] = useState<any>(null);
+ const [messageLength , setMessageLength] = useState<number>(0)
   useEffect(() => {
     const user = localStorage.getItem("currentUser");
     if (user) {
@@ -65,27 +70,36 @@ const ChatInterface: React.FC = () => {
       const unsubscribeChats = onSnapshot(q, async (snapshot) => {
         const chatUserIds = snapshot.docs.map((chatDoc) => chatDoc.id);
 
-        const unsubscribeUsers = onSnapshot(collection(db, "users"), (userSnapshot) => {
-          const fetchedUsers: User[] = userSnapshot.docs
-            .filter((userDoc) => chatUserIds.includes(userDoc.id))
-            .map((userDoc) => {
-              const userData = userDoc.data();
-              const chatData = snapshot.docs.find((chatDoc) => chatDoc.id === userDoc.id)?.data();
+        const unsubscribeUsers = onSnapshot(
+          collection(db, "users"),
+          (userSnapshot) => {
+            const fetchedUsers: User[] = userSnapshot.docs
+              .filter((userDoc) => chatUserIds.includes(userDoc.id))
+              .map((userDoc) => {
+                const userData = userDoc.data();
+                const chatData = snapshot.docs
+                  .find((chatDoc) => chatDoc.id === userDoc.id)
+                  ?.data();
 
-              return {
-                id: userDoc.id,
-                name: userData.fullName || "Unknown",
-                status: userData.online ? "online" : "offline",
-                lastMessage: chatData?.lastMessage?.text || "",
-                lastMessageTimestamp: chatData?.lastMessage?.timestamp || null,
-              };
-            });
+                return {
+                  id: userDoc.id,
+                  name: userData.fullName || "Unknown",
+                  status: userData.online ? "online" : "offline",
+                  lastMessage: chatData?.lastMessage?.text || "",
+                  lastMessageTimestamp:
+                    chatData?.lastMessage?.timestamp || null,
+                };
+              });
 
-          // Sort users by the last message timestamp (most recent first)
-          fetchedUsers.sort((a, b) => (b.lastMessageTimestamp || 0) - (a.lastMessageTimestamp || 0));
+            // Sort users by the last message timestamp (most recent first)
+            fetchedUsers.sort(
+              (a, b) =>
+                (b.lastMessageTimestamp || 0) - (a.lastMessageTimestamp || 0)
+            );
 
-          setUsers(fetchedUsers);
-        });
+            setUsers(fetchedUsers);
+          }
+        );
 
         return () => unsubscribeUsers();
       });
@@ -97,22 +111,117 @@ const ChatInterface: React.FC = () => {
   }, []);
 
   // Fetch messages for selected user
-  useEffect(() => {
+  const fetchMessages = useCallback(() => {
     if (selectedUser) {
       const chatRef = doc(db, "chats", selectedUser.id);
-
+  
+      // Using onSnapshot for real-time updates
       const unsubscribe = onSnapshot(chatRef, (docSnapshot) => {
         if (docSnapshot.exists()) {
-          const chatData = docSnapshot.data();
-          setMessages(chatData.messages || []);
+          // Retrieve messages and sort by timestamp
+          const allMessages = (docSnapshot.data().messages || []).sort(
+            (a: any, b: any) => a.timestamp - b.timestamp // Sort in ascending order
+          );
+  
+          // Log or store the total number of messages
+
+          setMessageLength(allMessages.length);
+
+
+         
+          
+  
+          // Ensure no duplicate messages are added
+          const startIndex = lastVisible
+            ? allMessages.findIndex((msg: any) => msg.id === lastVisible.id) - 1
+            : allMessages.length - 20; // Start from the last 20 messages initially
+  
+          const validStartIndex = Math.max(startIndex, 0); // Ensure index is not negative
+          const newMessages = allMessages.slice(
+            validStartIndex,
+            validStartIndex + 20
+          );
+  
+          // Append messages intelligently to avoid duplicates
+          setMessages((prevMessages) => {
+            const newUniqueMessages = newMessages.filter(
+              (msg: any) =>
+                !prevMessages.some((prevMsg) => prevMsg.id === msg.id)
+            );
+            return [...newUniqueMessages, ...prevMessages].reverse();
+          });
+  
+          // Update lastVisible to the last message in the fetched batch
+          if (newMessages.length > 0) {
+            setLastVisible(newMessages[newMessages.length - 1]);
+          }
+  
+          // Check if there are more messages to fetch
+          setHasMore(validStartIndex > 0);
         } else {
           setMessages([]);
         }
       });
-
+  
+      // Clean up on component unmount
       return () => unsubscribe();
     }
   }, [selectedUser]);
+
+  
+
+  const fetchMore = () => {
+    if (selectedUser && hasMore) {
+      const chatRef = doc(db, "chats", selectedUser.id);
+
+      getDoc(chatRef).then((docSnapshot) => {
+        if (docSnapshot.exists()) {
+          // Retrieve and sort messages by timestamp
+          const allMessages = (docSnapshot.data().messages || []).sort(
+            (a: any, b: any) => a.timestamp - b.timestamp // Sort in ascending order of timestamp
+          );
+
+          // Determine the starting point for fetching more messages
+          const startIndex =
+            allMessages.findIndex((msg: any) => msg.id === lastVisible.id) - 20;
+          const validStartIndex = Math.max(startIndex, 0); // Ensure the index is not negative
+          const additionalMessages = allMessages.slice(
+            validStartIndex,
+            validStartIndex + 20
+          );
+
+          // Append messages intelligently to avoid duplicates
+          setMessages((prevMessages) => {
+            const newUniqueMessages = additionalMessages.filter(
+              (msg: any) =>
+                !prevMessages.some((prevMsg) => prevMsg.id === msg.id)
+            );
+            return [...prevMessages, ...newUniqueMessages.reverse()];
+          });
+
+          // Update lastVisible to the last message in the newly fetched batch
+          if (additionalMessages.length > 0) {
+            setLastVisible(additionalMessages[0]); // First message in the batch is now the last visible
+          }
+
+          // Update hasMore to indicate if more messages are available
+          setHasMore(validStartIndex > 0);
+        }
+      });
+    }
+  };
+
+  console.log("Messages", messages);
+
+  useEffect(() => {
+    fetchMessages();
+  }, [fetchMessages]);
+
+  const handleScroll = () => {
+    if (hasMore) {
+      fetchMessages(); // Fetch more messages as user scrolls
+    }
+  };
 
   const sendMessage = async () => {
     if (!newMessage.trim() || !selectedUser || !senderId) return;
@@ -210,7 +319,7 @@ const ChatInterface: React.FC = () => {
   };
 
   return (
-    <div className="flex h-screen bg-gray-100">
+    <div className="flex h-screen">
       {/* Chat List */}
       <div className={`w-full md:w-1/3 lg:w-1/4 bg-white shadow-lg border-r`}>
         <div className="relative h-full max-w-full">
@@ -250,9 +359,9 @@ const ChatInterface: React.FC = () => {
 
       {/* Chat Messages */}
       <div
-        className={`flex-1 flex flex-col z-10 ${
+        className={`flex-1 flex flex-col z-10 bg-gray-100 ${
           showChat ? "block" : "hidden md:flex"
-        } space-y-4`}
+        }`}
       >
         {selectedUser ? (
           <>
@@ -296,46 +405,64 @@ const ChatInterface: React.FC = () => {
               </div>
             </div>
 
-            <div className="flex-1 overflow-y-auto p-6 space-y-4 bg-gray-100">
-              {messages.map((msg) => (
-                <div
-                  key={Math.random()}
-                  className={`flex ${
-                    msg.senderId === senderId ? "justify-end" : "justify-start"
-                  }`}
-                >
-                  <div
-                    className={`rounded-lg p-3 max-w-[60%] shadow ${
-                      msg.senderId === senderId
-                        ? "bg-[#98d7ec]"
-                        : "bg-gray-200"
-                    }`}
-                  >
-                    <p>{msg.text}</p>
-                    <span className="text-xs text-gray-500">
-                      {moment(msg.timestamp).format("LT")}
-                    </span>
+            <div
+              id="scrollableDiv"
+             
+              className="overflow-auto flex flex-col-reverse"
+            >
+              {/*Put the scroll bar always on the bottom*/}
+              <InfiniteScroll
+                dataLength={messages.length}
+                next={fetchMore}
+                style={{ display: "flex", flexDirection: "column-reverse" }} //To put endMessage and loader to the top.
+                inverse={true} //
+                hasMore={messages.length < messageLength}
+                loader={<h4>Loading...</h4>}
+                scrollableTarget="scrollableDiv"
+              >
+                {messages.map((msg, index) => (
+                  <div key={index}>
+                    <div
+                      className={`flex mx-[20px] mt-4 ${
+                        msg.senderId === senderId
+                          ? "justify-end"
+                          : "justify-start"
+                      }`}
+                    >
+                      <div
+                        className={`rounded-lg p-3 max-w-[60%] shadow ${
+                          msg.senderId === senderId
+                            ? "bg-[#98d7ec]"
+                            : "bg-gray-200"
+                        }`}
+                      >
+                        <p>{msg.text}</p>
+                        <span className="text-xs text-gray-500">
+                          {moment(msg.timestamp).format("LT")}
+                        </span>
+                      </div>
+                    </div>
                   </div>
-                </div>
-              ))}
-              <div ref={messagesEndRef} />
+                ))}
+              </InfiniteScroll>
             </div>
 
-            <div className="bg-white p-4 shadow-md flex">
+            {/* Fixed Input Field */}
+            <div className="bg-white shadow-md flex items-center p-4 fixed bottom-0 w-full ">
               <input
                 type="text"
                 value={newMessage}
                 onChange={(e) => setNewMessage(e.target.value)}
                 onKeyPress={handleKeyPress}
-                className="flex-1 p-2 border rounded-l-md"
+                className="flex-1 p-2 border rounded-l-md "
                 placeholder="Type a message"
               />
               <button
                 ref={buttonRef}
                 onClick={sendMessage}
-                className="bg-[#00BFFF] text-white p-2 text-xl rounded-r-md focus:none"
+                className="bg-[#00BFFF] text-white p-2 text-xl rounded-r-md fixed right-0 mr-2"
               >
-              <FontAwesomeIcon icon={faPaperPlane}/>
+                <FontAwesomeIcon icon={faPaperPlane} />
               </button>
             </div>
           </>
