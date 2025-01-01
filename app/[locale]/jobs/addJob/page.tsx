@@ -13,7 +13,7 @@ import {
   Select,
   SelectContent,
   SelectGroup,
-  SelectItem, 
+  SelectItem,
   SelectLabel,
   SelectTrigger,
   SelectValue,
@@ -22,9 +22,10 @@ import { useRouter } from "next/navigation";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import { useTranslations } from "next-intl";
 import MapComponent from "../../components/map/map";
+import TestMap from "../../components/map/ModalMap";
 
 function page() {
-  const t = useTranslations('Jobs');
+  const t = useTranslations("Jobs");
   interface Props {
     provider: string;
     category: string;
@@ -46,7 +47,7 @@ function page() {
     numberofrooms: string;
     needmaterial: string;
     Additionalservices: string[];
-    location:{lng:number , lat:number}
+    location: { lng: number; lat: number };
   };
 
   const {
@@ -83,8 +84,6 @@ function page() {
 
   const router = useRouter();
   const location = useSelector((state: any) => state.location);
-  
-  
 
   const categories: { [key: string]: string[] } = {
     "Cleaning and Hygiene Services": [
@@ -133,7 +132,7 @@ function page() {
 
   useEffect(() => {
     if (location) {
-      setValue('location', { lng: location.lng, lat: location.lat });
+      setValue("location", { lng: location.lng, lat: location.lat });
     }
   }, [location, setValue]);
 
@@ -166,31 +165,28 @@ function page() {
 
   return (
     <>
-     
-     
-     <div className="bg-[#F5F7FA] min-h-screen w-full flex items-start justify-start relative">
-     <div className="max-w-7xl mx-auto p-4 sm:p-6 lg">
-
+      <div className="bg-[#F5F7FA] min-h-screen w-full flex items-start justify-start relative">
+        <div className="max-w-7xl mx-auto p-4 sm:p-6 lg">
           <form
             onSubmit={handleSubmit(onSubmit)}
             className="w-full max-w-6xl px-8 lg:px-16 mt-6 mb-0"
           >
-            <h1 className="text-2xl font-bold mt-2">{(t('AddJobs'))}</h1>
-           <div className="grid w-full items-center gap-1.5 ">
+            <h1 className="text-2xl font-bold mt-2">{t("AddJobs")}</h1>
+            <div className="grid w-full items-center gap-1.5 ">
               <Controller
                 name="provider"
                 control={control}
                 rules={{
-                  required:(t("ProviderRequired")),
+                  required: t("ProviderRequired"),
                 }}
                 render={({ field: { value, onChange } }) => (
                   <Select onValueChange={onChange} value={value}>
                     <SelectTrigger className="w-full h-[55px] rounded-lg border border-[#4BB1D3] bg-gray-50 mt-1 pr-6 outline-[#4BB1D3] focus:border-[#4BB1D3] focus:outline-none focus:border-none">
-                      <SelectValue placeholder={(t('Provider'))} />
+                      <SelectValue placeholder={t("Provider")} />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectGroup>
-                        <SelectLabel>{(t('Provider'))}</SelectLabel>
+                        <SelectLabel>{t("Provider")}</SelectLabel>
                         <SelectItem value="Leonardo">Leonardo </SelectItem>
                         <SelectItem value="Matteo">Matteo</SelectItem>
                         <SelectItem value="Alessandro">Alessandro</SelectItem>
@@ -209,57 +205,74 @@ function page() {
               )}
             </div>
 
-           <div className="flex flex-col mt-6 h-full">
-  <h2 className="text-lg font-semibold text-gray-800">{t('HowManyHours')}</h2>
-  <div className="flex flex-wrap gap-4 mt-3 justify-start">
-    {[1, 2, 3, 4, 5, 6, 7, 8].map((hour) => (
-      <button
-        key={hour}
-        type="button"
-        onClick={() => handleSelectHour(hour)}
-        className={`w-8 h-8 text-lg font-bold rounded-full border transition duration-300 ${selectedHour === hour ? 'bg-[#4BB1D3] text-white' : 'text-[#4BB1D3] border-[#4BB1D3] hover:bg-[#4BB1D3] hover:text-white'}`}
-      >
-        {hour}
-      </button>
-    ))}
-  </div>
-  {errors.hour && (
-    <p className="text-red-500 text-sm mt-1">{errors.hour.message}</p>
-  )}
-</div>
+            <div className="flex flex-col mt-6 h-full">
+              <h2 className="text-lg font-semibold text-gray-800">
+                {t("HowManyHours")}
+              </h2>
+              <div className="flex flex-wrap gap-4 mt-3 justify-start">
+                {[1, 2, 3, 4, 5, 6, 7, 8].map((hour) => (
+                  <button
+                    key={hour}
+                    type="button"
+                    onClick={() => handleSelectHour(hour)}
+                    className={`w-8 h-8 text-lg font-bold rounded-full border transition duration-300 ${
+                      selectedHour === hour
+                        ? "bg-[#4BB1D3] text-white"
+                        : "text-[#4BB1D3] border-[#4BB1D3] hover:bg-[#4BB1D3] hover:text-white"
+                    }`}
+                  >
+                    {hour}
+                  </button>
+                ))}
+              </div>
+              {errors.hour && (
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.hour.message}
+                </p>
+              )}
+            </div>
 
-{/* Professionals Selection */}
-<div className="w-full mt-6 h-full">
-  <h2 className="text-lg font-semibold text-gray-800">{t('HowManyProfessionals')}</h2>
-  <div className="flex space-x-2 mt-2 gap-2">
-    {[1, 2, 3, 4].map((professional) => (
-      <div className="flex mt-2" key={professional}>
-        <button
-          type="button"
-          onClick={() => handleSelectProfessional(professional)}
-          className={`w-8 h-8 text-lg font-bold rounded-full border transition duration-300 ${selectedProfessionals === professional ? 'bg-[#4BB1D3] text-white' : 'text-[#4BB1D3] border-[#4BB1D3] hover:bg-[#4BB1D3] hover:text-white'}`}
-        >
-          {professional}
-        </button>
-      </div>
-    ))}
-  </div>
-  {errors.professional && (
-    <p className="text-red-500 mt-2 text-sm">{errors.professional.message}</p>
-  )}
-</div>
-
+            {/* Professionals Selection */}
+            <div className="w-full mt-6 h-full">
+              <h2 className="text-lg font-semibold text-gray-800">
+                {t("HowManyProfessionals")}
+              </h2>
+              <div className="flex space-x-2 mt-2 gap-2">
+                {[1, 2, 3, 4].map((professional) => (
+                  <div className="flex mt-2" key={professional}>
+                    <button
+                      type="button"
+                      onClick={() => handleSelectProfessional(professional)}
+                      className={`w-8 h-8 text-lg font-bold rounded-full border transition duration-300 ${
+                        selectedProfessionals === professional
+                          ? "bg-[#4BB1D3] text-white"
+                          : "text-[#4BB1D3] border-[#4BB1D3] hover:bg-[#4BB1D3] hover:text-white"
+                      }`}
+                    >
+                      {professional}
+                    </button>
+                  </div>
+                ))}
+              </div>
+              {errors.professional && (
+                <p className="text-red-500 mt-2 text-sm">
+                  {errors.professional.message}
+                </p>
+              )}
+            </div>
 
             <div className="grid w-full items-center gap-1.5 mt-3">
-              <p className="text-xl font-semibold mt-6 mb-4">{(t('SelectCategory'))}</p>
+              <p className="text-xl font-semibold mt-6 mb-4">
+                {t("SelectCategory")}
+              </p>
               <label className="text-md font-semibold" htmlFor="category">
-                {(t('Category'))}
+                {t("Category")}
               </label>
               <Controller
                 name="category"
                 control={control}
                 rules={{
-                  required: (t("CategoryRequired")),
+                  required: t("CategoryRequired"),
                 }}
                 render={({ field }) => (
                   <Select
@@ -270,11 +283,11 @@ function page() {
                     }}
                   >
                     <SelectTrigger className="w-full h-[55px] rounded-lg border p-4 pr-6 border-[#4BB1D3] bg-gray-50 outline-[#4BB1D3] focus:border-blue-500 focus:outline-none">
-                      <SelectValue placeholder={(t('SelectCategory'))} />
+                      <SelectValue placeholder={t("SelectCategory")} />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectGroup>
-                        <SelectLabel>{(t('categories'))}</SelectLabel>
+                        <SelectLabel>{t("categories")}</SelectLabel>
                         {Object.keys(categories).map((category) => (
                           <SelectItem key={category} value={category}>
                             {category}
@@ -296,13 +309,13 @@ function page() {
             {subCategories.length > 0 && (
               <div className="grid w-full items-center gap-1.5 mt-4">
                 <label className="text-md font-semibold" htmlFor="subcategory">
-                  {(t('Subcategories'))}
+                  {t("Subcategories")}
                 </label>
                 <Controller
                   name="subcategory"
                   control={control}
                   rules={{
-                    required: (t('SubcategoryRequired')),
+                    required: t("SubcategoryRequired"),
                   }}
                   render={({ field: { value, onChange } }) => (
                     <Select value={value} onValueChange={onChange}>
@@ -311,7 +324,7 @@ function page() {
                       </SelectTrigger>
                       <SelectContent>
                         <SelectGroup>
-                          <SelectLabel>{(t('Subcategories'))}</SelectLabel>
+                          <SelectLabel>{t("Subcategories")}</SelectLabel>
                           {subCategories.map((subCategory) => (
                             <SelectItem key={subCategory} value={subCategory}>
                               {subCategory}
@@ -331,22 +344,22 @@ function page() {
             )}
             <div className="grid w-full items-center gap-1.5 mt-6">
               <label className="text-md font-semibold" htmlFor="Room Area Size">
-                {(t('RoomAreaSize'))}
+                {t("RoomAreaSize")}
               </label>
               <Controller
                 name="roomsizes"
                 control={control}
                 rules={{
-                  required: (t('RoomSizeRequired')),
+                  required: t("RoomSizeRequired"),
                 }}
                 render={({ field: { value, onChange } }) => (
                   <Select onValueChange={onChange} value={value}>
                     <SelectTrigger className="w-full h-[55px] rounded-lg border border-[#4BB1D3] bg-gray-50 mt-1 pr-6 outline-[#4BB1D3] focus:border-[#4BB1D3] focus:outline-none focus:border-none">
-                      <SelectValue placeholder= {(t('RoomAreaSize'))} />
+                      <SelectValue placeholder={t("RoomAreaSize")} />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectGroup>
-                        <SelectLabel>  {(t('RoomAreaSize'))}</SelectLabel>
+                        <SelectLabel> {t("RoomAreaSize")}</SelectLabel>
                         <SelectItem value="Less than 50m2">
                           Less than 50 m2
                         </SelectItem>
@@ -372,22 +385,22 @@ function page() {
 
             <div className="grid w-full items-center gap-1.5 mt-6">
               <label className="text-md font-semibold" htmlFor="Room Area Size">
-              {(t('NumberOfRoom'))}
+                {t("NumberOfRoom")}
               </label>
               <Controller
                 name="numberofrooms"
                 control={control}
                 rules={{
-                  required: (t('RequiredNumberOfRoom')),
+                  required: t("RequiredNumberOfRoom"),
                 }}
                 render={({ field: { value, onChange } }) => (
                   <Select onValueChange={onChange} value={value}>
                     <SelectTrigger className="w-full h-[55px] rounded-lg border border-[#4BB1D3] bg-gray-50 mt-1 pr-6 outline-[#4BB1D3] focus:border-[#4BB1D3] focus:outline-none focus:border-none">
-                      <SelectValue placeholder={(t('NumberOfRoom'))} />
+                      <SelectValue placeholder={t("NumberOfRoom")} />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectGroup>
-                        <SelectLabel>{(t('NumberOfRoom'))}</SelectLabel>
+                        <SelectLabel>{t("NumberOfRoom")}</SelectLabel>
                         <SelectItem value="1 Room">1 Room</SelectItem>
                         <SelectItem value="2 Room">2 Room</SelectItem>
                         <SelectItem value="3 Room">3 Room</SelectItem>
@@ -408,16 +421,18 @@ function page() {
             {/* Cleaning Material started */}
 
             <div className="grid w-full items-center gap-1.5 mt-6">
-              <p className="text-md font-semibold ">{(t("NeedCleaningMaterials"))}</p>
+              <p className="text-md font-semibold ">
+                {t("NeedCleaningMaterials")}
+              </p>
 
               <Controller
                 name="needmaterial"
                 control={control}
-                rules={{ required: ((t('RequiredCleaningMaterial'))) }}
+                rules={{ required: t("RequiredCleaningMaterial") }}
                 render={({ field: { onChange }, fieldState: { error } }) => (
                   <>
                     <div className="flex space-x-4 mt-2">
-                      {[(t('No')), (t("yes"))].map((option) => (
+                      {[t("No"), t("yes")].map((option) => (
                         <button
                           type="button"
                           key={option}
@@ -446,9 +461,7 @@ function page() {
             </div>
 
             <div className="grid w-full items-center gap-1.5 mt-6">
-              <h3 className="text-md font-semibold">
-                {(t('SelectAdditional'))}
-              </h3>
+              <h3 className="text-md font-semibold">{t("SelectAdditional")}</h3>
 
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-4 mt-4">
                 {services.map((service) => (
@@ -474,7 +487,7 @@ function page() {
             </div>
 
             <div className="grid w-full items-center gap-1.5 mt-3">
-              <p className="font-semibold">{(t('photos'))}</p>
+              <p className="font-semibold">{t("photos")}</p>
               <div className="flex justify-between flex-wrap">
                 <div className="w-[108px] h-[99.52px]">
                   <Image
@@ -568,12 +581,10 @@ function page() {
             </div>
             {/* location */}
             <div className="grid w-full items-center gap-1.5 mt-6">
-  <p className="text-lg font-bold mt-2">{t('Location')}</p>
+              <p className="text-lg font-bold mt-2">{t("Location")}</p>
 
-  <MapComponent/>
-
-  
-</div>
+              <MapComponent />
+            </div>
 
             <div className="mt-8 flex justify-center items-center">
               {/* <Link href={'/location'}> */}
@@ -581,14 +592,13 @@ function page() {
                 type="submit"
                 className="w-[250px]  mt-6 h-[45px] text-white bg-[#00BFFF] rounded-lg outline-none hover:bg-[#00A0E0] transition duration-200 ease-in-out"
               >
-                <span>{(t('next'))}</span>
+                <span>{t("next")}</span>
               </Button>
               {/* </Link> */}
             </div>
           </form>
         </div>
       </div>
-      
     </>
   );
 }
