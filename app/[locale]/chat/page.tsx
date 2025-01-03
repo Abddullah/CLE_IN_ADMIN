@@ -20,6 +20,7 @@ import {
   startAfter,
 } from "firebase/firestore";
 import moment from "moment";
+import LoaderSpinner from "../components/Spinner";
 
 interface Message {
   id: string;
@@ -148,7 +149,7 @@ const ChatInterface: React.FC = () => {
               (msg: any) =>
                 !prevMessages.some((prevMsg) => prevMsg.id === msg.id)
             );
-            return [...newUniqueMessages, ...prevMessages].reverse();
+            return [...newUniqueMessages.reverse(), ...prevMessages];
           });
   
           // Update lastVisible to the last message in the fetched batch
@@ -239,6 +240,9 @@ const ChatInterface: React.FC = () => {
       };
 
       const chatRef = doc(db, "chats", selectedUser.id);
+
+      console.log(chatRef);
+      
 
       await setDoc(
         chatRef,
@@ -359,121 +363,133 @@ const ChatInterface: React.FC = () => {
 
       {/* Chat Messages */}
       <div
-        className={`flex-1 flex flex-col z-10 bg-gray-100 ${
-          showChat ? "block" : "hidden md:flex"
-        }`}
+  className={`flex-1 flex flex-col z-10 bg-gray-100 ${
+    showChat ? "block" : "hidden md:flex"
+  }`}
+>
+  {selectedUser ? (
+    <>
+      {/* Chat Header */}
+      <div className="bg-white p-4 shadow-md flex items-center sticky top-0 z-10 border-b">
+        <button
+          className="md:hidden mr-3"
+          onClick={() => setShowChat(false)}
+        >
+          <svg
+            className="w-6 h-6 text-gray-600"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="M15 19l-7-7 7-7"
+            />
+          </svg>
+        </button>
+        <div className="w-10 h-10 rounded-full bg-[#00BFFF] flex items-center justify-center">
+          <span className="text-white font-semibold">
+            {selectedUser.name.charAt(0)}
+          </span>
+        </div>
+        <div className="ml-4">
+          <h2 className="font-semibold text-gray-800">{selectedUser.name}</h2>
+          <p
+            className={`text-sm ${
+              selectedUser.status === "online"
+                ? "text-green-500"
+                : "text-gray-500"
+            }`}
+          >
+            {selectedUser.status}
+          </p>
+        </div>
+      </div>
+
+      {/* Messages Container */}
+      <div
+        id="scrollableDiv"
+        className="overflow-auto flex-1 pb-[20px]" 
       >
-        {selectedUser ? (
-          <>
-            <div className="bg-white p-4 shadow-md flex items-center sticky top-0 z-10 border-b">
-              <button
-                className="md:hidden mr-3"
-                onClick={() => setShowChat(false)}
+        <InfiniteScroll
+          dataLength={messages.length}
+          next={fetchMore}
+          style={{ display: "flex", flexDirection: "column-reverse" }}
+          inverse={true}
+          hasMore={messages.length < messageLength}
+          loader={<LoaderSpinner />}
+          scrollableTarget="scrollableDiv"
+        >
+          {messages.map((msg, index) => (
+            <div key={index}>
+              <div
+                className={`flex mx-[20px] mt-4 ${
+                  msg.senderId === senderId
+                    ? "justify-end"
+                    : "justify-start"
+                }`}
               >
-                <svg
-                  className="w-6 h-6 text-gray-600"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M15 19l-7-7 7-7"
-                  />
-                </svg>
-              </button>
-              <div className="w-10 h-10 rounded-full bg-[#00BFFF] flex items-center justify-center">
-                <span className="text-white font-semibold">
-                  {selectedUser.name.charAt(0)}
-                </span>
-              </div>
-              <div className="ml-4">
-                <h2 className="font-semibold text-gray-800">
-                  {selectedUser.name}
-                </h2>
-                <p
-                  className={`text-sm ${
-                    selectedUser.status === "online"
-                      ? "text-green-500"
-                      : "text-gray-500"
+                <div
+                  className={`rounded-lg p-3 max-w-[60%] shadow ${
+                    msg.senderId === senderId
+                      ? "bg-[#98d7ec]"
+                      : "bg-gray-300"
                   }`}
                 >
-                  {selectedUser.status}
-                </p>
+                  <p>{msg.text}</p>
+                  <span className="text-xs text-gray-500">
+                    {moment(msg.timestamp).format("LT")}
+                  </span>
+                </div>
               </div>
             </div>
-
-            <div
-              id="scrollableDiv"
-             
-              className="overflow-auto flex flex-col-reverse"
-            >
-              {/*Put the scroll bar always on the bottom*/}
-              <InfiniteScroll
-                dataLength={messages.length}
-                next={fetchMore}
-                style={{ display: "flex", flexDirection: "column-reverse" }} //To put endMessage and loader to the top.
-                inverse={true} //
-                hasMore={messages.length < messageLength}
-                loader={<h4>Loading...</h4>}
-                scrollableTarget="scrollableDiv"
-              >
-                {messages.map((msg, index) => (
-                  <div key={index}>
-                    <div
-                      className={`flex mx-[20px] mt-4 ${
-                        msg.senderId === senderId
-                          ? "justify-end"
-                          : "justify-start"
-                      }`}
-                    >
-                      <div
-                        className={`rounded-lg p-3 max-w-[60%] shadow ${
-                          msg.senderId === senderId
-                            ? "bg-[#98d7ec]"
-                            : "bg-gray-200"
-                        }`}
-                      >
-                        <p>{msg.text}</p>
-                        <span className="text-xs text-gray-500">
-                          {moment(msg.timestamp).format("LT")}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </InfiniteScroll>
-            </div>
-
-            {/* Fixed Input Field */}
-            <div className="bg-white shadow-md flex items-center p-4 fixed bottom-0 w-full ">
-              <input
-                type="text"
-                value={newMessage}
-                onChange={(e) => setNewMessage(e.target.value)}
-                onKeyPress={handleKeyPress}
-                className="flex-1 p-2 border rounded-l-md "
-                placeholder="Type a message"
-              />
-              <button
-                ref={buttonRef}
-                onClick={sendMessage}
-                className="bg-[#00BFFF] text-white p-2 text-xl rounded-r-md fixed right-0 mr-2"
-              >
-                <FontAwesomeIcon icon={faPaperPlane} />
-              </button>
-            </div>
-          </>
-        ) : (
-          <div className="flex-1 flex items-center justify-center">
-            <h3 className="text-xl font-semibold text-gray-600">
-              {t("select_a_user")}
-            </h3>
-          </div>
-        )}
+          ))}
+        </InfiniteScroll>
       </div>
+
+      
+
+
+<div className="bg-white p-3 border-t shadow-lg sticky bottom-0 z-10">
+              <div className="flex items-center space-x-2">
+                <input
+                  type="text"
+                  value={newMessage}
+                  onChange={(e) => setNewMessage(e.target.value)}
+                  onKeyPress={handleKeyPress}
+                  placeholder={t("type_message")}
+                  className="flex-1 border border-gray-300 rounded-full px-4 py-2 focus:outline-none focus:ring focus:ring-blue-200"
+                />
+                <button ref={buttonRef}
+            onClick={sendMessage} className="bg-[#00BFFF] text-white p-2 rounded-full hover:bg-blue-600 transition">
+                  <svg
+                    className="w-6 h-6"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"
+                    />
+                  </svg>
+                </button>
+              </div>
+            </div>
+    </>
+  ) : (
+    <div className="flex-1 flex items-center justify-center">
+      <h3 className="text-xl font-semibold text-gray-600">
+        {t("select_a_user")}
+      </h3>
+    </div>
+  )}
+</div>
+
     </div>
   );
 };

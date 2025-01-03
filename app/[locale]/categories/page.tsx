@@ -13,6 +13,7 @@ import {
 } from "firebase/firestore";
 import { db } from "../config/Firebase/FirebaseConfig";
 import CleaningCards from "../components/categoriesComponents/CleaningCards";
+import { useDispatch, useSelector } from 'react-redux';
 
 interface Category {
   id: string;
@@ -31,6 +32,10 @@ function Page() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [categoryToEdit, setCategoryToEdit] = useState<Category | null>(null);
   const [newSubcategories, setNewSubcategories] = useState<string[]>([]);
+  const dispatch = useDispatch();
+  
+  
+  
 
   const {
     control,
@@ -135,7 +140,12 @@ function Page() {
         )
       );
     }
+    
   };
+
+ 
+
+  
 
   return (
     <div className="bg-[#F5F7FA] h-full w-full">
