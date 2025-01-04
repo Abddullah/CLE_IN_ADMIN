@@ -1,12 +1,10 @@
 "use client";
 
 import React from "react";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+
 import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
 import Image from "next/image";
-import { Link, useRouter } from "@/i18n/routing";
+import { useRouter } from "@/i18n/routing";
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import {
@@ -23,7 +21,7 @@ import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import { useTranslations } from "next-intl";
 import MapComponent from "../../components/map/map";
 import { db } from "../../config/Firebase/FirebaseConfig";
-import { collection, getDocs, doc, getDoc } from "firebase/firestore";
+import { collection, getDocs } from "firebase/firestore";
 import Modal from "../../components/ChooseFrequencyModal";
 import { useDispatch } from "react-redux";
 import { setCategory } from "../../config/Redux/reducers/categorySlice";
@@ -107,16 +105,18 @@ function page() {
   const [matererialSelectedOption, setMaterialSelectedOption] =
     useState<string>("");
   const [additionalServicePrice, setAdditionalServicesPrice] = useState<any>();
-  const [selectedProfessional, setSelectedProfessional] = useState<number>(0);
+  const [selectedProfessional, setSelectedProfessional] = useState<number>(1);
   const [images, setImages] = useState<(string | null)[]>(Array(6).fill(null));
 
   const [selectedServices, setSelectedServices] = useState<string[]>([]);
 
-  const [totalPrice, setTotalPrice] = useState<number>(0);
+  const [totalPrice, setTotalPrice] = useState<number>(5);
 
-  const [selectedHour, setSelectedHour] = useState<number>(0);
+  const [selectedHour, setSelectedHour] = useState<number>(1);
 
   const [categories, setCategories] = useState<{ [key: string]: string[] }>({});
+
+  const [selectedMaterialPrice, setSelectedMaterialPrice] = useState<number>(0);
 
   const location = useSelector((state: any) => state.location);
   const plane = useSelector((state: any) => state.plan);
@@ -176,8 +176,6 @@ function page() {
       setSubCategories([]);
     }
   }, [selectedCategory, categories]);
-
-  console.log(selectedCategory);
 
   const handleCategoryChange = (value: string) => {
     setSelectedCategory(value);
@@ -242,19 +240,24 @@ function page() {
     roomPrice: number,
     roomCountPrice: number,
     hours: number,
-    professional: number,
-    hourlyRate: number // Pass hourPrice explicitly
+    selectedProfessional: number, // Number of professionals selected
+    hourlyRate: number // Hourly rate for the service
   ) => {
-    // Calculate total prices
+    // Calculate room price
     const totalRoomPrice = roomPrice + roomCountPrice;
-    const totalHourlyPrice = hourlyRate * hours;
-    const totalProfessionalPrice = totalHourlyPrice * professional;
 
-    console.log("Total Professional Price:", totalProfessionalPrice);
+    // Calculate hourly price
+    const totalHourlyPrice = hourlyRate * hours;
+
+    // Calculate professional price
+    const totalProfessionalPrice =
+      selectedProfessional > 1
+        ? (selectedProfessional - 1) * totalHourlyPrice
+        : 0;
 
     // Calculate final total
-    const total = totalRoomPrice + totalProfessionalPrice + totalHourlyPrice;
-    setTotalPrice(total); // Set the combined total price
+    const total = totalRoomPrice + totalHourlyPrice + totalProfessionalPrice;
+    setTotalPrice(total); // Update total price in state
   };
 
   // Updated handleHourChange function to explicitly pass hourPrice
@@ -284,7 +287,7 @@ function page() {
   // Ensure room size and room count functions also pass hourPrice
   const handleRoomSizeChange = (value: string) => {
     const selectedIndex = roomSizes.indexOf(value);
-    const price = parseFloat(roomPrices[selectedIndex] || "0");
+    const price = parseFloat(roomPrices[selectedIndex] || 0);
     setSelectedRoomPrice(price);
     calculateTotal(
       price,
@@ -310,23 +313,19 @@ function page() {
 
   //needed material
 
-  const handleMaterialSelectedOption = (option: string) => {
+  const handleMaterialSelectedOption = (option: any) => {
+    let price = 0; // Assume 5 for "yes"
     if (option === t("yes")) {
-      if (matererialSelectedOption === t("yes")) {
-        // If "Yes" is already selected, unselect it and subtract 5 from totalPrice
-        setMaterialSelectedOption("");
-        setTotalPrice((prevPrice) => prevPrice - 5);
-      } else {
-        // If "Yes" is not selected, select it and add 5 to totalPrice
-        setMaterialSelectedOption(t("yes"));
-        setTotalPrice((prevPrice) => prevPrice + 5);
-      }
+      price = 5;
+      setMaterialSelectedOption(t("yes"));
     } else {
-      // "No" selected, reset the selected option
-      setMaterialSelectedOption("");
+      price = 0;
+      setMaterialSelectedOption(t("No"));
     }
+    setTotalPrice((prevPrice) => prevPrice - selectedMaterialPrice + price);
+    setSelectedMaterialPrice(price);
+    console.log(matererialSelectedOption);
   };
-
   useEffect(() => {
     if (location) {
       setValue("location", { lng: location.lng, lat: location.lat });
@@ -378,6 +377,34 @@ function page() {
       setTotalPrice((prevPrice) => prevPrice + servicePrice); // Add price to total
     }
   };
+
+  //set total when user change the category from cleaning to someother category
+
+  useEffect(() => {
+    if (selectedCategory !== "Cleaning and Hygiene Services") {
+      // Subtract all related prices
+
+      const additionalServicesTotal = selectedServices.reduce(
+        (sum, service) => sum + (additionalServicePrice[service] || 0),
+        0
+      );
+
+      setTotalPrice(
+        (prevPrice) =>
+          prevPrice -
+          selectedRoomPrice -
+          selectedRoomCountPrice -
+          selectedMaterialPrice -
+          additionalServicesTotal
+      );
+
+      // Reset states
+      setSelectedRoomPrice(0);
+      setSelectedRoomCountPrice(0);
+      setSelectedMaterialPrice(0);
+      setSelectedServices([]);
+    }
+  }, [selectedCategory]);
 
   return (
     <>
@@ -683,7 +710,7 @@ function page() {
                               className={`px-4 py-2 rounded-full text-md font-medium transition duration-300 ${
                                 matererialSelectedOption === option
                                   ? "bg-[#00A0E0] text-white"
-                                  : "bg-[#d5dce4] text-black hover:bg-[#00A0E0] hover:text-white"
+                                  : "bg-[#d5dce4] text-black "
                               }`}
                             >
                               {option}
@@ -731,6 +758,7 @@ function page() {
               <div className="flex flex-wrap gap-6">
                 {images.map((image, index) => (
                   <div
+                    onClick={() => handleImageUpload(index)}
                     key={index}
                     className="relative w-[108px] h-[99.52px] rounded-lg bg-gray-100 border border-gray-400 flex items-center justify-center cursor-pointer shadow-sm hover:shadow-md transition-all"
                   >
@@ -752,10 +780,7 @@ function page() {
                         </button>
                       </>
                     ) : (
-                      <span
-                        onClick={() => handleImageUpload(index)}
-                        className="text-gray-500 text-sm font-medium"
-                      >
+                      <span className="text-gray-500 text-sm font-medium">
                         + Upload
                       </span>
                     )}
@@ -782,10 +807,10 @@ function page() {
           </form>
         </div>
 
-        <div className="fixed bottom-0 w-full bg-gray-300  z-20 p-3 border-t border-indigo-300 shadow-lg">
-          <div className="flex justify-center items-center">
+        <div className="fixed bottom-0 w-full bg-gray-300 z-10 p-3 border-t border-indigo-300 shadow-lg">
+          <div className="flex justify-center items-center z-10">
             <span className="text-lg font-medium">Total:</span>
-            <span className="text-xl ml-2">{totalPrice} €</span>
+            <span className="text-xl ml-2"> € {totalPrice} </span>
           </div>
         </div>
       </div>
