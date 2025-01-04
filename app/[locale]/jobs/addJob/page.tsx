@@ -755,7 +755,7 @@ function page() {
             )}
             <div className="grid w-full items-center gap-2 mt-3">
               <p className="font-semibold text-lg">Photos</p>
-              <div className="flex flex-wrap gap-6">
+              <div className="flex flex-wrap gap-10">
                 {images.map((image, index) => (
                   <div
                     onClick={() => handleImageUpload(index)}
@@ -799,7 +799,7 @@ function page() {
             <div className="mt-8 flex justify-center items-center">
               <Button
                 type="submit"
-                className="w-[250px] mb-10  mt-6 h-[45px] text-white bg-[#00BFFF] rounded-lg outline-none hover:bg-[#00A0E0] transition duration-200 ease-in-out"
+                className="w-[250px] mb-12  mt-6 h-[45px] text-white bg-[#00BFFF] rounded-lg outline-none hover:bg-[#00A0E0] transition duration-200 ease-in-out"
               >
                 <span>{t("next")}</span>
               </Button>
@@ -807,12 +807,14 @@ function page() {
           </form>
         </div>
 
-        <div className="fixed bottom-0 w-full bg-gray-300 z-10 p-3 border-t border-indigo-300 shadow-lg">
-          <div className="flex justify-center items-center z-10">
-            <span className="text-lg font-medium">Total:</span>
-            <span className="text-xl ml-2"> € {totalPrice} </span>
-          </div>
-        </div>
+        <div className="fixed bottom-0 w-full sm:left-[10%] sm:w-[100%] bg-[#00BFFF]  text-gray-200 z-10 p-3 rounded-t-lg shadow-2xl border-t-4 border-white">
+  <div className="flex justify-center items-center">
+    <span className="text-lg font-semibold uppercase tracking-wide">Total Amount : </span>
+    <span className="text-2xl font-bold ml-2"> € {totalPrice}</span>
+  </div>
+</div>
+
+
       </div>
     </>
   );
