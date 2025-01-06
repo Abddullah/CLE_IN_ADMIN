@@ -280,8 +280,8 @@ const path = usePathname();
                   </SelectTrigger>
                   <SelectContent>
                     <SelectGroup>
-                      <SelectItem value="Male">{t("male")}</SelectItem>
-                      <SelectItem value="Female">{t("female")}</SelectItem>
+                      <SelectItem value="male">{t("male")}</SelectItem>
+                      <SelectItem value="female">{t("female")}</SelectItem>
                     </SelectGroup>
                   </SelectContent>
                 </Select>
@@ -310,8 +310,8 @@ const path = usePathname();
                   </SelectTrigger>
                   <SelectContent>
                     <SelectGroup>
-                      <SelectItem value="User">{t("user_role_user")}</SelectItem>
-                      <SelectItem value="Provider">{t("user_role_provider")}</SelectItem>
+                      <SelectItem value="user">{t("user_role_user")}</SelectItem>
+                      <SelectItem value="provider">{t("user_role_provider")}</SelectItem>
                     </SelectGroup>
                   </SelectContent>
                 </Select>

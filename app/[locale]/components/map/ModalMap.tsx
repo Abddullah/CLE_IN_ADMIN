@@ -1,7 +1,8 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import mapboxgl from "mapbox-gl";
-import "mapbox-gl/dist/mapbox-gl.css"; // Mapbox CSS
+import "mapbox-gl/dist/mapbox-gl.css";
+import { useSelector } from "react-redux";
 
 interface ModalMapProps {
   testMap: mapboxgl.Map | null;
@@ -18,6 +19,8 @@ const ModalMap: React.FC<ModalMapProps> = ({
 }) => {
   const [marker, setMarker] = useState<mapboxgl.Marker | null>(null);
 
+  const selector = useSelector((state: any) => state.location);
+
   useEffect(() => {
     if (!process.env.NEXT_PUBLIC_MAP_ACCESS_TOKEN) {
       console.error("Mapbox access token is missing.");
@@ -27,16 +30,22 @@ const ModalMap: React.FC<ModalMapProps> = ({
 
     const mapInstance = new mapboxgl.Map({
       container: "map", // Container ID
-      center: [12.4964, 41.9028], // Initial coordinates
+      center: [selector.lng, selector.lat], // Initial coordinates
       zoom: 9,
       style: "mapbox://styles/mapbox/streets-v11",
     });
 
     setTestMap(mapInstance);
 
+    if (marker) {
+      marker.remove();
+      return;
+    }
+
     const initialMarker = new mapboxgl.Marker()
-      .setLngLat([67.0671, 24.9665])
+      .setLngLat([0, 0])
       .addTo(mapInstance);
+
     setMarker(initialMarker);
 
     // Update marker and selected location on map click
@@ -45,6 +54,8 @@ const ModalMap: React.FC<ModalMapProps> = ({
       initialMarker.setLngLat([lng, lat]);
       setSelectedLocation({ lng, lat }); // Update parent state
     });
+
+
 
     return () => {
       mapInstance.remove();
@@ -65,3 +76,27 @@ const ModalMap: React.FC<ModalMapProps> = ({
 };
 
 export default ModalMap;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

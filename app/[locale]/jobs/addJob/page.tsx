@@ -807,7 +807,7 @@ function page() {
           </form>
         </div>
 
-        <div className="fixed bottom-0 w-full sm:left-[10%] sm:w-[100%] bg-[#00BFFF]  text-gray-200 z-10 p-3 rounded-t-lg shadow-2xl border-t-4 border-white">
+        <div className="fixed bottom-0 w-full sm:left-[10%] sm:w-[100%] bg-[#00BFFF]  text-gray-200 z-20 p-3 rounded-t-lg shadow-2xl">
   <div className="flex justify-center items-center">
     <span className="text-lg font-semibold uppercase tracking-wide">Total Amount : </span>
     <span className="text-2xl font-bold ml-2"> € {totalPrice}</span>

@@ -104,7 +104,7 @@ const Sidebar = () => {
   
 
   return (
-    <div className="flex relative h-screen">
+    <div className="flex relative h-screen ">
       <button
         onClick={toggleSidebar}
         className={`md:hidden fixed top-1 left-1 p-4 z-30 ${
@@ -119,7 +119,7 @@ const Sidebar = () => {
 
      <div
   ref={sidebarRef}
-  className={`bg-white shadow-md h-full w-64 transition-transform duration-300 ease-in-out transform ${
+  className={`bg-white shadow-md h-full w-64 z-30 transition-transform duration-300 ease-in-out transform  ${
     isOpen ? "translate-x-0" : "-translate-x-full"
   } md:translate-x-0 fixed md:relative z-20 top-0 overflow-y-auto scrollbar`} // Added 'scrollbar' class
 >
