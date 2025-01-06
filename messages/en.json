@@ -397,7 +397,9 @@
     "deactivate":"Deactivate",
     "edit_service":"Edit Service",
     "no_payment_cards_available":"No Payment cards available",
-    "cancel":"Cancel"
+    "cancel":"Cancel",
+    "payment_card_error":"Only one card can be created at a time and you already created one card.",
+    "payment_card_success":"Your payment card has been added successfully."
 
   },
 

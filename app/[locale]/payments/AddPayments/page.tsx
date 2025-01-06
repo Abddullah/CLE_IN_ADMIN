@@ -1,14 +1,16 @@
 
-
 "use client"
+
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useTranslations } from "next-intl";
-import { collection, addDoc, query, getDocs, serverTimestamp } from "firebase/firestore"; 
+import { collection, addDoc, serverTimestamp , setDoc , doc , getDocs } from "firebase/firestore"; // Import Firebase functions
 import { db } from "../../config/Firebase/FirebaseConfig";
+import SuccessModal from "../../components/sucessModal";
+import ErrorModal from "../../components/errorModal";
 import { useRouter } from "@/i18n/routing";
 
 type Field = {
@@ -19,63 +21,87 @@ type InputTitle = {
   [key: string]: string | number;
 };
 
+
 function Page() {
   const t = useTranslations("Payments");
   const [fields, setFields] = useState<Field[]>([{ id: 1 }, { id: 2 }]);
   const [deletingId, setDeletingId] = useState<number | null>(null);
-  const [showErrorModal, setShowErrorModal] = useState(false); // State to handle error modal visibility
-  const [showSuccessModal, setShowSuccessModal] = useState(false); // State for success modal visibility
-  const router = useRouter();
+  const [isSucessModalOpen, setIsSucessModalOpen] = useState(false);
+  const [isErrorModalOpen, setIsErrorModalOpen] = useState(false);
+  const [errorText , setErrorText] = useState<string>("")
+  const [sucessText , setSucessText] = useState<string>("")
+  const router = useRouter()
+  
+  
+   
 
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm<InputTitle>();
 
-  // Function to check if any card exists in the "payments" collection
-  const checkExistingCard = async () => {
-    const q = query(collection(db, "payments"));
-    const querySnapshot = await getDocs(q);
-    return !querySnapshot.empty; // If the query is not empty, a card already exists
-  };
-
-  // On form submit
   const onSubmit: SubmitHandler<InputTitle> = async (data) => {
-    try {
-      // Check if a card already exists
-      const cardExists = await checkExistingCard();
-      if (cardExists) {
-        setShowErrorModal(true); // Show error modal if a card exists
-        return;
+    // Filter out undefined or empty values to avoid sending invalid data to Firebase
+    const validData = fields.map((field) => {
+      const name = data[`name-${field.id}`];
+      const percentage = data[`percentage-${field.id}`];
+      
+      // Ensure no undefined values are passed to Firebase
+      if (name && percentage) {
+        return {
+          name: name,
+          percentage: percentage,
+        };
       }
+      return null;
+    }).filter((item) => item !== null); // Remove any null items
+  
+    // Add valid data to the Firestore 'payments' collection
 
-      // Prepare data for Firebase
-      const paymentData = Object.keys(data).reduce((acc, key) => {
-        // Modify field keys to avoid using dashes or spaces
-        const newKey = key.replace(/-/g, "");
-        acc[newKey] = data[key];
-        return acc;
-      }, {} as { [key: string]: any });
+   
+    if (validData.length > 0) {
+      try {
+         const querySnapshot = await getDocs(collection(db, "payments"));
+              if (!querySnapshot.empty) {
 
-      // Add form data to Firebase "payments" collection
-      await addDoc(collection(db, "payments"), {
-        ...paymentData,
-        createdAt: serverTimestamp(),
-      });
-      console.log("Payment saved successfully!");
+                setErrorText(t('payment_card_error'))
 
-      // Show success modal after creating the first card
-      setShowSuccessModal(true);
-      setTimeout(()=>{
-        router.push('/payments')
+                setIsErrorModalOpen(true)
+                
+                return; // Prevent further execution
+              }
+        const docRef =  doc(collection(db, "payments"));
+        const paymentData={
+          
+            tax: validData,
+            createdAt: serverTimestamp(),
+            id: docRef.id,  
+          
+        }
+        await setDoc(docRef, paymentData);
+        console.log("Data added successfully with docId: ", docRef.id);
+        reset()
+        setSucessText(t('payment_card_success'))
+        setIsSucessModalOpen(true)
+        setTimeout(()=>{
+          router.push('/payments')
+        } , 3000)
 
-      },3000)
-    } catch (error) {
-      console.error("Error saving payment data: ", error);
+        
+      } catch (error) {
+        console.error("Error adding document: ", error);
+      }
     }
+    
   };
 
+  const closeModal = () => {
+    setIsSucessModalOpen(false);
+    setIsErrorModalOpen(false);
+    router.push('/payments')
+  };
   const addMoreFields = () => {
     setFields([...fields, { id: fields.length + 1 }]);
   };
@@ -107,12 +133,12 @@ function Page() {
               </Label>
               <Input
                 type="text"
-                {...register(`name${field.id}`, { required: true })} // Changed to name{field.id}
+                {...register(`name-${field.id}`, { required: true })}
                 placeholder={t("enter_name")}
-                className="h-[50px] border-[#4BB1D3] mt-2 focus:ring-[#4BB1D3] w-full sm:w-[22rem]"
+                className="h-[50px]  border-[#4BB1D3] mt-2 focus:ring-[#4BB1D3] w-full sm:w-[22rem]"
                 id={`name-${field.id}`}
               />
-              {errors[`name${field.id}`] && (
+              {errors[`name-${field.id}`] && (
                 <span className="text-red-600 text-sm mt-1">{t("name_required")}</span>
               )}
 
@@ -120,13 +146,13 @@ function Page() {
                 {t("percentage")}
               </Label>
               <Input
-                type="number"
-                {...register(`percentage${field.id}`, { required: true })} // Changed to percentage{field.id}
+                type="text"
+                {...register(`percentage-${field.id}`, { required: true })}
                 placeholder={t("enter_percentage")}
-                className="h-[50px] border-[#4BB1D3] mt-2 focus:ring-[#4BB1D3] w-full sm:w-[22rem]"
+                className="h-[50px] border-[#4BB1D3] mt-2 focus:ring-[#4BB1D3]  w-full sm:w-[22rem]"
                 id={`percentage-${field.id}`}
               />
-              {errors[`percentage${field.id}`] && (
+              {errors[`percentage-${field.id}`] && (
                 <span className="text-red-600 text-sm mt-1">{t("percentage_required")}</span>
               )}
             </div>
@@ -147,12 +173,12 @@ function Page() {
                 </Label>
                 <Input
                   type="text"
-                  {...register(`name${field.id}`, { required: true })} 
+                  {...register(`name-${field.id}`, { required: true })}
                   placeholder={t("enter_name")}
                   className="h-[50px] border-[#4BB1D3] mt-2 focus:ring-[#4BB1D3] min-w-full"
                   id={`name-${field.id}`}
                 />
-                {errors[`name${field.id}`] && (
+                {errors[`name-${field.id}`] && (
                   <span className="text-red-600 text-sm mt-1">{t("name_required")}</span>
                 )}
               </div>
@@ -163,12 +189,12 @@ function Page() {
                 </Label>
                 <Input
                   type="text"
-                  {...register(`percentage${field.id}`, { required: true })} // Changed to percentage{field.id}
+                  {...register(`percentage-${field.id}`, { required: true })}
                   placeholder={t("enter_percentage")}
                   className="h-[50px] border-[#4BB1D3] mt-2 focus:ring-[#4BB1D3] max-w-full"
                   id={`percentage-${field.id}`}
                 />
-                {errors[`percentage${field.id}`] && (
+                {errors[`percentage-${field.id}`] && (
                   <span className="text-red-600 text-sm mt-1">{t("percentage_required")}</span>
                 )}
               </div>
@@ -203,40 +229,10 @@ function Page() {
         </div>
       </form>
 
-      {/* Error Modal */}
-      {showErrorModal && (
-        <div className="fixed inset-0 flex justify-center items-center bg-gray-500 bg-opacity-50">
-          <div className="bg-white p-6 rounded-lg">
-            <h2 className="text-xl font-semibold text-red-600">Error</h2>
-            <p className="mt-2">Only one card can be created at a time.</p>
-            <button
-              onClick={() => setShowErrorModal(false)}
-              className="mt-4 px-4 py-2 bg-[#00BFFF] text-white rounded"
-            >
-              Close
-            </button>
-          </div>
-        </div>
-      )}
+      <SuccessModal text="Your Payment Card has been added successfully" isOpen={isSucessModalOpen} onClose={closeModal} />
 
-      {/* Success Modal */}
-      {showSuccessModal && (
-        <div className="fixed inset-0 flex justify-center items-center bg-gray-500 bg-opacity-50">
-          <div className="bg-white p-6 rounded-lg">
-            <h2 className="text-xl font-semibold text-green-600">Success</h2>
-            <p className="mt-2">Payment Card Created Successfully!</p>
-            <button
-              onClick={() => {
-                setShowSuccessModal(false)
-                router.push('/payments')
-              }}
-              className="mt-4 px-4 py-2 bg-[#00BFFF] text-white rounded-lg"
-            >
-              Close
-            </button>
-          </div>
-        </div>
-      )}
+      <ErrorModal text={errorText} isOpen={isErrorModalOpen} onClose={closeModal}/>
+     
     </div>
   );
 }

@@ -366,7 +366,10 @@
   "deactivate": "Disattiva",
   "edit_service":"Modifica Servizio",
   "no_payment_cards_available":"Nessuna carta di pagamento disponibile",
-  "cancel": "Annulla"
+  "cancel": "Annulla",
+  "payment_card_error":"Può essere creata solo una carta alla volta e hai già creato una carta.",
+  "payment_card_success":"La tua carta di pagamento è stata aggiunta con successo."
+
 
 
 },
