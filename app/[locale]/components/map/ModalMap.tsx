@@ -21,6 +21,10 @@ const ModalMap: React.FC<ModalMapProps> = ({
 
   const selector = useSelector((state: any) => state.location);
 
+  const {lng , lat}= selector;
+
+ 
+
   useEffect(() => {
     if (!process.env.NEXT_PUBLIC_MAP_ACCESS_TOKEN) {
       console.error("Mapbox access token is missing.");
@@ -43,7 +47,7 @@ const ModalMap: React.FC<ModalMapProps> = ({
     }
 
     const initialMarker = new mapboxgl.Marker()
-      .setLngLat([0, 0])
+      .setLngLat([lng, lat])
       .addTo(mapInstance);
 
     setMarker(initialMarker);
@@ -54,8 +58,6 @@ const ModalMap: React.FC<ModalMapProps> = ({
       initialMarker.setLngLat([lng, lat]);
       setSelectedLocation({ lng, lat }); // Update parent state
     });
-
-
 
     return () => {
       mapInstance.remove();
@@ -76,27 +78,3 @@ const ModalMap: React.FC<ModalMapProps> = ({
 };
 
 export default ModalMap;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
