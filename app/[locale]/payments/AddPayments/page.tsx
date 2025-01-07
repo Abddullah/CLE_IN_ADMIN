@@ -94,6 +94,8 @@ function Page() {
         console.error("Error adding document: ", error);
       }
     }
+
+    localStorage.setItem('tax' , JSON.stringify(validData));
     
   };
 

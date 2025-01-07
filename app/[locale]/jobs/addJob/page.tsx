@@ -16,6 +16,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { setJobSlice } from '../../config/Redux/reducers/jobSlice';  // Import the action
+
 
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import { useTranslations } from "next-intl";
@@ -28,6 +30,8 @@ import { setCategory } from "../../config/Redux/reducers/categorySlice";
 
 function page() {
   const t = useTranslations("Jobs");
+
+  const dispatch = useDispatch();
 
   interface Props {
     provider: string;
@@ -52,6 +56,8 @@ function page() {
     Additionalservices: string[];
     location: { lng: number; lat: number };
     plan: { value: string };
+    total:number;
+    totalWithTax:number;
   };
 
   interface RoomSize {
@@ -77,16 +83,39 @@ function page() {
     },
   });
 
+  
+
+  const [form, setForm] = useState({
+    provider: '',
+    category: '',
+    subcategory: '',
+    hour: 0,
+    professional: 0,
+    roomsizes: '',
+    numberofrooms: '',
+    needmaterial: '',
+    Additionalservices: [],
+    location: { lng: 0, lat: 0 },
+    plan: { value: '' }
+  });
+
+  
+
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(true);
 
-  const onSubmit: SubmitHandler<FormInputs> = (data) => {
-    alert("Form Submitted Sucessfully");
-    console.log(data);
-    router.push("/jobs/location");
-  };
+  const onSubmit: SubmitHandler<FormInputs> = (data:any) => {
+   
 
-  const dispatch = useDispatch();
+    
+    
+    dispatch(setJobSlice(data));  // Dispatch form data to Redux store
+
+    alert("Form Submitted Sucessfully");
+    
+    console.log(data);
+    router.push("/jobs/addJob/location");
+  };
 
   const [selectedCategory, setSelectedCategory] = useState<string>("");
   const [subCategories, setSubCategories] = useState<string[]>([]);
@@ -117,6 +146,7 @@ function page() {
   const [categories, setCategories] = useState<{ [key: string]: string[] }>({});
 
   const [selectedMaterialPrice, setSelectedMaterialPrice] = useState<number>(0);
+
 
   const location = useSelector((state: any) => state.location);
   const plane = useSelector((state: any) => state.plan);
@@ -258,11 +288,13 @@ function page() {
     // Calculate final total
     const total = totalRoomPrice + totalHourlyPrice + totalProfessionalPrice;
     setTotalPrice(total); // Update total price in state
+    
   };
 
   // Updated handleHourChange function to explicitly pass hourPrice
   const handleHourChange = (hours: number) => {
     setSelectedHour(hours);
+    setValue("hour", hours);
     calculateTotal(
       selectedRoomPrice,
       selectedRoomCountPrice,
@@ -275,6 +307,7 @@ function page() {
   // Updated handleSelectProfessional to include hourPrice
   const handleSelectProfessional = (professional: number) => {
     setSelectedProfessional(professional);
+    setValue("professional", professional);
     calculateTotal(
       selectedRoomPrice,
       selectedRoomCountPrice,
@@ -324,7 +357,7 @@ function page() {
     }
     setTotalPrice((prevPrice) => prevPrice - selectedMaterialPrice + price);
     setSelectedMaterialPrice(price);
-    console.log(matererialSelectedOption);
+    setValue("needmaterial" , matererialSelectedOption)
   };
   useEffect(() => {
     if (location) {
@@ -355,6 +388,7 @@ function page() {
         });
 
         setAdditionalServices(servicesData); // Set the services list
+        
         setAdditionalServicesPrice(servicesPrice); // Set the prices for each service
       } catch (err) {
         console.error("Error fetching services: ", err);
@@ -364,19 +398,31 @@ function page() {
     fetchServicesAndPrices();
   }, []); // Only run once when the component mounts
 
-  // Handle checkbox selection and updating total price
-  const handleCheckboxChange = (service: string) => {
+ 
+
+
+  const handleCheckboxChange = (service: string): void => {
+    setSelectedServices((prevSelectedServices) => {
+      const updatedServices = prevSelectedServices.includes(service)
+        ? prevSelectedServices.filter((item) => item !== service)
+        : [...prevSelectedServices, service];
+  
+      // Set the updated services in the form value
+      setValue("Additionalservices", updatedServices);
+  
+      return updatedServices;
+    });
+  
     const servicePrice = additionalServicePrice[service] || 0; // Get price of the selected service
     if (selectedServices.includes(service)) {
       // If already selected, deselect it and subtract the price
-      setSelectedServices(selectedServices.filter((item) => item !== service));
       setTotalPrice((prevPrice) => prevPrice - servicePrice); // Subtract price from total
     } else {
       // If not selected, add it and add the price
-      setSelectedServices([...selectedServices, service]);
       setTotalPrice((prevPrice) => prevPrice + servicePrice); // Add price to total
     }
   };
+  
 
   //set total when user change the category from cleaning to someother category
 
@@ -406,6 +452,37 @@ function page() {
     }
   }, [selectedCategory]);
 
+  setValue('total' , totalPrice)
+
+  useEffect(()=>{
+    const data = localStorage.getItem("tax");
+
+const tax = data ? JSON.parse(data) : 0;
+
+// Check if tax is an array
+if (Array.isArray(tax)) {
+  const totalPercentage = tax
+    .map(item => Number(item.percentage)) 
+    .reduce((sum, percentage) => sum + percentage, 0); 
+    const totalWithTax = Number((totalPrice * (1 + (totalPercentage/100) )).toFixed(1));
+    setValue('totalWithTax', totalWithTax);
+
+
+ 
+} else {
+  console.log("No valid tax data found.");
+}
+
+  } , [totalPrice])
+
+
+  
+  
+
+  
+   
+  
+  
   return (
     <>
       <div className="bg-[#F5F7FA] min-h-screen w-full flex items-start justify-start relative">

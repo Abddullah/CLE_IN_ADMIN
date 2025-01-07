@@ -298,11 +298,19 @@
     "InstructionPlaceholder":"Write here...",
     "WhatWouldYouLike":"When would you like to scehedule your service?",
     "selectDate":"Select Date",
+    "selectTimeStart":"Select Time Start",
+    "selectTimeEnd":"Select Time End",
     "selectTime":"Select Time",
     "pageTitle": "Review & Confirm Booking",
+    "ServiceDateRequired":"Date is Required",
+    "serviceTimeStartRequired":"Time start is Required",
+    "serviceTimeEndRequired":"Time end is Required",
+    "invalidTime":"End time must be later than the start time. Please select a valid time range.",
+
+
    
       "title": "Service Details",
-      "service": "Service",
+      "service": "Category",
       "serviceDescription": "Premium Cleaning Services",
       "description": "Description",
       "descriptionDetails": "Deep cleaning with eco-friendly products",

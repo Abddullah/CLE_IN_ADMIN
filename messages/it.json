@@ -265,7 +265,11 @@
   "WhatWouldYouLike": "Quando desideri programmare il tuo servizio?",
   "selectDate": "Seleziona la data",
   "selectTime": "Seleziona l'ora",
+   "selectTimeStart": "Seleziona Ora Inizio",
+    "selectTimeEnd": "Seleziona Ora Fine",
   "pageTitle": "Rivedi e Conferma Prenotazione",
+  "invalidTime":"L'orario di fine deve essere successivo all'orario di inizio. Seleziona un intervallo di tempo valido.",
+
     
       "title": "Dettagli del Servizio",
       "service": "Servizio",

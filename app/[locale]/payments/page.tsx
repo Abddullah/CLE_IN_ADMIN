@@ -41,7 +41,11 @@ const Payments = () => {
       });
 
       setServices(taxList); // Update state with tax data
+     
+      
     });
+
+   
 
     // Add event listener to close modal on click outside
     const handleClickOutside = (event: MouseEvent) => {
