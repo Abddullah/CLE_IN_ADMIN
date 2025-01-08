@@ -1,0 +1,292 @@
+"use client";
+
+import React, { useEffect, useRef, useState } from "react";
+import Card from "../../components/servicesComponents/ServicesCards";
+import {
+  getDocs,
+  collection,
+  doc,
+  updateDoc,
+  onSnapshot,
+  deleteDoc,
+  where,
+  query,
+
+} from "firebase/firestore";
+import { db } from "../../config/Firebase/FirebaseConfig";
+import moment from "moment";
+import LoaderSpinner from "../../components/Spinner";
+import { useTranslations } from "use-intl";
+import { Link } from "@/i18n/routing";
+// import BookingModal from "../components/jobsComponent/JobDetailsCard";
+import JobTab from "../../components/JobTab";
+function Page() {
+  const t = useTranslations("Jobs");
+  const [jobs, setJobs] = useState<any>([]);
+  const [editableJob, setEditableJob] = useState<null | any>(null); // Store the job being edited
+  const [isModalOpen, setIsModalOpen] = useState(false); // Modal visibility
+  const [categories, setCategories] = useState<any[]>([]);
+  const modalRef = useRef<HTMLDivElement | null>(null);
+
+  
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
+        setIsModalOpen(false);
+      }
+    };
+
+    // Add event listener for clicks
+    document.addEventListener("mousedown", handleClickOutside);
+
+    // Cleanup event listener on component unmount
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+ 
+
+  
+
+
+  useEffect(() => {
+    // Create a query to fetch only active jobs
+    const jobsQuery = query(
+      collection(db, "jobs"),
+      where("addStatus", "==", "moderate") // Filter for active jobs
+    );
+
+    // Set up real-time listener for the filtered collection
+    const unsubscribe = onSnapshot(jobsQuery, (snapshot) => {
+      const jobList = snapshot.docs.map((doc:any) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setJobs(jobList);
+    });
+
+    return () => unsubscribe(); // Clean up the listener on unmount
+  }, []);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const querySnapshot = await getDocs(collection(db, "categories"));
+        const fetchedCategories = querySnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setCategories(fetchedCategories);
+        console.log(categories);
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      }
+    };
+
+    fetchCategories();
+  }, []);
+
+  const handleEditClick = (job: any) => {
+    setEditableJob(job);
+    setIsModalOpen(true);
+  };
+
+  const handleDeleteClick = async (job: any) => {
+    try {
+      // Get the document reference
+      const jobDocRef = doc(db, "jobs", job.id);
+  
+      // Delete the document
+      await deleteDoc(jobDocRef);
+  
+      console.log(`Job with ID ${job.id} has been deleted successfully.`);
+    } catch (error) {
+      console.error("Error deleting job:", error);
+    }
+  };
+
+  const handleSave = async () => {
+    if (!editableJob) return;
+
+    try {
+      // Update the job in Firebase
+      const jobDocRef = doc(db, "jobs", editableJob.id);
+      await updateDoc(jobDocRef, {
+        category: editableJob?.category,
+        addStatus: editableJob?.addStatus,
+        bookingStart: editableJob?.bookingStart,
+        bookingEnd: editableJob?.bookingEnd,
+      });
+
+      setIsModalOpen(false);
+    } catch (error) {
+      console.error("Error updating job:", error);
+    }
+  };
+
+
+
+  return (
+    <div className="bg-[#F5F7FA] min-h-screen w-full">
+
+
+      <div className="absolute bottom-8 right-8 z-10">
+                  <Link href={"/jobs/addJob"}>
+                    <button className="w-14 h-14 flex items-center justify-center bg-[#00BFFF] text-white text-3xl rounded-full shadow-lg hover:bg-[#009ACD] focus:outline-none focus:ring-4 focus:ring-blue-300">
+                      +
+                    </button>
+                  </Link>
+                </div>
+      
+      
+              <JobTab/>
+
+      <div className="flex flex-wrap justify-center gap-12 w-full px-4 sm:px-8 md:px-14 lg:px-10 mt-4">
+        {jobs.map((job: any) => (
+          <div className="w-[310px]" key={job.id}>
+            <Card
+              price={` € ${job.totalPriceWithTax } / hr `}
+              title={job.category || "No Title"}
+              time={`${moment(job.bookingStart).format("hh:mm A")} - ${moment(
+                job.bookingEnd
+              ).format("hh:mm A")}`}
+              imageUrl={job.imageUrl || "/assets/servicesIcons/hospital.svg"}
+              status={job.addStatus || "Inactive"}
+              statusTextColor={"red-600"}
+              date={
+                moment(job.bookingDate).isValid()
+                  ? moment(job.bookingDate).format("MMM -D -YYYY")
+                  : "Invalid Date"
+              }
+              dotsIcon="/assets/categoriesIcons/dots.svg"
+              onEdit={() => handleEditClick(job)}
+              onDelete={()=> handleDeleteClick(job)}
+              
+            />
+          </div>
+        ))}
+      </div>
+
+      {isModalOpen && (
+        <div ref={modalRef} className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white w-96 rounded-lg p-6 shadow-lg">
+            <h2 className="text-xl font-semibold mb-4">Edit Job</h2>
+            <form>
+              {/* Title (Select Field) */}
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700">
+                  Title
+                </label>
+                <select
+                  value={editableJob?.category || ""}
+                  onChange={(e) =>
+                    setEditableJob({ ...editableJob, category: e.target.value })
+                  }
+                  className="w-full px-4 py-2 mt-1 bg-gray-50 rounded-md border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
+                >
+                  <option value="" disabled>
+                    Select a category
+                  </option>
+                  {categories.map((category: any) => (
+                    <option key={category.id} value={category.categoryName}>
+                      {category.categoryName}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Select Time Start */}
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700">
+                  Select Time Start
+                </label>
+                <input
+                  type="time"
+                  onChange={(e) =>
+                    setEditableJob({
+                      ...editableJob,
+                      bookingStart: moment(e.target.value, "HH:mm").valueOf(),
+                    })
+                  }
+                  value={
+                    editableJob?.bookingStart
+                      ? moment(editableJob.bookingStart).format("HH:mm")
+                      : ""
+                  }
+                  className="w-full px-4 py-2 mt-1 bg-gray-50 rounded-md border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
+                />
+              </div>
+
+              {/* Select Time End */}
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700">
+                  Select Time End
+                </label>
+                <input
+                  type="time"
+                  onChange={(e) =>
+                    setEditableJob({
+                      ...editableJob,
+                      bookingEnd: moment(e.target.value, "HH:mm").valueOf(),
+                    })
+                  }
+                  value={
+                    editableJob?.bookingEnd
+                      ? moment(editableJob.bookingEnd).format("HH:mm")
+                      : ""
+                  }
+                  className="w-full px-4 py-2 mt-1 bg-gray-50 rounded-md border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
+                />
+              </div>
+
+              {/* Status */}
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700">
+                  Status
+                </label>
+                <select
+                  value={editableJob?.addStatus || ""}
+                  onChange={(e) =>
+                    setEditableJob({
+                      ...editableJob,
+                      addStatus: e.target.value,
+                    })
+                  }
+                  className="w-full px-4 py-2 mt-1 bg-gray-50 rounded-md border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
+                >
+                  <option value="active">Active</option>
+                  <option value="moderate">Moderate</option>
+                  <option value="pending">Pending</option>
+                </select>
+              </div>
+
+              {/* Buttons */}
+              <div className="flex justify-end space-x-4">
+                <button
+                  type="button"
+                  onClick={() => setIsModalOpen(false)}
+                  className="py-2 px-4 bg-gray-500 text-white rounded-md shadow-sm hover:bg-gray-600"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  onClick={handleSave}
+                  className="py-2 px-4 bg-blue-500 text-white rounded-md shadow-sm hover:bg-blue-600"
+                >
+                  Save
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+      {/* <div>
+        <BookingModal/>
+      </div> */}
+    </div>
+  );
+}
+
+export default Page;

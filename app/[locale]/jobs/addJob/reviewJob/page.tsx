@@ -27,9 +27,37 @@ function Page() {
   const [isDisbale , setIsDisable] = useState<boolean>(false);
  const [isSucessModalOpen, setIsSucessModalOpen] = useState(false);
  const [errorText , setErrorText] = useState<any>()
+ const [reviewData , setReviewData] = useState<any[]>([])
+ const [review , setReview] = useState<any | null>(null)
+
+ useEffect(() => {
+  // LocalStorage se data load karen
+  const data = localStorage.getItem('reviewJob');
+  const reviewServices = JSON.parse(data || '[]');
+
+  // LocalStorage me pehle se jo data hai usse state me set karen
+  setReviewData(reviewServices);
+
+  // Naye data ko reviewServices me add karen agar wo pehle se nahi hai
+  const newData = [selector.job, selector.address.setLocation, selector.service];
+
+  // Filter out the data to avoid duplicates
+  const updatedData = [...reviewServices, ...newData].filter((value, index, self) => 
+    self.findIndex(v => JSON.stringify(v) === JSON.stringify(value)) === index
+  );
+
+  // ReviewData ko update karen
+  setReviewData(updatedData);
+
+  // LocalStorage me updated data ko save karen
+  localStorage.setItem("reviewJob", JSON.stringify(updatedData));
+
+  // Console me updated data ko log karen
+  console.log(updatedData);
+  setReview(updatedData)
+}, []); // Empty dependency array to run on mount only
 
 
-  console.log(selector);
   
 
   useEffect(() => {
@@ -44,6 +72,7 @@ function Page() {
     setIsSucessModalOpen(false);
   };
   
+
 
 
   const timeStart = moment(service?.serviceData.startTime, "HH:mm").valueOf();
@@ -98,6 +127,9 @@ function Page() {
     }
   };
 
+  console.log(review);
+  
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#F5F7FA] to-white">
       <div className="container px-4 sm:px-6 lg:px-8 py-12">
@@ -115,7 +147,7 @@ function Page() {
                     {t("service")}
                   </h2>
                   <p className="text-gray-700 text-lg">
-                    {t("serviceDescription")}
+                    {/* {review[2]?.category} */}
                   </p>
                 </div>
                 <div className="transform transition-all duration-300 hover:translate-x-2">

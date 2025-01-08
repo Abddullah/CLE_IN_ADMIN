@@ -306,15 +306,19 @@
     "serviceTimeStartRequired":"Time start is Required",
     "serviceTimeEndRequired":"Time end is Required",
     "invalidTime":"End time must be later than the start time. Please select a valid time range.",
+    "active":"Active",
+    "moderate":"Moderate",
+    "Pending":"Pending",
+    "add_button": "ADD",
 
 
    
       "title": "Service Details",
       "service": "Category",
       "serviceDescription": "Premium Cleaning Services",
-      "description": "Description",
+      "description": "Subcategory",
       "descriptionDetails": "Deep cleaning with eco-friendly products",
-      "professionalCleaners": "Professional Cleaners",
+      "professionalCleaners": "Professionals",
       "cleanersDetails": "3 Certified Experts",
       "frequency": "Service Frequency",
       "frequencyDetails": "Weekly Premium Service",

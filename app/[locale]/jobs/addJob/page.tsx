@@ -471,6 +471,7 @@ if (Array.isArray(tax)) {
  
 } else {
   console.log("No valid tax data found.");
+  setValue("totalWithTax" , totalPrice)
 }
 
   } , [totalPrice])
