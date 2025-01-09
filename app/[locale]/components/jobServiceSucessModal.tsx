@@ -58,17 +58,3 @@ const SuccessModal: React.FC<SuccessModalProps> = ({ text, onClose }) => {
 
 export default SuccessModal;
 
-// Usage Example:
-// import SuccessModal from './SuccessModal';
-// const App = () => {
-//   const handleModalClose = () => console.log('Modal Closed!');
-
-//   return (
-//     <div>
-//       <SuccessModal
-//         text="Your text has been created successfully!"
-//         onClose={handleModalClose}
-//       />
-//     </div>
-//   );
-// };

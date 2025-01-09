@@ -4,8 +4,8 @@ import { useTranslations } from "next-intl";
 import { usePathname } from "next/navigation";
 
 function JobTab() {
-    const t = useTranslations("Jobs");
-  
+  const t = useTranslations("Jobs");
+
   const [active, setActive] = useState<string>("");
   const router = useRouter();
   const path = usePathname();
@@ -17,55 +17,50 @@ function JobTab() {
       setActive("pending");
     } else if (path.includes("jobs")) {
       setActive("jobs");
-    } 
+    }
   }, [path]);
 
   return (
     <>
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-3 gap-6 mx-6 mt-8">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 px-4 sm:px-6 mt-6">
         <button
           onClick={() => {
             router.push("/jobs");
           }}
-          className={`flex-1 py-4 rounded-md ${
+          className={`w-full py-3 text-center rounded-lg transition-all duration-200 ${
             active === "jobs"
               ? "text-white bg-[#00BFFF] hover:bg-[#00BFFF]"
               : "text-white bg-[#859090] hover:bg-[#859090]"
           }`}
         >
-        {(t('active'))}
+          {t("active")}
         </button>
 
         <button
           onClick={() => {
             router.push("/jobs/pending");
           }}
-          className={`flex-1 py-4 rounded-md ${
+          className={`w-full py-3 text-center rounded-lg transition-all duration-200 ${
             active === "pending"
               ? "text-white bg-[#00BFFF] hover:bg-[#00BFFF]"
               : "text-white bg-[#859090] hover:bg-[#859090]"
           }`}
         >
-            {(t('Pending'))}
-                          
-
+          {t("Pending")}
         </button>
 
         <button
           onClick={() => {
             router.push("/jobs/moderate");
           }}
-          className={`flex-1 py-4 rounded-md ${
+          className={`w-full py-3 text-center rounded-lg transition-all duration-200 ${
             active === "moderate"
               ? "text-white bg-[#00BFFF] hover:bg-[#00BFFF]"
               : "text-white bg-[#859090] hover:bg-[#859090]"
           }`}
         >
-            {(t('moderate'))}
-           
+          {t("moderate")}
         </button>
-
-       
       </div>
     </>
   );

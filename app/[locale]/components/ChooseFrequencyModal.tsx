@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { setPlan } from "../config/Redux/reducers/planSlice";
-
-const Modal = () => {
+import { useTranslations } from "next-intl";
+const FrequencyModal = () => {
+  const t = useTranslations("frequencyModal")
   const dispatch = useDispatch();
   const [selected, setSelected] = useState("One Time"); // Default selection
   const [isOpen, setIsOpen] = useState(true); // State to control modal visibility
@@ -26,7 +27,7 @@ const Modal = () => {
             <div className="bg-white w-11/12 max-w-4xl rounded-2xl shadow-2xl overflow-hidden">
               {/* Modal Header */}
               <div className="bg-gradient-to-r from-[#00BFFF] to-[#008CBA] text-white text-center py-4">
-                <h2 className="text-3xl font-bold">Choose Your Frequency</h2>
+                <h2 className="text-3xl font-bold">{t('choose_frequency')}</h2>
               </div>
 
               {/* Modal Body */}
@@ -35,57 +36,60 @@ const Modal = () => {
                 {[
                   {
                     plan: "Weekly",
-                    label: "Weekly",
+                    label: `${t('weekly_plan')}`,
                     description: [
-                      "✔️ The same cleaner every week",
-                      "✔️ Cancel at any time",
+                      `✔️ ${t('same_cleaner_evey_week')}`,
+                      `✔️ ${t('cancel_anytime')} `,
                     ],
                     badge: "10% Off",
                     popular: true,
                   },
                   {
                     plan: "Every 2 Weeks",
-                    label: "Every 2 Weeks",
+                    label: `${t('every_two_week')}`,
                     description: [
-                      "✔️ The same cleaner every 2 weeks",
-                      "✔️ Cancel at any time",
+                      `✔️ ${t('same_cleaner_every_two_week')}`,
+                     `✔️ ${t('cancel_anytime')} `,
                     ],
                     badge: "5% Off",
                   },
                   {
                     plan: "One Time",
-                    label: "One Time",
-                    description: ["✔️ When your schedule is uncertain"],
+                    label: `${t('one_time')}`,
+                    description: [`✔️ ${t('one_time_details')}`],
                   },
                 ].map(({ plan, label, description, badge, popular }) => (
                   <div
-                    key={plan}
-                    onClick={() => handleSelect(plan)}
-                    className={`relative p-6 w-full rounded-lg border transition duration-300 cursor-pointer shadow-md ${
-                      selected === plan
-                        ? "bg-[#e0eff5] border-2 border-[#00BFFF]"
-                        : "bg-white text-gray-700 border-gray-300"
-                    } hover:shadow-lg`}
-                  >
-                    {popular && (
-                      <span className="absolute top-[-22px] left-0 bg-[#00BFFF] text-white text-xs font-bold px-2 py-1 rounded-sm shadow-md">
-                        Most Popular
-                      </span>
-                    )}
-                    <div className="relative">
-                      <h3 className="text-xl font-bold mb-2">{label}</h3>
-                      {badge && (
-                        <span className="absolute top-0 right-0 bg-green-500 text-white text-xs font-bold px-2 py-1 rounded-sm shadow">
-                          {badge}
-                        </span>
-                      )}
-                    </div>
-                    <ul className="mt-4 space-y-2 text-sm">
-                      {description.map((item, idx) => (
-                        <li key={idx}>{item}</li>
-                      ))}
-                    </ul>
-                  </div>
+  key={plan}
+  onClick={() => handleSelect(plan)}
+  className={`relative p-6 w-full rounded-lg border transition duration-300 cursor-pointer shadow-md ${
+    selected === plan
+      ? "bg-[#e0eff5] border-2 border-[#00BFFF]"
+      : "bg-white text-gray-700 border-gray-300"
+  } hover:shadow-lg`}
+>
+  {popular && (
+    <span className="absolute top-[-12px] left-0 bg-[#00BFFF] text-white text-xs font-bold px-2 py-1 rounded-sm shadow-md">
+      {t('most_popular')}
+    </span>
+  )}
+  <div className="relative">
+    <h3 className="text-xl font-bold mb-2 relative">
+      {label}
+      {badge && (
+        <span className="absolute top-0 right-[-20px] bg-green-500 text-white text-xs font-bold px-2 py-1 rounded-sm shadow">
+          {badge}
+        </span>
+      )}
+    </h3>
+  </div>
+  <ul className="mt-4 space-y-2 text-sm">
+    {description.map((item, idx) => (
+      <li key={idx}>{item}</li>
+    ))}
+  </ul>
+</div>
+
                 ))}
               </div>
 
@@ -95,7 +99,7 @@ const Modal = () => {
                   onClick={handleClose}
                   className="bg-[#00BFFF] text-white px-6 py-2 rounded-lg hover:bg-[#008CBA] transition"
                 >
-                  Select
+                  {t('select')}
                 </button>
               </div>
             </div>
@@ -106,4 +110,4 @@ const Modal = () => {
   );
 };
 
-export default Modal;
+export default FrequencyModal;

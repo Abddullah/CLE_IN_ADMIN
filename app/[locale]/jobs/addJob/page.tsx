@@ -23,10 +23,10 @@ import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import { useTranslations } from "next-intl";
 import MapComponent from "../../components/map/map";
 import { db } from "../../config/Firebase/FirebaseConfig";
-import { collection, getDocs } from "firebase/firestore";
-import Modal from "../../components/ChooseFrequencyModal";
+import { collection, getDocs , query , where } from "firebase/firestore";
 import { useDispatch } from "react-redux";
 import { setCategory } from "../../config/Redux/reducers/categorySlice";
+import FrequencyModal from "../../components/ChooseFrequencyModal";
 
 function page() {
   const t = useTranslations("Jobs");
@@ -111,8 +111,7 @@ function page() {
     
     dispatch(setJobSlice(data));  // Dispatch form data to Redux store
 
-    alert("Form Submitted Sucessfully");
-    
+    localStorage.setItem('addJob' , JSON.stringify(data));    
     console.log(data);
     router.push("/jobs/addJob/location");
   };
@@ -146,6 +145,35 @@ function page() {
   const [categories, setCategories] = useState<{ [key: string]: string[] }>({});
 
   const [selectedMaterialPrice, setSelectedMaterialPrice] = useState<number>(0);
+  const [users, setUsers] = useState<any[]>([]);
+
+  //fetch the users from the firebase 
+
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        // Firestore query to exclude admin users
+        const usersQuery = query(
+          collection(db, "users"),
+          where("role", "!=", "admin") // Only fetch users whose role is not admin
+        );
+
+        const querySnapshot = await getDocs(usersQuery);
+        const fetchedUsers = querySnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setUsers(fetchedUsers);
+      } catch (error) {
+        console.error("Error fetching users:", error);
+      }
+    };
+
+    fetchUsers();
+  }, []);
+
+
 
 
   const location = useSelector((state: any) => state.location);
@@ -349,7 +377,7 @@ function page() {
   const handleMaterialSelectedOption = (option: any) => {
     let price = 0; // Assume 5 for "yes"
     if (option === t("yes")) {
-      price = 5;
+      price = 6;
       setMaterialSelectedOption(t("yes"));
     } else {
       price = 0;
@@ -488,7 +516,7 @@ if (Array.isArray(tax)) {
     <>
       <div className="bg-[#F5F7FA] min-h-screen w-full flex items-start justify-start relative">
         <div className="flex items-center justify-center h-screen">
-          <Modal />
+          <FrequencyModal />
         </div>
 
         <div className="max-w-7xl mx-auto p-4 sm:p-6 lg">
@@ -497,38 +525,37 @@ if (Array.isArray(tax)) {
             className="w-full max-w-6xl px-8 lg:px-16 mt-6 mb-0"
           >
             <h1 className="text-2xl font-bold mt-2">{t("AddJobs")}</h1>
-            <div className="grid w-full items-center gap-1.5 ">
-              <Controller
-                name="provider"
-                control={control}
-                rules={{
-                  required: t("ProviderRequired"),
-                }}
-                render={({ field: { value, onChange } }) => (
-                  <Select onValueChange={onChange} value={value}>
-                    <SelectTrigger className="w-full h-[55px] rounded-lg border border-[#4BB1D3] bg-gray-50 mt-1 pr-6 outline-[#4BB1D3] focus:border-[#4BB1D3] focus:outline-none focus:border-none">
-                      <SelectValue placeholder={t("Provider")} />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectGroup>
-                        <SelectLabel>{t("Provider")}</SelectLabel>
-                        <SelectItem value="Leonardo">Leonardo </SelectItem>
-                        <SelectItem value="Matteo">Matteo</SelectItem>
-                        <SelectItem value="Alessandro">Alessandro</SelectItem>
-                        <SelectItem value="Giovanni">Giovanni</SelectItem>
-                        <SelectItem value="Luca">Luca</SelectItem>
-                        <SelectItem value="Marco">Marco</SelectItem>
-                      </SelectGroup>
-                    </SelectContent>
-                  </Select>
-                )}
-              />
-              {errors.provider && (
-                <p className="text-red-500 text-sm mt-1">
-                  {errors.provider.message}
-                </p>
-              )}
-            </div>
+            <div className="grid w-full items-center gap-1.5">
+      <Controller
+        name="provider"
+        control={control}
+        rules={{
+          required: t("ProviderRequired"),
+        }}
+        render={({ field: { value, onChange } }) => (
+          <Select onValueChange={onChange} value={value}>
+            <SelectTrigger className="w-full h-[55px] rounded-lg border border-[#4BB1D3] bg-gray-50 mt-1 pr-6 outline-[#4BB1D3] focus:border-[#4BB1D3] focus:outline-none focus:border-none">
+              <SelectValue placeholder={t("Provider")} />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                <SelectLabel>{t("Provider")}</SelectLabel>
+                {users.map((user:any) => (
+                  <SelectItem key={user.userId} value={user.fullName}>
+                    {user.fullName}
+                  </SelectItem>
+                ))}
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+        )}
+      />
+      {errors.provider && (
+        <p className="text-red-500 text-sm mt-1">
+          {errors.provider.message}
+        </p>
+      )}
+    </div>
 
             <div className="flex flex-col mt-6 h-full">
               <h2 className="text-lg font-semibold text-gray-800">

@@ -53,8 +53,8 @@ const Card: React.FC<CardProps> = ({
   };
 
   return (
-    <div className="cursor-pointer">
-      <div className="bg-white rounded-lg shadow-md border p-4 w-80">
+    <div className="cursor-pointer flex">
+      <div className="bg-white rounded-lg shadow-md border p-4 w-80 ">
         <Image
           src={imageUrl}
           alt={title}

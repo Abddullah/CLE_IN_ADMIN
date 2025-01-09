@@ -47,13 +47,13 @@ function page() {
     };
 
     dispatch(setLocation(formData));
+    localStorage.setItem("address" , JSON.stringify(data))
 
 
     
     
 
 
-    alert("Form submitted Sucessfully");
     
     
     router.push('/jobs/addJob/scheduleService')
