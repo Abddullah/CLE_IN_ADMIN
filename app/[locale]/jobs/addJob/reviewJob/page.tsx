@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Link } from "@/i18n/routing";
+import { Link, useRouter } from "@/i18n/routing";
 import { useTranslations } from "next-intl";
 import { useSelector } from "react-redux";
 import { db } from "@/app/[locale]/config/Firebase/FirebaseConfig";
@@ -17,118 +17,115 @@ import SuccessModal from "@/app/[locale]/components/sucessModal";
 
 function Page() {
   const t = useTranslations("Jobs");
+  const router = useRouter();
   const selector = useSelector((state: any) => state);
-
-  
 
   const [job, setJob] = useState<null | any>();
   const [address, setAddress] = useState<null | any>();
   const [service, setService] = useState<null | any>();
-  const [isDisbale , setIsDisable] = useState<boolean>(false);
- const [isSucessModalOpen, setIsSucessModalOpen] = useState(false);
- const [errorText , setErrorText] = useState<any>()
- const [reviewData , setReviewData] = useState<any[]>([])
- const [review , setReview] = useState<any | null>(null)
+  const [isDisbale, setIsDisable] = useState<boolean>(false);
+  const [isSucessModalOpen, setIsSucessModalOpen] = useState(false);
+  const [errorText, setErrorText] = useState<any>();
+  const [reviewData, setReviewData] = useState<any[]>([]);
+  const [reviewJob, setReviewJob] = useState<any[]>([]);
+  const [paymentSummary , setPaymentSummary] = useState([]);
 
- useEffect(() => {
-  // LocalStorage se data load karen
-  const data = localStorage.getItem('reviewJob');
-  const reviewServices = JSON.parse(data || '[]');
+  useEffect(() => {
 
-  // LocalStorage me pehle se jo data hai usse state me set karen
-  setReviewData(reviewServices);
+    //get all the pages data from the local storage
 
-  // Naye data ko reviewServices me add karen agar wo pehle se nahi hai
-  const newData = [selector.job, selector.address.setLocation, selector.service];
+    const job = localStorage.getItem("addJob");
+    const jobData = job ? JSON.parse(job) : null;
 
-  // Filter out the data to avoid duplicates
-  const updatedData = [...reviewServices, ...newData].filter((value, index, self) => 
-    self.findIndex(v => JSON.stringify(v) === JSON.stringify(value)) === index
-  );
+    const address = localStorage.getItem("address");
+    const addressData = address ? JSON.parse(address) : null;
 
-  // ReviewData ko update karen
-  setReviewData(updatedData);
+    const service = localStorage.getItem("scheduleService");
+    const serviceData = service ? JSON.parse(service) : null;
 
-  // LocalStorage me updated data ko save karen
-  localStorage.setItem("reviewJob", JSON.stringify(updatedData));
+    const tax = localStorage.getItem("tax");
+    const taxData = tax ? JSON.parse(tax) : null;
 
-  // Console me updated data ko log karen
-  console.log(updatedData);
-  setReview(updatedData)
-}, []); // Empty dependency array to run on mount only
+    //push the get data from local storage to the state array
+
+    reviewData.push(jobData, addressData, serviceData);
+
+    setReviewData([...reviewData]);
+
+    //push the payemet data in the payment summary state
+
+    setPaymentSummary(taxData);
+
+    
+    
+
+  }, []);
+
+  const timeStart = moment(reviewData[2]?.startTime, "HH:mm").format("hh:mm A")
+  const timeEnd = moment(reviewData[2]?.endTime, "HH:mm").format("hh:mm A")
 
 
   
-
-  useEffect(() => {
-    setAddress(selector.address.setLocation);
-    setJob(selector.job);
-    setService(selector.service);
-  }, []);
-
-
 
   const closeModal = () => {
     setIsSucessModalOpen(false);
+    router.push('/jobs')
   };
-  
-
-
-
-  const timeStart = moment(service?.serviceData.startTime, "HH:mm").valueOf();
-  const timeEnd = moment(service?.serviceData.endTime, "HH:mm").valueOf();
-  const serviceDate = moment(service?.serviceData.ServiceDate , "D-MM-YYYY").valueOf();
-
 
   const clickNext = async () => {
-    setIsDisable(true)
+    setIsDisable(true);
 
-    const geoPoint = new GeoPoint(job.location.lat, job.location.lng);
+    const geoPoint = new GeoPoint(
+      reviewData[0]?.location.lat,
+      reviewData[0]?.location.lng
+    );
 
-
-   
     try {
       // Firebase ki `job` collection reference
       const jobCollectionRef = collection(db, "jobs");
 
       // Data save karna
       const docRef = await addDoc(jobCollectionRef, {
-        repeateService: job?.plan.value,
-        roomSize: job?.roomsizes,
-        roomsQty: job?.numberofrooms,
-        category: job?.category,
-        howManyHourDoYouNeed: job?.hour,
-        howManyProfessionalDoYouNeed: job?.professional,
-        subCategory: job?.subcategory,
-        aditionalServices: job?.Additionalservices,
+        repeateService: reviewData[0]?.plan.value,
+        roomSize: reviewData[0]?.roomsizes || "",
+        roomsQty: reviewData[0]?.numberofrooms || "",
+        category: reviewData[0]?.category,
+        howManyHourDoYouNeed: reviewData[0]?.hour,
+        howManyProfessionalDoYouNeed: reviewData[0]?.professional,
+        subCategory: reviewData[0]?.subcategory,
+        aditionalServices: reviewData[0]?.Additionalservices,
         createdAt: serverTimestamp(),
         addStatus: "pending",
         addType: "job",
         geoPoint: geoPoint,
-        bookingDate: serviceDate,
-        bookingStart:timeStart ,
-        bookingEnd: timeEnd,
-        images:[{imagURL:""}, {imagURL:""} , {imagURL:""} , {imagURL:""} , {imagURL:""} , {imagURL:""}],
-        totalPrice:job?.total,
-        totalPriceWithTax:job?.totalWithTax,
-        needCleaningMaterials:job?.needmaterial,
-        address:address?.location,
-        instructions:address?.instructions
-
+        bookingDate: new Date(reviewData[2]?.ServiceDate).getTime(),
+        bookingStart: moment(reviewData[2]?.startTime, "HH:mm").valueOf(),
+        bookingEnd: moment(reviewData[2]?.endTime, "HH:mm").valueOf(),
+        images: [
+          { imagURL: "" },
+          { imagURL: "" },
+          { imagURL: "" },
+          { imagURL: "" },
+          { imagURL: "" },
+          { imagURL: "" },
+        ],
+        totalPrice: reviewData[0]?.total,
+        totalPriceWithTax: reviewData[0]?.totalWithTax,
+        needCleaningMaterials: reviewData[0]?.needmaterial || "",
+        address: reviewData[1]?.locationRequired,
+        instructions: reviewData[1]?.instructionRequired,
       });
 
       console.log("Document written with ID:", docRef.id);
-      setIsDisable(false)
-      setIsSucessModalOpen(true)
+      setIsDisable(false);
+      setIsSucessModalOpen(true);
+      setTimeout(()=>{
+        router.push('/jobs')
+      }, 3000)
     } catch (error) {
       console.error("Error adding document:", error);
-      
-      
     }
   };
-
-  console.log(review);
-  
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#F5F7FA] to-white">
@@ -147,7 +144,7 @@ function Page() {
                     {t("service")}
                   </h2>
                   <p className="text-gray-700 text-lg">
-                    {/* {review[2]?.category} */}
+                    {reviewData[0]?.category}
                   </p>
                 </div>
                 <div className="transform transition-all duration-300 hover:translate-x-2">
@@ -155,7 +152,7 @@ function Page() {
                     {t("description")}
                   </h2>
                   <p className="text-gray-700 text-lg">
-                    {t("descriptionDetails")}{" "}
+                    {reviewData[0]?.subcategory}{" "}
                   </p>
                 </div>
                 <div className="transform transition-all duration-300 hover:translate-x-2">
@@ -163,7 +160,7 @@ function Page() {
                     {t("professionalCleaners")}
                   </h2>
                   <p className="text-gray-700 text-lg">
-                    {t("cleanersDetails")}
+                    {reviewData[0]?.professional} Professional
                   </p>
                 </div>
                 <div className="transform transition-all duration-300 hover:translate-x-2">
@@ -171,49 +168,27 @@ function Page() {
                     {t("frequency")}
                   </h2>
                   <p className="text-gray-700 text-lg">
-                    {t("frequencyDetails")}
+                    {reviewData[0]?.plan.value}
                   </p>
                 </div>
-                <div className="transform transition-all duration-300 hover:translate-x-2">
-                  <h2 className="text-xl font-semibold text-gray-900 mb-3">
-                    {t("coverageArea")}
-                  </h2>
-                  <p className="text-gray-700 text-lg">
-                    {t("coverageDetails")}
-                  </p>
-                </div>
+                
               </div>
 
               {/* Additional Details */}
               <div className="space-y-8">
-                <div className="transform transition-all duration-300 hover:translate-x-2">
-                  <h2 className="text-xl font-semibold text-gray-900 mb-3">
-                    {t("accommodation")}
-                  </h2>
-                  <p className="text-gray-700 text-lg">
-                    {t("accommodationDetails")}
-                  </p>
-                </div>
-                <div className="transform transition-all duration-300 hover:translate-x-2">
-                  <h2 className="text-xl font-semibold text-gray-900 mb-3">
-                    {t("equipment")}
-                  </h2>
-                  <p className="text-gray-700 text-lg">
-                    {t("equipmentDetails")}
-                  </p>
-                </div>
+                
                 <div className="transform transition-all duration-300 hover:translate-x-2">
                   <h2 className="text-xl font-semibold text-gray-900 mb-3">
                     {t("rate")}
                   </h2>
-                  <p className="text-gray-700 text-lg">{t("rateDetails")}</p>
+                  <p className="text-gray-700 text-lg">5</p>
                 </div>
                 <div className="transform transition-all duration-300 hover:translate-x-2">
                   <h2 className="text-xl font-semibold text-gray-900 mb-3">
                     {t("appointmentDate")}
                   </h2>
                   <p className="text-gray-700 text-lg">
-                    {t("appointmentDateDetails")}
+                    {reviewData[2]?.ServiceDate}
                   </p>
                 </div>
                 <div className="transform transition-all duration-300 hover:translate-x-2">
@@ -221,7 +196,7 @@ function Page() {
                     {t("duration")}
                   </h2>
                   <p className="text-gray-700 text-lg">
-                    {t("durationDetails")}
+                    {`${timeStart} - ${timeEnd}`}
                   </p>
                 </div>
                 <div className="transform transition-all duration-300 hover:translate-x-2">
@@ -229,7 +204,7 @@ function Page() {
                     {t("location")}
                   </h2>
                   <p className="text-gray-700 text-lg">
-                    {t("locationDetails")}
+                    {reviewData[1]?.locationRequired}
                   </p>
                 </div>
               </div>
@@ -238,34 +213,44 @@ function Page() {
 
           {/* Payment Summary Card */}
           <div className="bg-white border-2 rounded-2xl shadow-xl p-8 max-w-md mb-10 transition-all duration-300 hover:shadow-2xl">
-            <h2 className="text-2xl font-bold text-gray-900 mb-8">
-              {t("Summary")}
-            </h2>
-            <div className="space-y-6">
-              <div className="flex justify-between items-center py-4 border-b border-gray-200">
-                <span className="text-lg text-gray-700">
-                  {t("serviceAmount")}
-                </span>
-                <span className="text-xl text-gray-900 font-semibold">
-                  €150.00
-                </span>
-              </div>
-              <div className="flex justify-between items-center py-4 border-b border-gray-200">
-                <span className="text-lg text-gray-700">{t("vat")}</span>
-                <span className="text-xl text-gray-900 font-semibold">
-                  €22.50
-                </span>
-              </div>
-              <div className="flex justify-between items-center pt-6">
-                <span className="text-xl font-bold text-gray-900">
-                  {t("total")}
-                </span>
-                <span className="text-2xl font-bold text-[#00BFFF]">
-                  €172.50
-                </span>
-              </div>
-            </div>
-          </div>
+  <h2 className="text-2xl font-bold text-gray-900 mb-8">
+    {t("Summary")}
+  </h2>
+  <div className="space-y-6">
+    <div className="flex justify-between items-center py-4 border-b border-gray-200">
+      <span className="text-lg text-gray-700">
+        {t("serviceAmount")}
+      </span>
+      <span className="text-xl text-gray-900 font-semibold">
+        €{reviewData[0]?.total}
+      </span>
+    </div>
+    
+    {/* Map over reviewData to display name and percentage */}
+    {paymentSummary.map((item:any, index:any) => (
+      item.name && item.percentage && (
+        <div key={index} className="flex justify-between items-center py-4 border-b border-gray-200">
+          <span className="text-lg text-gray-700">
+            {item.name}
+          </span>
+          <span className="text-xl text-gray-900 font-semibold">
+            {item.percentage}%
+          </span>
+        </div>
+      )
+    ))}
+
+    <div className="flex justify-between items-center pt-6">
+      <span className="text-xl font-bold text-gray-900">
+        {t("total")}
+      </span>
+      <span className="text-2xl font-bold text-[#00BFFF]">
+        €{reviewData[0]?.totalWithTax}
+      </span>
+    </div>
+  </div>
+</div>
+
 
           {/* Book Button */}
           <div className="mt-8 flex justify-center items-center">
@@ -280,8 +265,11 @@ function Page() {
             </Button>
             {/* </Link> */}
           </div>
-          <SuccessModal text="Your Job has been Created Sucessfully" isOpen={isSucessModalOpen} onClose={closeModal} />
-          
+          <SuccessModal
+            text={`${(t('job_created_sucess'))}`}
+            isOpen={isSucessModalOpen}
+            onClose={closeModal}
+          />
         </div>
       </div>
     </div>

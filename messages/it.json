@@ -272,6 +272,8 @@
   "active":"Attivo",
   "moderate":"Moderato",
   "Pending":"Sospeso",
+  "job_created_sucess": "Il tuo lavoro è stato creato con successo",
+
 
     
       "title": "Dettagli del Servizio",
@@ -385,7 +387,21 @@
     "category_added_sucessfully": "Categoria aggiunta con successo",
     "category_added_message": "La tua categoria è stata aggiunta con successo al sistema",
     "close_button": "Chiudi"
+},
+
+"frequencyModal": {
+    "choose_frequency": "Scegli la frequenza",
+    "weekly_plan": "Settimanale",
+    "same_cleaner_evey_week": "Lo stesso addetto ogni settimana",
+    "cancel_anytime": "Annulla in qualsiasi momento",
+    "every_two_week": "Ogni 2 settimane",
+    "one_time": "Una volta",
+    "same_cleaner_every_two_week": "Lo stesso addetto ogni 2 settimane",
+    "one_time_details": "Quando il tuo programma è incerto",
+    "select": "Seleziona",
+    "most_popular": "Più Popolare"
 }
+
 
 
 

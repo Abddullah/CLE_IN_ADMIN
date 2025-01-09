@@ -310,6 +310,7 @@
     "moderate":"Moderate",
     "Pending":"Pending",
     "add_button": "ADD",
+    "job_created_sucess":"Your Job has been Created Sucessfully",
 
 
    
@@ -420,6 +421,20 @@
     "category_added_message":"Your  category has been added successfully to the system",
     "close_button":"Close"
 
+  },
+
+  "frequencyModal":{
+    "choose_frequency":"Choose Your Frequency",
+    "weekly_plan":"Weekly",
+    "same_cleaner_evey_week":"The same cleaner every week",
+    "cancel_anytime":"Cancel at any time",
+    "every_two_week":"Every 2 Weeks",
+    "one_time":"One Time",
+    "same_cleaner_every_two_week":"The same cleaner every 2 weeks",
+    "one_time_details":"When your schedule is uncertain",
+    "select":"Select",
+    "most_popular":"Most Popular"
+    
   }
   
   

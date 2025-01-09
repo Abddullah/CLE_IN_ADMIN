@@ -11,7 +11,6 @@ import {
   deleteDoc,
   where,
   query,
-
 } from "firebase/firestore";
 import { db } from "../config/Firebase/FirebaseConfig";
 import moment from "moment";
@@ -29,11 +28,15 @@ function Page() {
   const [categories, setCategories] = useState<any[]>([]);
   const modalRef = useRef<HTMLDivElement | null>(null);
 
+
   
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
+      if (
+        modalRef.current &&
+        !modalRef.current.contains(event.target as Node)
+      ) {
         setIsModalOpen(false);
       }
     };
@@ -46,10 +49,6 @@ function Page() {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
- 
-
-  
-
 
   useEffect(() => {
     // Create a query to fetch only active jobs
@@ -60,7 +59,7 @@ function Page() {
 
     // Set up real-time listener for the filtered collection
     const unsubscribe = onSnapshot(jobsQuery, (snapshot) => {
-      const jobList = snapshot.docs.map((doc:any) => ({
+      const jobList = snapshot.docs.map((doc: any) => ({
         id: doc.id,
         ...doc.data(),
       }));
@@ -97,10 +96,10 @@ function Page() {
     try {
       // Get the document reference
       const jobDocRef = doc(db, "jobs", job.id);
-  
+
       // Delete the document
       await deleteDoc(jobDocRef);
-  
+
       console.log(`Job with ID ${job.id} has been deleted successfully.`);
     } catch (error) {
       console.error("Error deleting job:", error);
@@ -118,6 +117,7 @@ function Page() {
         addStatus: editableJob?.addStatus,
         bookingStart: editableJob?.bookingStart,
         bookingEnd: editableJob?.bookingEnd,
+        bookingDate: editableJob?.bookingDate,
       });
 
       setIsModalOpen(false);
@@ -126,28 +126,23 @@ function Page() {
     }
   };
 
- 
-
   return (
-    <div className="bg-[#F5F7FA] min-h-screen w-full">
-
-
+    <div className="bg-[#F5F7FA] w-full h-full overflow-hidden overflow-y-auto max-h-screen">
       <div className="absolute bottom-8 right-8 z-10">
-                  <Link href={"/jobs/addJob"}>
-                    <button className="w-14 h-14 flex items-center justify-center bg-[#00BFFF] text-white text-3xl rounded-full shadow-lg hover:bg-[#009ACD] focus:outline-none focus:ring-4 focus:ring-blue-300">
-                      +
-                    </button>
-                  </Link>
-                </div>
-      
-      
-              <JobTab/>
+        <Link href={"/jobs/addJob"}>
+          <button className="w-14 h-14 flex items-center justify-center bg-[#00BFFF] text-white text-3xl rounded-full shadow-lg hover:bg-[#009ACD] focus:outline-none focus:ring-4 focus:ring-blue-300">
+            +
+          </button>
+        </Link>
+      </div>
 
-      <div className="flex flex-wrap justify-center gap-12 w-full px-4 sm:px-8 md:px-14 lg:px-10 mt-4">
+      <JobTab />
+
+      <div className="flex flex-wrap justify-center gap-12 w-full px-4 sm:px-8 sm:justify-start md:px-14 md:justify-start lg:justify-start lg:px-10 mt-4">
         {jobs.map((job: any) => (
-          <div className="w-[310px]" key={job.id}>
+          <div className="w-[310px] mt-[40px]" key={job.id}>
             <Card
-              price={` € ${job.totalPriceWithTax } / hr `}
+              price={` € ${job.totalPriceWithTax}`}
               title={job.category || "No Title"}
               time={`${moment(job.bookingStart).format("hh:mm A")} - ${moment(
                 job.bookingEnd
@@ -162,16 +157,18 @@ function Page() {
               }
               dotsIcon="/assets/categoriesIcons/dots.svg"
               onEdit={() => handleEditClick(job)}
-              onDelete={()=> handleDeleteClick(job)}
-              
+              onDelete={() => handleDeleteClick(job)}
             />
           </div>
         ))}
       </div>
 
       {isModalOpen && (
-        <div ref={modalRef} className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-          <div className="bg-white w-96 rounded-lg p-6 shadow-lg">
+        <div
+          ref={modalRef}
+          className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 "
+        >
+          <div className="bg-white w-[450px] rounded-lg p-6 shadow-lg mx-3">
             <h2 className="text-xl font-semibold mb-4">Edit Job</h2>
             <form>
               {/* Title (Select Field) */}
@@ -179,22 +176,67 @@ function Page() {
                 <label className="block text-sm font-medium text-gray-700">
                   Title
                 </label>
-                <select
-                  value={editableJob?.category || ""}
-                  onChange={(e) =>
-                    setEditableJob({ ...editableJob, category: e.target.value })
-                  }
-                  className="w-full px-4 py-2 mt-1 bg-gray-50 rounded-md border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
-                >
-                  <option value="" disabled>
-                    Select a category
-                  </option>
-                  {categories.map((category: any) => (
-                    <option key={category.id} value={category.categoryName}>
-                      {category.categoryName}
-                    </option>
-                  ))}
-                </select>
+
+                <div className="mb-4 mt-2">
+                  <div className="relative">
+                    <select
+                      id="professional-select"
+                      className="block w-full px-4 py-3 text-sm border border-gray-300 rounded-lg shadow-sm appearance-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      value={editableJob?.category || ""}
+                      onChange={(e) =>
+                        setEditableJob({
+                          ...editableJob,
+                          category: e.target.value,
+                        })
+                      }
+                    >
+                      <option value="" disabled>
+                        Choose an option
+                      </option>
+                      {categories.map((category: any) => (
+                        <option key={category.id} value={category.categoryName}>
+                          {category.categoryName}
+                        </option>
+                      ))}
+                    </select>
+                    <span className="absolute inset-y-0 right-3 flex items-center pointer-events-none">
+                      <svg
+                        className="w-5 h-5 text-gray-400"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M19 9l-7 7-7-7"
+                        />
+                      </svg>
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700">
+                  Select Date
+                </label>
+                <div className="mt-1">
+                  <input
+                    type="date"
+                    name="ServiceDate"
+                                        onChange={(e) => {
+                      setEditableJob({
+                        ...editableJob,
+                        bookingDate: new Date(e.target.value).getTime(),
+                      });
+                    }}
+                    // Register field with validation
+                    className="w-full px-4 py-2 mt-1 bg-gray-50 rounded-md border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
+                  />
+                </div>
               </div>
 
               {/* Select Time Start */}
@@ -242,24 +284,50 @@ function Page() {
               </div>
 
               {/* Status */}
+
               <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700">
-                  Status
-                </label>
-                <select
-                  value={editableJob?.addStatus || ""}
-                  onChange={(e) =>
-                    setEditableJob({
-                      ...editableJob,
-                      addStatus: e.target.value,
-                    })
-                  }
-                  className="w-full px-4 py-2 mt-1 bg-gray-50 rounded-md border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
+                <label
+                  htmlFor="professional-select"
+                  className="block text-sm font-medium text-gray-700 mb-2"
                 >
-                  <option value="active">Active</option>
-                  <option value="inactive">Inactive</option>
-                  <option value="pending">Pending</option>
-                </select>
+                  Select Job Status
+                </label>
+                <div className="relative">
+                  <select
+                    value={editableJob?.addStatus || ""}
+                    onChange={(e) =>
+                      setEditableJob({
+                        ...editableJob,
+                        addStatus: e.target.value,
+                      })
+                    }
+                    id="professional-select"
+                    className="block w-full px-4 py-3 text-sm border border-gray-300 rounded-lg shadow-sm appearance-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  >
+                    <option value="" disabled>
+                      Choose an option
+                    </option>
+                    <option value="active">Active</option>
+                    <option value="moderate">Moderate</option>
+                    <option value="pending">Pending</option>
+                  </select>
+                  <span className="absolute inset-y-0 right-3 flex items-center pointer-events-none">
+                    <svg
+                      className="w-5 h-5 text-gray-400"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M19 9l-7 7-7-7"
+                      />
+                    </svg>
+                  </span>
+                </div>
               </div>
 
               {/* Buttons */}
@@ -274,7 +342,7 @@ function Page() {
                 <button
                   type="button"
                   onClick={handleSave}
-                  className="py-2 px-4 bg-blue-500 text-white rounded-md shadow-sm hover:bg-blue-600"
+                  className="py-2 px-4 bg-[#00BFFF] text-white rounded-md shadow-sm hover:bg-[#00BFFF]"
                 >
                   Save
                 </button>

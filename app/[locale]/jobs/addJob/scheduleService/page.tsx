@@ -41,6 +41,7 @@ function Page() {
     }
 
     dispatch(setServiceData(data));
+    localStorage.setItem('scheduleService' , JSON.stringify(data))
 
     console.log(data);
     router.push('/jobs/addJob/reviewJob')
