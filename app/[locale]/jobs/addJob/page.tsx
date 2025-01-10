@@ -133,19 +133,21 @@ function page() {
   const [matererialSelectedOption, setMaterialSelectedOption] =
     useState<string>("");
   const [additionalServicePrice, setAdditionalServicesPrice] = useState<any>();
-  const [selectedProfessional, setSelectedProfessional] = useState<number>(1);
+  const [selectedProfessional, setSelectedProfessional] = useState<number>(0);
   const [images, setImages] = useState<(string | null)[]>(Array(6).fill(null));
 
   const [selectedServices, setSelectedServices] = useState<string[]>([]);
 
-  const [totalPrice, setTotalPrice] = useState<number>(5);
+  const [totalPrice, setTotalPrice] = useState<number>(0);
 
-  const [selectedHour, setSelectedHour] = useState<number>(1);
+  const [selectedHour, setSelectedHour] = useState<number>(0);
 
   const [categories, setCategories] = useState<{ [key: string]: string[] }>({});
 
   const [selectedMaterialPrice, setSelectedMaterialPrice] = useState<number>(0);
   const [users, setUsers] = useState<any[]>([]);
+  const [previousUserRate , setPreviouUserRate] = useState<number>(0);
+  
 
   //fetch the users from the firebase 
 
@@ -172,6 +174,26 @@ function page() {
 
     fetchUsers();
   }, []);
+
+  const handleProviderChange = (selectedProvider: string) => {
+    // Find the selected user by userId (which is the value of the SelectItem)
+    const selectedUser = users.find((user: any) => user.userId === selectedProvider);
+
+    if (selectedUser) {
+        const newHourlyRate = Number(selectedUser.hourlyRate);
+        setHourPrice(newHourlyRate);
+        
+        // Save userId in local storage
+        localStorage.setItem('JobPostUserId', selectedProvider);
+    }
+};
+
+
+  useEffect(() => {
+    // Optionally handle state changes, if needed
+    console.log("Total:", totalPrice); // Log the updated total
+  }, [totalPrice]);
+
 
 
 
@@ -239,21 +261,7 @@ function page() {
     setSelectedCategory(value);
   };
 
-  useEffect(() => {
-    const fetchHourlyRate = async () => {
-      try {
-        const querySnapshot = await getDocs(collection(db, "hourlyRates"));
-        querySnapshot.forEach((doc) => {
-          const price = parseInt(doc.data().rate || "0");
-          setHourPrice(price);
-        });
-      } catch (error) {
-        console.error("Error fetching hourly rate: ", error);
-      }
-    };
-    fetchHourlyRate();
-  }, []);
-
+  
   // Fetch room sizes and their prices
   useEffect(() => {
     const fetchRoomSizes = async () => {
@@ -339,7 +347,7 @@ function page() {
     calculateTotal(
       selectedRoomPrice,
       selectedRoomCountPrice,
-      selectedHour,
+      selectedHour || 0,
       professional,
       hourPrice // Pass the current hourPrice
     );
@@ -353,7 +361,7 @@ function page() {
     calculateTotal(
       price,
       selectedRoomCountPrice,
-      selectedHour,
+      selectedHour || 0,
       selectedProfessional,
       hourPrice // Pass the current hourPrice
     );
@@ -366,7 +374,7 @@ function page() {
     calculateTotal(
       selectedRoomPrice,
       price,
-      selectedHour,
+      selectedHour || 0,
       selectedProfessional,
       hourPrice // Pass the current hourPrice
     );
@@ -533,15 +541,18 @@ if (Array.isArray(tax)) {
           required: t("ProviderRequired"),
         }}
         render={({ field: { value, onChange } }) => (
-          <Select onValueChange={onChange} value={value}>
+          <Select onValueChange={(value) => {
+            onChange(value);
+            handleProviderChange(value); // Update the hourly rate when the provider changes
+          }} value={value}>
             <SelectTrigger className="w-full h-[55px] rounded-lg border border-[#4BB1D3] bg-gray-50 mt-1 pr-6 outline-[#4BB1D3] focus:border-[#4BB1D3] focus:outline-none focus:border-none">
               <SelectValue placeholder={t("Provider")} />
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
                 <SelectLabel>{t("Provider")}</SelectLabel>
-                {users.map((user:any) => (
-                  <SelectItem key={user.userId} value={user.fullName}>
+                {users.map((user: any) => (
+                  <SelectItem key={user.userId} value={user.userId}> {/* Use userId as the value */}
                     {user.fullName}
                   </SelectItem>
                 ))}

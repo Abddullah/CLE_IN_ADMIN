@@ -19,6 +19,7 @@ import { useTranslations } from "use-intl";
 import { Link } from "@/i18n/routing";
 // import BookingModal from "../components/jobsComponent/JobDetailsCard";
 import JobTab from "../components/JobTab";
+import BookingModal from "../components/jobsComponent/JobDetailsCard";
 
 function Page() {
   const t = useTranslations("Jobs");
@@ -27,6 +28,8 @@ function Page() {
   const [isModalOpen, setIsModalOpen] = useState(false); // Modal visibility
   const [categories, setCategories] = useState<any[]>([]);
   const modalRef = useRef<HTMLDivElement | null>(null);
+  const [selectedJob , setSelectedJob]=useState<null | any>(null);
+  const [detailModalOpen , SetDetailModalOpen] = useState<boolean>(false)
 
 
   
@@ -63,11 +66,17 @@ function Page() {
         id: doc.id,
         ...doc.data(),
       }));
+
+     
+      
       setJobs(jobList);
     });
 
     return () => unsubscribe(); // Clean up the listener on unmount
   }, []);
+
+  console.log(jobs);
+  
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -92,10 +101,18 @@ function Page() {
     setIsModalOpen(true);
   };
 
+  //handle click on the job
+
+  const handleJobClick = (job:any) => {
+    setSelectedJob(job);
+    SetDetailModalOpen(true);
+  };
+
   const handleDeleteClick = async (job: any) => {
     try {
       // Get the document reference
       const jobDocRef = doc(db, "jobs", job.id);
+     
 
       // Delete the document
       await deleteDoc(jobDocRef);
@@ -140,7 +157,7 @@ function Page() {
 
       <div className="flex flex-wrap justify-center gap-12 w-full px-4 sm:px-8 sm:justify-start md:px-14 md:justify-start lg:justify-start lg:px-10 mt-4">
         {jobs.map((job: any) => (
-          <div className="w-[310px] mt-[40px]" key={job.id}>
+          <div onClick={()=>handleJobClick(job)} className="w-[310px] mt-[40px]" key={job.id}>
             <Card
               price={` € ${job.totalPriceWithTax}`}
               title={job.category || "No Title"}
@@ -150,6 +167,7 @@ function Page() {
               imageUrl={job.imageUrl || "/assets/servicesIcons/cardImage.svg"}
               status={job.addStatus || "Inactive"}
               statusTextColor={"green-500"}
+              
               date={
                 moment(job.bookingDate).isValid()
                   ? moment(job.bookingDate).format("MMM -D -YYYY")
@@ -158,6 +176,7 @@ function Page() {
               dotsIcon="/assets/categoriesIcons/dots.svg"
               onEdit={() => handleEditClick(job)}
               onDelete={() => handleDeleteClick(job)}
+             
             />
           </div>
         ))}
@@ -351,9 +370,9 @@ function Page() {
           </div>
         </div>
       )}
-      {/* <div>
-        <BookingModal/>
-      </div> */}
+      <div>
+      {detailModalOpen && <BookingModal bookingData={selectedJob} handleClose={()=>SetDetailModalOpen(false)} />}
+      </div>
     </div>
   );
 }

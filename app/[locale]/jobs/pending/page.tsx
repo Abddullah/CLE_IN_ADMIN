@@ -17,8 +17,8 @@ import moment from "moment";
 import LoaderSpinner from "../../components/Spinner";
 import { useTranslations } from "use-intl";
 import { Link } from "@/i18n/routing";
-// import BookingModal from "../components/jobsComponent/JobDetailsCard";
 import JobTab from "../../components/JobTab";
+import BookingModal from "../../components/jobsComponent/JobDetailsCard";
 function Page() {
   const t = useTranslations("Jobs");
   const [jobs, setJobs] = useState<any>([]);
@@ -26,6 +26,8 @@ function Page() {
   const [isModalOpen, setIsModalOpen] = useState(false); // Modal visibility
   const [categories, setCategories] = useState<any[]>([]);
   const modalRef = useRef<HTMLDivElement | null>(null);
+  const [detailModalOpen , SetDetailModalOpen]=useState<boolean>(false)
+  const [selectedJob , setSelectedJob]=useState<null | any>(null);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -64,6 +66,13 @@ function Page() {
 
     return () => unsubscribe(); // Clean up the listener on unmount
   }, []);
+
+
+  const handleJobClick = (job:any) => {
+    setSelectedJob(job);
+    SetDetailModalOpen(true);
+  };
+
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -136,7 +145,7 @@ function Page() {
 
       <div className="flex flex-wrap justify-center gap-12 w-full px-4 sm:px-8 sm:justify-start md:px-14 md:justify-start lg:justify-start lg:px-10 mt-4">
         {jobs.map((job: any) => (
-          <div className="w-[310px] mt-[40px]" key={job.id}>
+          <div onClick={()=>handleJobClick(job)}  className="w-[310px] mt-[40px]" key={job.id}>
             <Card
               price={` € ${job.totalPriceWithTax}  `}
               title={job.category || "No Title"}
@@ -347,9 +356,9 @@ function Page() {
           </div>
         </div>
       )}
-      {/* <div>
-        <BookingModal/>
-      </div> */}
+        <div>
+      {detailModalOpen && <BookingModal bookingData={selectedJob} handleClose={()=>SetDetailModalOpen(false)} />}
+      </div>
     </div>
   );
 }

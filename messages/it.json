@@ -138,7 +138,10 @@
 
     "add_user_button": "Aggiungi utente",
     "user_role_user": "Utente",
-    "user_role_provider": "Fornitore"
+    "user_role_provider": "Fornitore",
+    "Add_hourly_rate": "Aggiungi Tariffa Oraria",
+"hourly_rate_placeholder": "Tariffa Oraria",
+"hourly_rate_required_error": "Tariffa Oraria è obbligatoria"
   },
   "Bookings": {
     "booking_details_header": "Dettagli della Prenotazione",

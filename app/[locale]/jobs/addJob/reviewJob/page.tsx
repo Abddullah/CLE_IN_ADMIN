@@ -12,6 +12,8 @@ import {
   collection,
   serverTimestamp,
   GeoPoint,
+  doc,
+  setDoc
 } from "firebase/firestore";
 import SuccessModal from "@/app/[locale]/components/sucessModal";
 
@@ -83,9 +85,13 @@ function Page() {
     try {
       // Firebase ki `job` collection reference
       const jobCollectionRef = collection(db, "jobs");
-
+    
+      // Nayi document ID generate karna
+      const newDocRef = doc(jobCollectionRef); // Ye random ID generate karega
+    
       // Data save karna
-      const docRef = await addDoc(jobCollectionRef, {
+      await setDoc(newDocRef, {
+        jobId: newDocRef.id, // Random ID ko data mein shamil karna
         repeateService: reviewData[0]?.plan.value,
         roomSize: reviewData[0]?.roomsizes || "",
         roomsQty: reviewData[0]?.numberofrooms || "",
@@ -114,17 +120,19 @@ function Page() {
         needCleaningMaterials: reviewData[0]?.needmaterial || "",
         address: reviewData[1]?.locationRequired,
         instructions: reviewData[1]?.instructionRequired,
+        postedBy:localStorage.getItem('JobPostUserId'),
       });
-
-      console.log("Document written with ID:", docRef.id);
+    
+      console.log("Document written with ID:", newDocRef.id);
       setIsDisable(false);
       setIsSucessModalOpen(true);
-      setTimeout(()=>{
-        router.push('/jobs')
-      }, 3000)
+      setTimeout(() => {
+        router.push('/jobs');
+      }, 3000);
     } catch (error) {
       console.error("Error adding document:", error);
     }
+    
   };
 
   return (

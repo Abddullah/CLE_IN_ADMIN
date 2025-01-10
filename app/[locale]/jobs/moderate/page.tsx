@@ -20,6 +20,7 @@ import { useTranslations } from "use-intl";
 import { Link } from "@/i18n/routing";
 // import BookingModal from "../components/jobsComponent/JobDetailsCard";
 import JobTab from "../../components/JobTab";
+import BookingModal from "../../components/jobsComponent/JobDetailsCard";
 function Page() {
   const t = useTranslations("Jobs");
   const [jobs, setJobs] = useState<any>([]);
@@ -27,6 +28,8 @@ function Page() {
   const [isModalOpen, setIsModalOpen] = useState(false); // Modal visibility
   const [categories, setCategories] = useState<any[]>([]);
   const modalRef = useRef<HTMLDivElement | null>(null);
+  const [selectedJob , setSelectedJob]=useState<null | any>(null);
+    const [detailModalOpen , SetDetailModalOpen] = useState<boolean>(false)
 
   
 
@@ -87,6 +90,13 @@ function Page() {
     fetchCategories();
   }, []);
 
+
+  const handleJobClick = (job:any) => {
+    setSelectedJob(job);
+    SetDetailModalOpen(true);
+  };
+
+
   const handleEditClick = (job: any) => {
     setEditableJob(job);
     setIsModalOpen(true);
@@ -146,7 +156,7 @@ function Page() {
 
               <div className="flex flex-wrap justify-center gap-12 w-full px-4 sm:px-8 sm:justify-start md:px-14 md:justify-start lg:justify-start lg:px-10 mt-4">
         {jobs.map((job: any) => (
-          <div className="w-[310px] mt-[40px]" key={job.id}>
+          <div onClick={()=>handleJobClick(job)} className="w-[310px] mt-[40px]" key={job.id}>
             <Card
               price={` € ${job.totalPriceWithTax } `}
               title={job.category || "No Title"}
@@ -357,9 +367,9 @@ function Page() {
           </div>
         </div>
       )}
-      {/* <div>
-        <BookingModal/>
-      </div> */}
+      <div>
+      {detailModalOpen && <BookingModal bookingData={selectedJob} handleClose={()=>SetDetailModalOpen(false)} />}
+      </div>
     </div>
   );
 }

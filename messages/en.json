@@ -143,7 +143,10 @@
       
       "add_user_button": "Add User",
       "user_role_user": "User",
-      "user_role_provider": "Provider"
+      "user_role_provider": "Provider",
+      "Add_hourly_rate":"Add Hourly Rate",
+      "hourly_rate_placeholder": "Hourly Rate",
+      "hourly_rate_required_error": "Hourly Rate is required"
      
     },
     "Bookings":{

@@ -46,6 +46,7 @@ function AddUserPage() {
     role: UserRole;
     gender: UserGender;
     dob: string;
+    hourlyRate:string
   };
 
   const {
@@ -73,6 +74,7 @@ const path = usePathname();
       await setDoc(doc(db, "users", user.uid), {
         fullName: data.username,
         email: data.email,
+        hourlyRate:data.hourlyRate,
         address: data.address,
         phone: data.phone,
         role: data.role,
@@ -208,6 +210,22 @@ const path = usePathname();
             />
             {errors.address && (
               <span className="text-red-600 text-sm">{errors.address.message}</span>
+            )}
+          </div>
+
+          <div className="grid w-full max-w-sm items-center gap-1.5 mt-3">
+            <Label htmlFor="hourlyRate" className="text-md font-semibold">
+              {t("Add_hourly_rate")}
+            </Label>
+            <Input
+              type="text"
+              placeholder={t("hourly_rate_placeholder")}
+              {...register("hourlyRate", { required: t("hourly_rate_required_error") })}
+              className="h-[50px] rounded-lg border-[#4BB1D3] focus:border-blue-500 focus:outline-none"
+              id="address"
+            />
+            {errors.hourlyRate && (
+              <span className="text-red-600 text-sm">{errors.hourlyRate.message}</span>
             )}
           </div>
 

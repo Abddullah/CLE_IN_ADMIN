@@ -42,8 +42,9 @@ function page() {
               status={(t('active'))}
               date="Sep 09 , 2024"
               dotsIcon="/assets/categoriesIcons/dots.svg"
-              editIcon="/assets/categoriesIcons/edit.svg"
-              deleteIcon="/assets/categoriesIcons/delete.svg"
+              statusTextColor={"green-500"}
+              
+              
             />
           </div>
 
@@ -56,8 +57,8 @@ function page() {
               status={(t('active'))}
               date="Sep 09 , 2024"
               dotsIcon="/assets/categoriesIcons/dots.svg"
-              editIcon="/assets/categoriesIcons/edit.svg"
-              deleteIcon="/assets/categoriesIcons/delete.svg"
+              statusTextColor={"green-500"}
+              
             />
           </div>
 
@@ -70,8 +71,9 @@ function page() {
               status={(t('active'))}
               date="Sep 09 , 2024"
               dotsIcon="/assets/categoriesIcons/dots.svg"
-              editIcon="/assets/categoriesIcons/edit.svg"
-              deleteIcon="/assets/categoriesIcons/delete.svg"
+              statusTextColor={"green-500"}
+              onEdit={()=>{}}
+              onDelete={()=>{}}
             />
           </div>
 
@@ -84,8 +86,8 @@ function page() {
               status={(t('active'))}
               date="Sep 09 , 2024"
               dotsIcon="/assets/categoriesIcons/dots.svg"
-              editIcon="/assets/categoriesIcons/edit.svg"
-              deleteIcon="/assets/categoriesIcons/delete.svg"
+              statusTextColor={"green-500"}
+             
             />
           </div>
 
@@ -98,8 +100,8 @@ function page() {
               status={(t('active'))}
               date="Sep 09 , 2024"
               dotsIcon="/assets/categoriesIcons/dots.svg"
-              editIcon="/assets/categoriesIcons/edit.svg"
-              deleteIcon="/assets/categoriesIcons/delete.svg"
+              statusTextColor={"green-500"}
+             
             />
           </div>
         </div>
