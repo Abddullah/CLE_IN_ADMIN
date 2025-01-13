@@ -55,45 +55,50 @@ const BookingModal = ({ bookingData, handleClose}:Props) => {
           
   console.log(customerInfo);
   
+  mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAP_ACCESS_TOKEN as string;
 
  
 
-    const mapContainerRef = useRef(null);
+  const mapContainerRef = useRef<HTMLDivElement | null>(null);
 
+ 
+  
+
+  
+  
   useEffect(() => {
-    // Set your Mapbox access token
-    mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAP_ACCESS_TOKEN as string;
+    if (!mapContainerRef.current) return; // Ensure ref is not null
 
     // Initialize the map
-    if (mapContainerRef.current) {
-      const map = new mapboxgl.Map({
-        container: mapContainerRef.current, // Container ID
-        style: "mapbox://styles/mapbox/streets-v11", // Map style
-        center: [
-          bookingData?.geoPoint?._long, 
-          bookingData?.geoPoint?._lat
-        ], // Initial map center [lng, lat]
-        zoom: 8, // Initial zoom level
-        interactive: false,
-      });
-    } else {
-      console.error('Map container reference is null');
-    }
+    const map = new mapboxgl.Map({
+      container: mapContainerRef.current, // Safe to use ref here
+      style: "mapbox://styles/mapbox/streets-v11", // Map style
+      center: [
+        bookingData?.geoPoint?._long, 
+        bookingData?.geoPoint?._lat
+      ],
+      zoom: 10, // Initial zoom level
+      interactive:false
+    });
+
+    const lng = bookingData?.geoPoint?._long;
+    const lat = bookingData?.geoPoint?._lat;
+
+
+    console.log("long" , lng  , "lat" , lat);
     
 
+    // Add a marker
     new mapboxgl.Marker({ color: "red" }) // Customize marker color
-    .setLngLat([bookingData?.geoPoint?._long, bookingData?.geoPoint?._lat]) // Set marker coordinates [lng, lat]
-    .addTo(map);
-  
-  // Cleanup map instance on component unmount
-  return () => map.remove();
-  
+    .setLngLat([lng , lat]) // Marker position (longitude, latitude)
+      .addTo(map); // Add marker to map
 
-  
+    // Clean up on component unmount
+    return () => map.remove();
   }, []);
 
   return (
-    <div className="fixed inset-0 flex justify-center items-center bg-gray-900 bg-opacity-50 z-50">
+    <div className="fixed inset-0 flex justify-center items-center bg-gray-900 bg-opacity-50 z-50 ">
       <div className="w-full max-w-4xl sm:max-w-xl mx-auto bg-white rounded-lg shadow-lg p-6 relative max-h-[95vh] overflow-auto">
         <div className="flex justify-end">
           <button onClick={handleClose}>
@@ -153,10 +158,12 @@ howManyProfessionalDoYouNeed
             </div>
           </div>
 
-          {/* Availability */}
+        
          
           {/* Location */}
-          <div className="grid w-full items-center gap-1.5 mt-6">
+  
+
+<div className="grid w-full items-center gap-1.5 mt-6">
       <p className="text-lg mt-2">Location</p>
       <div
         className="mt-4 w-full h-[180px] relative overflow-hidden rounded-lg"

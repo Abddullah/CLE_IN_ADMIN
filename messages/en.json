@@ -259,7 +259,14 @@
     "cleaningHygieneServices": "Cleaning and Hygiene Services",
     "homeMaintenanceServices": "Home Maintenance Services",
     "installationServices": "Installation Services",
-    "renovationServices": "Renovation Services"
+    "renovationServices": "Renovation Services",
+    "add_fix_rate":"Add Fix Rate",
+    "fix_rate":"Fix Rate",
+    "fix_rate_required":"Add Fixed Rate Required",
+    "Enter_fixRates":"Enter Fix Rates",
+    "fix_Rate":"Fix Rate",
+    "no_fix_rate_available":"No Fix Rates Available",
+    "close_button":"Close Button"
   
       
   },

@@ -28,8 +28,8 @@ function Page() {
   const [isModalOpen, setIsModalOpen] = useState(false); // Modal visibility
   const [categories, setCategories] = useState<any[]>([]);
   const modalRef = useRef<HTMLDivElement | null>(null);
-  const [selectedJob , setSelectedJob]=useState<null | any>(null);
-  const [detailModalOpen , SetDetailModalOpen] = useState<boolean>(false)
+  const [selectedJob , setSelectedJob] = useState<null | any>(null);
+  const [detailModalOpen , SetDetailModalOpen] = useState<boolean>(false);
 
 
   
@@ -159,6 +159,7 @@ function Page() {
         {jobs.map((job: any) => (
           <div onClick={()=>handleJobClick(job)} className="w-[310px] mt-[40px]" key={job.id}>
             <Card
+            
               price={` € ${job.totalPriceWithTax}`}
               title={job.category || "No Title"}
               time={`${moment(job.bookingStart).format("hh:mm A")} - ${moment(

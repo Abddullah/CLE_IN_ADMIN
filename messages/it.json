@@ -227,7 +227,15 @@
   "select_time_slots": "Seleziona gli orari disponibili",
   "select_one":"Seleziona almeno un giorno",
   "select_Both":"Sono richiesti sia l'orario di apertura che quello di chiusura",
-  "next":"prossimo"
+  "next":"prossimo",
+  "add_fix_rate": "Aggiungi Tariffa Fissa",
+"fix_rate": "Tariffa Fissa",
+"fix_rate_required": "Aggiunta Tariffa Fissa Necessaria",
+"Enter_fixRates": "Inserisci Tariffe Fisse",
+"fix_Rate": "Tariffa Fissa",
+"no_fix_rate_available": "Nessuna Tariffa Fissa Disponibile",
+"close_button": "Pulsante Chiudi"
+
   },
   "Jobs":{
     "AddJobs": "Aggiungi lavori",

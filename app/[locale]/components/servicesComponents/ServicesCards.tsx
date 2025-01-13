@@ -52,6 +52,8 @@ const Card: React.FC<CardProps> = ({
     setShowOptions(false); // Close the options menu
   };
 
+  const [image , setImage]=useState(false);
+
   return (
     <div className="cursor-pointer flex">
       <div className="bg-white rounded-lg shadow-md border p-4 w-80 ">
