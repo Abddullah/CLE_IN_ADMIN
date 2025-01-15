@@ -100,7 +100,7 @@ function Page() {
         howManyProfessionalDoYouNeed: reviewData[0]?.professional,
         subCategory: reviewData[0]?.subcategory,
         aditionalServices: reviewData[0]?.Additionalservices,
-        createdAt: serverTimestamp(),
+        createdAt: new Date().getTime(),
         addStatus: "pending",
         addType: "job",
         geoPoint: geoPoint,

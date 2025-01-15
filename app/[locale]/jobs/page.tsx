@@ -22,7 +22,7 @@ import JobTab from "../components/JobTab";
 import BookingModal from "../components/jobsComponent/JobDetailsCard";
 
 function Page() {
-  const t = useTranslations("Jobs");
+  const t = useTranslations("Jobs"); 
   const [jobs, setJobs] = useState<any>([]);
   const [editableJob, setEditableJob] = useState<null | any>(null); // Store the job being edited
   const [isModalOpen, setIsModalOpen] = useState(false); // Modal visibility
@@ -174,6 +174,7 @@ function Page() {
                   ? moment(job.bookingDate).format("MMM -D -YYYY")
                   : "Invalid Date"
               }
+              createdAt={moment(job.createdAt).fromNow()}
               dotsIcon="/assets/categoriesIcons/dots.svg"
               onEdit={() => handleEditClick(job)}
               onDelete={() => handleDeleteClick(job)}

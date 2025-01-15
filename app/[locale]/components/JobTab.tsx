@@ -10,12 +10,28 @@ function JobTab() {
   const router = useRouter();
   const path = usePathname();
 
+  console.log(path);
+  
+  const [pathName , setPathName] = useState("");
+
+
+  useEffect(()=>{
+  if(path.includes('jobs')){
+    setPathName('jobs')
+    return
+  }
+
+  setPathName('services')
+
+  },[path])
+  
+
   useEffect(() => {
     if (path.includes("moderate")) {
       setActive("moderate");
     } else if (path.includes("pending")) {
       setActive("pending");
-    } else if (path.includes("jobs")) {
+    } else if (path.includes("jobs") || path.includes("services")) {
       setActive("jobs");
     }
   }, [path]);
@@ -25,7 +41,7 @@ function JobTab() {
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 px-4 sm:px-6 mt-6">
         <button
           onClick={() => {
-            router.push("/jobs");
+            router.push(`/${pathName}`);
           }}
           className={`w-full py-3 text-center rounded-lg transition-all duration-200 ${
             active === "jobs"
@@ -38,7 +54,7 @@ function JobTab() {
 
         <button
           onClick={() => {
-            router.push("/jobs/pending");
+            router.push(`/${pathName}/pending`);
           }}
           className={`w-full py-3 text-center rounded-lg transition-all duration-200 ${
             active === "pending"
@@ -51,7 +67,7 @@ function JobTab() {
 
         <button
           onClick={() => {
-            router.push("/jobs/moderate");
+            router.push(`/${pathName}/moderate`);
           }}
           className={`w-full py-3 text-center rounded-lg transition-all duration-200 ${
             active === "moderate"

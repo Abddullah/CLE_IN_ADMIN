@@ -6,6 +6,12 @@ import { useEffect, useRef } from "react";
 import mapboxgl from "mapbox-gl";
 import {  collection, query , getDocs , where} from 'firebase/firestore';
 import { db } from '../../config/Firebase/FirebaseConfig';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faEllipsisV,
+  faEdit,
+  faTrashAlt,
+} from "@fortawesome/free-solid-svg-icons";
 
 
 
@@ -16,7 +22,7 @@ interface Props {
 
 
 
-const BookingModal = ({ bookingData, handleClose}:Props) => {
+const ServiceDetails = ({ bookingData, handleClose}:Props) => {
   const [customerInfoModal, setCustomerInfoModal] = useState(false);
   const [editDelete, SetEditDelete] = useState<boolean>(false);
   const [customerInfo , setCustomerInfo]=useState<null | any>(null);
@@ -126,40 +132,36 @@ const BookingModal = ({ bookingData, handleClose}:Props) => {
             {bookingData?.category} 
           </h3>
           <p className="text-gray-600 text-xs sm:text-sm">
-            {bookingData?.subCategory}
+            {bookingData?.description}
           </p>
 
           {/* Price, Cleaners, etc. */}
           <div className="max-w-full w-full bg-white shadow-lg rounded-lg p-6 mt-4 border border-gray-200">
-            <div className="flex justify-between items-center py-2 border-b">
+            <div className="flex justify-between items-center py-2 ">
               <span className="text-gray-600">Price</span>
               <span className="text-gray-800 font-medium">€ {bookingData?.totalPriceWithTax}</span>
             </div>
-            <div className="flex justify-between items-center py-2 border-b">
-              <span className="text-gray-600">Professionals</span>
-              <span className="text-gray-800 font-medium">{bookingData?.
-howManyProfessionalDoYouNeed
-}</span>
-            </div>
-            <div className="flex justify-between items-center py-2 border-b">
-              <span className="text-gray-600">Work Frequency</span>
-              <span className="text-gray-800 font-medium">{bookingData?.repeateService}</span>
-            </div>
-            <div className="flex justify-between items-center py-2 border-b">
-              <span className="text-gray-600">Hours</span>
-              <span className="text-gray-800 font-medium">{bookingData?.howManyHourDoYouNeed}</span>
-            </div>
-            <div className="flex justify-between items-center py-2 border-b">
-              <span className="text-gray-600">Date</span>
-              <span className="text-gray-800 font-medium">{moment(bookingData?.bookingDate).format('DD-MM-YYYY')}</span>
-            </div>
-            <div className="flex justify-between items-center py-2">
-              <span className="text-gray-600">Time Slot</span>
-              <span className="text-gray-800 font-medium">{`${moment(bookingData?.bookingStart).format("hh:mm A")} - ${moment(
-                              bookingData?.bookingEnd
-                            ).format("hh:mm A")}`}</span>
-            </div>
+            
+           
+          
+           
           </div>
+
+
+          <div>
+      <p className="text-lg mt-8">Availablity</p>
+      <div className="flex justify-start gap-12">
+        {bookingData.timeSlots.map((slot:any, index:number) => (
+          <div key={index} className="mt-3">
+            <p className="text-sm font-semibold">{slot.day}</p>
+            <p className="text-sm text-[#00BFFF]">
+              {moment(slot.openingTime).format('h:mm A')} to {moment(slot.closingTime).format('h:mm A')}
+            </p>
+          </div>
+        ))}
+      </div>
+    </div>
+
 
         
          
@@ -223,6 +225,80 @@ howManyProfessionalDoYouNeed
     
           )}
 
+
+<div className="mt-6">
+                <h4 className="text-lg font-semibold text-gray-800 mb-4">
+                  Reviews
+                </h4>
+                <div className="space-y-4">
+                  <div className="bg-white p-4 rounded-xl shadow-md transition duration-300 hover:shadow-lg">
+                    <div className="flex items-center mb-2">
+                      <div className="flex-shrink-0 w-10 h-10 bg-gray-200 rounded-full overflow-hidden mr-3">
+                        <Image
+                          src="/assets/servicesIcons/profile2.svg"
+                          alt="Alex Smith"
+                          width={40}
+                          height={40}
+                          className="object-cover w-full h-full"
+                        />
+                      </div>
+                      <div>
+                        <p className="font-medium text-gray-900">Alex Smith</p>
+                        <div className="flex items-center text-yellow-400 text-xs">
+                          ★★★★☆
+                          <span className="text-gray-500 ml-2">
+                            (4.5 Stars)
+                          </span>
+                        </div>
+                      </div>
+
+                      <div className="ml-auto relative">
+                        <button
+                          onClick={() => SetEditDelete(!editDelete)}
+                          className="text-gray-600 hover:text-gray-900"
+                        >
+                          <FontAwesomeIcon icon={faEllipsisV} size="lg" />
+                        </button>
+
+                        {editDelete && (
+                          <div className="absolute right-0 top-8 w-32 bg-white border border-gray-200 rounded-lg shadow-md z-10">
+                            <button
+                              className="flex items-center w-full p-2 hover:bg-gray-100"
+                              onClick={() => {
+                                console.log("Edit clicked");
+                                SetEditDelete(false);
+                              }}
+                            >
+                              <FontAwesomeIcon
+                                icon={faEdit}
+                                className="w-4 h-4 mr-2"
+                              />
+                              <span>Edit</span>
+                            </button>
+                            <button
+                              className="flex items-center w-full p-2 hover:bg-gray-100"
+                              onClick={() => {
+                                console.log("Delete clicked");
+                                SetEditDelete(false);
+                              }}
+                            >
+                              <FontAwesomeIcon
+                                icon={faTrashAlt}
+                                className="w-4 h-4 mr-2"
+                              />
+                              <span>Delete</span>
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                    <p className="text-gray-600 text-sm">
+                      "Very happy with the cleaning. Will definitely book
+                      again!"
+                    </p>
+                  </div>
+                </div>
+              </div>
          
 
           {/* Apply Button */}
@@ -237,4 +313,4 @@ howManyProfessionalDoYouNeed
   );
 };
 
-export default BookingModal;
+export default ServiceDetails;

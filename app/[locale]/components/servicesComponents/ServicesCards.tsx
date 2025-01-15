@@ -14,17 +14,19 @@ interface CardProps {
   imageUrl: string;
   title: string;
   price: string;
-  time: string;
+  time?: string;
   status: string;
-  date: any;
+  date?: any;
   dotsIcon: string;
   statusTextColor:any;
+  createdAt:string;
   onEdit: (updatedData: {
     title: string;
     price: string;
     status: string;
   }) => void;
   onDelete: () => void; // Add onDelete callback
+
 }
 
 const Card: React.FC<CardProps> = ({
@@ -36,18 +38,22 @@ const Card: React.FC<CardProps> = ({
   date,
   dotsIcon,
   statusTextColor,
+  createdAt,
   onEdit,
   onDelete, // Add onDelete callback
 }) => {
   const [showOptions, setShowOptions] = useState(false);
   const [editableData, setEditableData] = useState({ title, price, status });
 
+
   const handleEdit = () => {
+   
     onEdit(editableData);
     setShowOptions(false); // Close the options menu
   };
 
   const handleDelete = () => {
+   
     onDelete();
     setShowOptions(false); // Close the options menu
   };
@@ -99,7 +105,8 @@ const Card: React.FC<CardProps> = ({
           <h2 className="text-md font-semibold text-gray-800">{title}</h2>
           <h2 className="text-sm text-gray-600">{time}</h2>
           <h2 className="text-sm text-gray-600">Status: <span className={`text-${statusTextColor}`}>{status}</span></h2>
-          <h2 className="text-sm text-gray-600">Date: {date}</h2>
+          <h2 className="text-sm text-gray-600"> {date}</h2>
+          <h2 className="text-xs text-gray-600"> {createdAt}</h2>
         </div>
       </div>
     </div>

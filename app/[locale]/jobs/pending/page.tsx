@@ -155,6 +155,7 @@ function Page() {
               imageUrl={job.imageUrl || "/assets/servicesIcons/company.svg"}
               status={job.addStatus || "Inactive"}
               statusTextColor={"yellow-400"}
+              createdAt={moment(job.createdAt).fromNow()}
               date={
                 moment(job.bookingDate).isValid()
                   ? moment(job.bookingDate).format("MMM -D -YYYY")

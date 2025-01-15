@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState } from "react";
-import Card from "../components/servicesComponents/ServicesCards";
 import { Button } from "@/components/ui/button";
 import { Link } from "@/i18n/routing";
 import { useTranslations } from "next-intl";
@@ -16,11 +15,12 @@ import {
   onSnapshot,
   updateDoc,
 } from "firebase/firestore";
-import { db } from "../config/Firebase/FirebaseConfig";
 import moment from "moment";
-import BookingModal from "../components/jobsComponent/JobDetailsCard";
-import ServiceDetails from "../components/servicesComponents/ServiceDetailComponent";
-import JobTab from "../components/JobTab";
+import { db } from "../../config/Firebase/FirebaseConfig";
+import Card from "../../components/servicesComponents/ServicesCards";
+import ServiceDetails from "../../components/servicesComponents/ServiceDetailComponent";
+import JobTab from "../../components/JobTab";
+;
 
 function page() {
   const t = useTranslations("Services");
@@ -75,7 +75,7 @@ function page() {
     // Create a query to fetch only active jobs
     const jobsQuery = query(
       collection(db, "service"),
-      where("addStatus", "==", "active") // Filter for active jobs
+      where("addStatus", "==", "moderate") // Filter for active jobs
     );
 
     // Set up real-time listener for the filtered collection
@@ -172,7 +172,7 @@ function page() {
     <>
       <div className="bg-[#F5F7FA] w-full h-full overflow-hidden overflow-y-auto max-h-screen">
         <div className="absolute bottom-8 right-8 z-10">
-          <Link href={"services/addService"}>
+          <Link href={"/services/addService"}>
             <button className="w-14 h-14 flex items-center justify-center bg-[#00BFFF] text-white text-3xl rounded-full shadow-lg hover:bg-[#009ACD] focus:outline-none focus:ring-4 focus:ring-blue-300">
               +
             </button>
@@ -195,7 +195,7 @@ function page() {
                 // createdAt={job.createdAt}
                 status={job.addStatus || "Inactive"}
                 createdAt={moment(job.createdAt).fromNow()}
-                statusTextColor={"green-500"}
+                statusTextColor={"red-600"}
                 dotsIcon="/assets/categoriesIcons/dots.svg"
                 onEdit={() => handleEditClick(job)}
                 onDelete={() => handleDeleteClick(job)}
