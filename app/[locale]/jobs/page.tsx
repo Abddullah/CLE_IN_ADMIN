@@ -157,7 +157,7 @@ function Page() {
 
       <div className="flex flex-wrap justify-center gap-12 w-full px-4 sm:px-8 sm:justify-start md:px-14 md:justify-start lg:justify-start lg:px-10 mt-4">
         {jobs.map((job: any) => (
-          <div onClick={()=>handleJobClick(job)} className="w-[310px] mt-[40px]" key={job.id}>
+          <div className="w-[310px] mt-[40px]" key={job.id}>
             <Card
             
               price={` € ${job.totalPriceWithTax}`}
@@ -168,11 +168,12 @@ function Page() {
               imageUrl={job.imageUrl || "/assets/servicesIcons/cardImage.svg"}
               status={job.addStatus || "Inactive"}
               statusTextColor={"green-500"}
+              detailOpen={() => handleJobClick(job)}
               
               date={
-                moment(job.bookingDate).isValid()
-                  ? moment(job.bookingDate).format("MMM -D -YYYY")
-                  : "Invalid Date"
+            `Date: ${    moment(job.bookingDate).isValid()
+              ? moment(job.bookingDate).format("MMM -D -YYYY")
+              : "Invalid Date"}`
               }
               createdAt={moment(job.createdAt).fromNow()}
               dotsIcon="/assets/categoriesIcons/dots.svg"
@@ -190,12 +191,12 @@ function Page() {
           className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 "
         >
           <div className="bg-white w-[450px] rounded-lg p-6 shadow-lg mx-3">
-            <h2 className="text-xl font-semibold mb-4">Edit Job</h2>
+            <h2 className="text-xl font-semibold mb-4">{(t('edit_Job'))}</h2>
             <form>
               {/* Title (Select Field) */}
               <div className="mb-4">
                 <label className="block text-sm font-medium text-gray-700">
-                  Title
+                  {(t('titleEdit'))}
                 </label>
 
                 <div className="mb-4 mt-2">
@@ -242,7 +243,7 @@ function Page() {
 
               <div className="mb-4">
                 <label className="block text-sm font-medium text-gray-700">
-                  Select Date
+                  {(t('select_Date'))}
                 </label>
                 <div className="mt-1">
                   <input
@@ -263,7 +264,7 @@ function Page() {
               {/* Select Time Start */}
               <div className="mb-4">
                 <label className="block text-sm font-medium text-gray-700">
-                  Select Time Start
+                  {(t('select_Time_Start'))}
                 </label>
                 <input
                   type="time"
@@ -285,7 +286,7 @@ function Page() {
               {/* Select Time End */}
               <div className="mb-4">
                 <label className="block text-sm font-medium text-gray-700">
-                  Select Time End
+                  {(t('select_Time_End'))}
                 </label>
                 <input
                   type="time"
@@ -311,7 +312,7 @@ function Page() {
                   htmlFor="professional-select"
                   className="block text-sm font-medium text-gray-700 mb-2"
                 >
-                  Select Job Status
+                  {(t('select_Job_Status'))}
                 </label>
                 <div className="relative">
                   <select
@@ -358,14 +359,14 @@ function Page() {
                   onClick={() => setIsModalOpen(false)}
                   className="py-2 px-4 bg-gray-500 text-white rounded-md shadow-sm hover:bg-gray-600"
                 >
-                  Cancel
+                  {(t('cancel'))}
                 </button>
                 <button
                   type="button"
                   onClick={handleSave}
                   className="py-2 px-4 bg-[#00BFFF] text-white rounded-md shadow-sm hover:bg-[#00BFFF]"
                 >
-                  Save
+                  {(t('update'))}
                 </button>
               </div>
             </form>

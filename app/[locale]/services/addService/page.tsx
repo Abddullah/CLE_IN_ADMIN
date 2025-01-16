@@ -72,7 +72,7 @@ function page() {
     fixRate: string;
     descriptionValue: string;
     totalWithTax: number;
-    days:any;
+    days:any[];
   }
 
   type FormInputs = {
@@ -83,7 +83,15 @@ function page() {
     description: string;
     location: { lng: number; lat: number };
     totalWithTax: number;
-    days: any;
+    days: any[];
+  };
+
+
+  type Day = {
+    day: string;
+    isChecked: boolean;
+    openingTime: string;
+    closingTime: string;
   };
 
   const {
@@ -94,13 +102,34 @@ function page() {
     setValue,
     watch,
     clearErrors,
+    setError,
   } = useForm<FormInputs>({
     defaultValues: {
       location: { lat: 0, lng: 0 },
+      days: [],
     },
     mode: "onChange",
   });
 
+  const days = watch("days"); 
+  
+
+  const allDays = [
+    { day: "Monday", openingTime: "", closingTime: "" },
+    { day: "Tuesday", openingTime: "", closingTime: "" },
+    { day: "Wednesday", openingTime: "", closingTime: "" },
+    { day: "Thursday", openingTime: "", closingTime: "" },
+    { day: "Friday", openingTime: "", closingTime: "" },
+    { day: "Saturday", openingTime: "", closingTime: "" },
+    { day: "Sunday", openingTime: "", closingTime: "" },
+  ];
+
+  // Watch selected days
+  const selectedDays = watch("days");
+
+  // Handle form submission
+  
+  
   useEffect(() => {
     if (location) {
       setValue("location", { lng: location.lng, lat: location.lat });
@@ -109,61 +138,46 @@ function page() {
 
   //testing the checkbox functionality
 
-  type Day = {
-    day: string;
-    isChecked: boolean;
-    openingTime: string;
-    closingTime: string;
-  };
-
-  const [days, setDays] = useState<Day[]>([
-    { day: "Monday", isChecked: false, openingTime: "", closingTime: "" },
-    { day: "Tuesday", isChecked: false, openingTime: "", closingTime: "" },
-    { day: "Wednesday", isChecked: false, openingTime: "", closingTime: "" },
-    { day: "Thursday", isChecked: false, openingTime: "", closingTime: "" },
-    { day: "Friday", isChecked: false, openingTime: "", closingTime: "" },
-    { day: "Saturday", isChecked: false, openingTime: "", closingTime: "" },
-    { day: "Sunday", isChecked: false, openingTime: "", closingTime: "" },
-  ]);
-
-  type HandleCheckboxChange = (index: number) => void;
-
-  const handleCheckboxChange: HandleCheckboxChange = (index) => {
-    // Clone the days array to avoid mutating the state directly
-    const updatedDays: Day[] = [...days];
-
-    // Toggle the isChecked state of the selected day
-    updatedDays[index].isChecked = !updatedDays[index].isChecked;
-
-    // Update the state with the modified array
-    setDays(updatedDays);
-
-    // Extract the selected day and its checkbox state
-    const selectedDay: string = updatedDays[index].day;
-    const isChecked: boolean = updatedDays[index].isChecked;
-
-    // Update the form values using setValue
-    setValue(`days[${index}].day`, selectedDay);
-    setValue(`days[${index}].isChecked`, isChecked);
-
-    // Log the updated days array for debugging
-    console.log("Updated days:", updatedDays);
-  };
-
-  const handleTimeChange = (index: any, type: any, value: any) => {
-    const updatedDays = [...days];
-    updatedDays[index][type] = value; // Update the specific day with the new time
-    setDays(updatedDays);
-
-    // Form data mein open aur close time update karen
-    setValue(`days[${index}].${type}`, value); // 'open' ya 'close' time update
-
-    console.log("Updated days with time:", updatedDays);
-  };
+ 
+ 
 
   
 
   const onSubmit: SubmitHandler<FormInputs> = (data) => {
+
+    clearErrors();
+
+    // Check if at least one day is checked
+    const hasCheckedDay = data.days.some((d) => d.isChecked);
+    if (!hasCheckedDay) {
+      setError("days", {
+        type: "manual",
+        message: (t('select_one')),
+      });
+      return;
+    }
+
+    // Check for invalid time ranges
+    const invalidDay = data.days.find(
+      (d) =>
+        d.isChecked &&
+        new Date(`1970-01-01T${d.closingTime}:00`) <= new Date(`1970-01-01T${d.openingTime}:00`)
+    );
+
+    if (invalidDay) {
+      setError("days", {
+        type: "manual",
+        message: `Invalid time range for ${invalidDay.day}. Closing time must be after opening time.`,
+      });
+      return;
+    }
+
+    
+    console.log("Selected Days:", data.days.filter((d) => d.isChecked));
+    
+
+
+   
     console.log("data", data);
     localStorage.setItem("addService", JSON.stringify(data));
     router.push("reviewService");
@@ -327,15 +341,15 @@ const selectedRateValue = selectedRate ? selectedRate : 0;
               )}
             </div>
             <div className="grid w-full items-center gap-1.5 mt-3">
-              <p className="text-xl font-semibold mt-6 mb-4">Select Category</p>
+              <p className="text-xl font-semibold mt-6 mb-4">{(t('selectCategory'))}</p>
               <label className="text-md font-semibold" htmlFor="category">
-                Category
+                {(t('category'))}
               </label>
               <Controller
                 name="category"
                 control={control}
                 rules={{
-                  required: "Category is required",
+                  required: (t('categoryRequired')),
                 }}
                 render={({ field }) => (
                   <Select
@@ -346,11 +360,11 @@ const selectedRateValue = selectedRate ? selectedRate : 0;
                     }}
                   >
                     <SelectTrigger className="w-full h-[55px] rounded-lg border p-4 pr-6 border-[#4BB1D3] bg-gray-50 outline-[#4BB1D3] focus:border-blue-500 focus:outline-none">
-                      <SelectValue placeholder="Select Category" />
+                      <SelectValue placeholder={(t('selectCategory'))} />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectGroup>
-                        <SelectLabel>Categories</SelectLabel>
+                        <SelectLabel>{t('categories')}</SelectLabel>
                         {Object.keys(categories).map((category) => (
                           <SelectItem key={category} value={category}>
                             {category}
@@ -374,22 +388,22 @@ const selectedRateValue = selectedRate ? selectedRate : 0;
                     className="text-md font-semibold"
                     htmlFor="subcategory"
                   >
-                    Subcategories
+                    {(t('SubCategories'))}
                   </label>
                   <Controller
                     name="subcategory"
                     control={control}
                     rules={{
-                      required: "Subcategory is required",
+                      required: (t('subcategoryRequired')),
                     }}
                     render={({ field: { value, onChange } }) => (
                       <Select value={value} onValueChange={onChange}>
                         <SelectTrigger className="w-full h-[55px] rounded-lg border p-4 pr-6 border-[#4BB1D3] bg-gray-50 outline-[#4BB1D3] focus:border-blue-500 focus:outline-none">
-                          <SelectValue placeholder="Select Subcategory" />
+                          <SelectValue placeholder={(t('selectSubCategory'))} />
                         </SelectTrigger>
                         <SelectContent>
                           <SelectGroup>
-                            <SelectLabel>Subcategories</SelectLabel>
+                            <SelectLabel>{(t('SubCategories'))}</SelectLabel>
                             {subCategories.map((subCategory) => (
                               <SelectItem key={subCategory} value={subCategory}>
                                 {subCategory}
@@ -460,7 +474,7 @@ const selectedRateValue = selectedRate ? selectedRate : 0;
             </div>
 
             <div className="grid w-full items-center gap-2 mt-3">
-              <p className="font-semibold text-lg">Photos</p>
+              <p className="font-semibold text-lg">{(t('photos'))}</p>
               <div className="flex flex-wrap gap-10">
                 {images.map((image, index) => (
                   <div
@@ -487,7 +501,7 @@ const selectedRateValue = selectedRate ? selectedRate : 0;
                       </>
                     ) : (
                       <span className="text-gray-500 text-sm font-medium">
-                        + Upload
+                        + {(t('upload'))}
                       </span>
                     )}
                   </div>
@@ -504,113 +518,117 @@ const selectedRateValue = selectedRate ? selectedRate : 0;
             {/* <div className="grid w-full items-center gap-1.5 mt-3">
   
 </div> */}
+<div className="max-w-4xl mx-auto p-6 bg-white shadow rounded-lg mt-6">
 
-<div className="p-6 max-w-4xl mx-auto bg-white shadow-lg rounded-lg grid w-full items-center gap-4 mt-6 md:mt-8 lg:mt-10">
-  <h2 className="text-2xl font-bold mb-6 text-gray-800 text-center md:text-left">
-    Select Time Slots
-  </h2>
+<h1 className="text-2xl font-bold text-gray-800 mb-6">{(t('select_time_slots'))}</h1>
 
-  {days.map((day, index) => (
-    <div
-      key={index}
-      className="flex flex-col md:flex-row items-start md:items-center justify-between border-b py-4 space-y-4 md:space-y-0"
-    >
-      <label className="flex items-center space-x-3">
-        <input
-          type="checkbox"
-          checked={day.isChecked}
-          onChange={() => handleCheckboxChange(index)}
-          className="w-5 h-5 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
-        />
-        <span className="text-gray-800 font-medium">{day.day}</span>
-      </label>
-      {day.isChecked && (
-        <div className="flex flex-col md:flex-row items-start md:items-center space-y-4 md:space-y-0 md:space-x-6">
-          <div>
-            <label
-              htmlFor={`open-${index}`}
-              className="block text-sm font-medium text-gray-700 mb-1"
-            >
-              Opening Time
-            </label>
-            <Controller
-              name={`days[${index}].openingTime`}
-              control={control}
-              defaultValue={day.openingTime}
-              rules={{
-                required: "Opening time is required",
+{allDays.map((day) => {
+  const existingDay = selectedDays.find((d) => d.day === day.day);
+
+  return (
+    <Controller
+      key={day.day}
+      name={`days.${day.day}`}
+      control={control}
+      render={() => (
+        <div className="flex flex-col md:flex-row justify-between items-center border-b py-4">
+          {/* Checkbox */}
+          <div className="flex items-center space-x-3">
+            <input
+              type="checkbox"
+              checked={!!existingDay?.isChecked}
+              onChange={() => {
+                const updatedDays = existingDay
+                  ? selectedDays.map((d) =>
+                      d.day === day.day
+                        ? { ...d, isChecked: !d.isChecked }
+                        : d
+                    )
+                  : [...selectedDays, { ...day, isChecked: true }];
+                setValue("days", updatedDays);
+                clearErrors("days");
               }}
-              render={({ field, fieldState }) => (
-                <>
-                  <input
-                    {...field}
-                    type="time"
-                    id={`open-${index}`}
-                    className={`w-full md:w-28 px-3 py-2 border ${
-                      fieldState.error ? "border-red-500" : "border-gray-300"
-                    } rounded focus:outline-none focus:ring-2 focus:ring-blue-500`}
-                  />
-                  {fieldState.error && (
-                    <span className="text-red-500 text-sm">
-                      {fieldState.error.message}
-                    </span>
-                  )}
-                </>
-              )}
+              className="w-5 h-5 text-blue-600 border-gray-300 rounded"
             />
+            <span className="text-gray-800 font-medium">{day.day}</span>
           </div>
-          <div>
-            <label
-              htmlFor={`close-${index}`}
-              className="block text-sm font-medium text-gray-700 mb-1"
-            >
-              Closing Time
-            </label>
-            <Controller
-              name={`days[${index}].closingTime`}
-              control={control}
-              defaultValue={day.closingTime}
-              rules={{
-                required: "Closing time is required",
-                validate: (value) => {
-                  const openTime = `1970-01-01T${day.openingTime}:00`;
-                  const closeTime = `1970-01-01T${value}:00`;
-                  if (new Date(closeTime) <= new Date(openTime)) {
-                    return "Closing time must be after opening time";
+
+          {/* Time Fields */}
+          {existingDay?.isChecked && (
+            <div className="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-6 mt-4 md:mt-0">
+              {/* Opening Time */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  {(t('opening_Time'))}
+                </label>
+                <input
+                  type="time"
+                  value={existingDay.openingTime}
+                  onChange={(e) =>
+                    setValue(
+                      "days",
+                      selectedDays.map((d) =>
+                        d.day === day.day
+                          ? { ...d, openingTime: e.target.value }
+                          : d
+                      )
+                    )
                   }
-                  return true;
-                },
-              }}
-              render={({ field, fieldState }) => (
-                <>
-                  <input
-                    {...field}
-                    type="time"
-                    id={`close-${index}`}
-                    className={`w-full md:w-28 px-3 py-2 border ${
-                      fieldState.error ? "border-red-500" : "border-gray-300"
-                    } rounded focus:outline-none focus:ring-2 focus:ring-blue-500`}
-                  />
-                  {fieldState.error && (
-                    <span className="text-red-500 text-sm">
-                      {fieldState.error.message}
-                    </span>
-                  )}
-                </>
-              )}
-            />
-          </div>
+                  required
+                  className={`w-28 px-3 py-2 border ${
+                    errors.days?.message && "border-red-500"
+                  } rounded focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                />
+              </div>
+
+              {/* Closing Time */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                {(t('closing_Time'))}
+                </label>
+                <input
+                  type="time"
+                  value={existingDay.closingTime}
+                  onChange={(e) =>
+                    setValue(
+                      "days",
+                      selectedDays.map((d) =>
+                        d.day === day.day
+                          ? { ...d, closingTime: e.target.value }
+                          : d
+                      )
+                    )
+                  }
+                  required
+                  className={`w-28 px-3 py-2 border ${
+                    errors.days?.message && "border-red-500"
+                  } rounded focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                />
+              </div>
+            </div>
+          )}
         </div>
       )}
-    </div>
-  ))}
+    />
+  );
+})}
 
-  {/* At least one day validation */}
-  {errors.days && errors.days.type === "validate" && (
-    <p className="text-red-500 text-sm">At least one day must be selected.</p>
-  )}
-</div>
 
+      {/* Display Error Messages */}
+      {errors.days && (
+        <div className="text-red-500 text-sm mt-4">
+          {errors.days.message}
+        </div>
+      )}
+
+      {/* Submit Button */}
+    
+
+{/* Submit Button */}
+
+
+       
+      </div>
 
 
             <div className="mt-6 flex justify-center items-center">

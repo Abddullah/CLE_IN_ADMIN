@@ -184,7 +184,7 @@ function page() {
         <div className="flex flex-wrap justify-center gap-12 w-full px-4 sm:px-8 sm:justify-start md:px-14 md:justify-start lg:justify-start lg:px-10 mt-4">
           {services.map((job: any) => (
             <div
-            onClick={()=>handleJobClick(job)}
+            
               className="w-[310px] mt-[40px]"
               key={job.id}
             >
@@ -199,6 +199,7 @@ function page() {
                 dotsIcon="/assets/categoriesIcons/dots.svg"
                 onEdit={() => handleEditClick(job)}
                 onDelete={() => handleDeleteClick(job)}
+                detailOpen={() => handleJobClick(job)}
                 
               />
             </div>
@@ -218,7 +219,7 @@ function page() {
                     ×
                   </button>
                   <h2 className="text-2xl font-semibold text-center mb-4">
-                    Edit Service
+                    {t("edit_Service")}
                   </h2>
 
                   {/* Time Slots Editing */}
@@ -279,7 +280,7 @@ function page() {
 
                   <div className="mb-4 mt-3">
                     <label className="block text-sm font-medium text-gray-700">
-                      Title
+                      {(t('editTitle'))}
                     </label>
 
                     <div className="mb-4 mt-2">
@@ -326,7 +327,7 @@ function page() {
                       htmlFor="addStatus"
                       className="block text-sm font-medium text-gray-700 mb-2"
                     >
-                      Select Job Status
+                      {(t('select_Job_status'))}
                     </label>
                     <div className="relative">
                       <select
@@ -366,13 +367,14 @@ function page() {
                       className="bg-[#00BFFF] text-white py-2 px-6 rounded-lg hover:bg-[#00BFFF] transition-all"
                       onClick={handleSubmit}
                     >
-                      Update
+                      {(t('update'))}
                     </button>
                     <button
                       className="bg-gray-500 text-white py-2 px-6 rounded-lg hover:bg-gray-600 transition-all"
                       onClick={closeModal}
                     >
-                      Cancel
+                      {(t('cancel'))}
+                      
                     </button>
                   </div>
                 </div>

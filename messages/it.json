@@ -182,8 +182,10 @@
     "categories":"Categorie",
     "SubCategories":"Sottocategoria",
     "selectCategory": "Seleziona Categoria",
+    "upload":"caricamento",
     "categoryRequired": "La categoria è obbligatoria",
     "selectSubCategory": "Seleziona Sottocategoria",
+    "subcategory": "Sottocategoria",
     "subcategoryRequired": "La sottocategoria è obbligatoria",
     "adFixedRate": "Tariffa Fissa Annuncio",
     "fixRateRequired": "La tariffa fissa è obbligatoria",
@@ -197,6 +199,7 @@
   "serviceTitle": "Pulizia a Casa",
   "descriptionTitle": "Descrizione",
   "descriptionText": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Blanditiis assumenda necessitatibus expedita, dicta iure eius dolorem voluptatum officia aut neque sint distinctio quia quasi sed recusandae voluptatibus voluptas magni error?",
+
  
   
     "titleJob": "Dettagli del Lavoro",
@@ -225,6 +228,8 @@
   "Pending":"Sospeso",
   "add_button": "AGGIUNGERE",
   "select_time_slots": "Seleziona gli orari disponibili",
+  "opening_Time": "Orario di apertura",
+  "closing_Time": "Orario di chiusura",
   "select_one":"Seleziona almeno un giorno",
   "select_Both":"Sono richiesti sia l'orario di apertura che quello di chiusura",
   "next":"prossimo",
@@ -234,7 +239,24 @@
 "Enter_fixRates": "Inserisci Tariffe Fisse",
 "fix_Rate": "Tariffa Fissa",
 "no_fix_rate_available": "Nessuna Tariffa Fissa Disponibile",
-"close_button": "Pulsante Chiudi"
+"close_button": "Pulsante Chiudi",
+"Summary": "Riepilogo Pagamento",
+"serviceAmount": "Importo del Servizio",
+"service_created_sucess": "Il tuo servizio è stato creato con successo",
+"reviews": "Recensioni",
+"Availablity": "Disponibilità",
+"customer_info": "Informazioni Cliente",
+"edit_Service": "Modifica Servizio",
+"cancel": "Annulla",
+"update": "Aggiorna",
+"select_Job_status": "Seleziona Stato Lavoro",
+"editTitle": "Titolo"
+
+
+
+
+
+
 
   },
   "Jobs":{
@@ -314,7 +336,18 @@
       "Summary": "Riepilogo Pagamento",
       "serviceAmount": "Importo del Servizio",
       "vat": "IVA (15%)",
-      "total": "Totale"
+      "total": "Totale",
+      "edit": "Modifica",
+"delete": "Elimina",
+"edit_Job": "Modifica Lavoro",
+"titleEdit": "Titolo",
+"select_Time_Start": "Seleziona Ora Inizio",
+"select_Date": "Seleziona Data",
+"select_Time_End": "Seleziona Ora Fine",
+"select_Job_Status": "Seleziona Stato Lavoro",
+"cancel": "Annulla",
+"update": "Aggiorna"
+
 
   
   },

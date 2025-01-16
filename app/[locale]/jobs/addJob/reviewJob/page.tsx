@@ -131,6 +131,7 @@ function Page() {
       }, 3000);
     } catch (error) {
       console.error("Error adding document:", error);
+      setIsDisable(false);
     }
     
   };

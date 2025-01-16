@@ -12,6 +12,7 @@ import {
   faEdit,
   faTrashAlt,
 } from "@fortawesome/free-solid-svg-icons";
+import { useTranslations } from 'next-intl';
 
 
 
@@ -23,6 +24,8 @@ interface Props {
 
 
 const ServiceDetails = ({ bookingData, handleClose}:Props) => {
+
+  const t = useTranslations("Services");
   const [customerInfoModal, setCustomerInfoModal] = useState(false);
   const [editDelete, SetEditDelete] = useState<boolean>(false);
   const [customerInfo , setCustomerInfo]=useState<null | any>(null);
@@ -149,7 +152,7 @@ const ServiceDetails = ({ bookingData, handleClose}:Props) => {
 
 
           <div>
-      <p className="text-lg mt-8">Availablity</p>
+      <p className="text-lg mt-8">{(t('Availablity'))}</p>
       <div className="flex justify-start gap-12">
         {bookingData.timeSlots.map((slot:any, index:number) => (
           <div key={index} className="mt-3">
@@ -169,7 +172,7 @@ const ServiceDetails = ({ bookingData, handleClose}:Props) => {
   
 
 <div className="grid w-full items-center gap-1.5 mt-6">
-      <p className="text-lg mt-2">Location</p>
+      <p className="text-lg mt-2">{(t('Location'))}</p>
       <div
         className="mt-4 w-full h-[180px] relative overflow-hidden rounded-lg"
         style={{ position: "relative" }}
@@ -186,7 +189,7 @@ const ServiceDetails = ({ bookingData, handleClose}:Props) => {
               <span className="text-xl font-bold">i</span>
             </button>
             <p className="ml-2 text-gray-700 cursor-pointer text-sm font-medium hover:text-blue-600 transition-all duration-300">
-              Customer info
+              {(t('customer_info'))}
             </p>
           </div>
 
@@ -194,7 +197,7 @@ const ServiceDetails = ({ bookingData, handleClose}:Props) => {
  
             <div className="max-w-full w-full bg-white shadow-lg rounded-lg overflow-hidden border border-gray-300">
             <div className="px-6 py-4 border-b bg-[#00BFFF] text-white">
-              <h2 className="text-lg font-bold">Customer Information</h2>
+              <h2 className="text-lg font-bold">{(t('customer_info'))}</h2>
             </div>
             <div className="p-6 space-y-4">
               <div>
@@ -228,7 +231,7 @@ const ServiceDetails = ({ bookingData, handleClose}:Props) => {
 
 <div className="mt-6">
                 <h4 className="text-lg font-semibold text-gray-800 mb-4">
-                  Reviews
+                  {(t('reviews'))}
                 </h4>
                 <div className="space-y-4">
                   <div className="bg-white p-4 rounded-xl shadow-md transition duration-300 hover:shadow-lg">

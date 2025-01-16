@@ -145,7 +145,7 @@ function Page() {
 
       <div className="flex flex-wrap justify-center gap-12 w-full px-4 sm:px-8 sm:justify-start md:px-14 md:justify-start lg:justify-start lg:px-10 mt-4">
         {jobs.map((job: any) => (
-          <div onClick={()=>handleJobClick(job)}  className="w-[310px] mt-[40px]" key={job.id}>
+          <div   className="w-[310px] mt-[40px]" key={job.id}>
             <Card
               price={` € ${job.totalPriceWithTax}  `}
               title={job.category || "No Title"}
@@ -155,12 +155,13 @@ function Page() {
               imageUrl={job.imageUrl || "/assets/servicesIcons/company.svg"}
               status={job.addStatus || "Inactive"}
               statusTextColor={"yellow-400"}
+              detailOpen={() => handleJobClick(job)}
               createdAt={moment(job.createdAt).fromNow()}
               date={
-                moment(job.bookingDate).isValid()
-                  ? moment(job.bookingDate).format("MMM -D -YYYY")
-                  : "Invalid Date"
-              }
+                         `Date: ${    moment(job.bookingDate).isValid()
+                           ? moment(job.bookingDate).format("MMM -D -YYYY")
+                           : "Invalid Date"}`
+                           }
               dotsIcon="/assets/categoriesIcons/dots.svg"
               onEdit={() => handleEditClick(job)}
               onDelete={() => handleDeleteClick(job)}
@@ -169,194 +170,194 @@ function Page() {
         ))}
       </div>
 
-      {isModalOpen && (
-        <div
-          ref={modalRef}
-          className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 "
-        >
-          <div className="bg-white w-[450px] rounded-lg p-6 shadow-lg mx-3">
-            <h2 className="text-xl font-semibold mb-4">Edit Job</h2>
-            <form>
-              {/* Title (Select Field) */}
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700">
-                  Title
-                </label>
-
-                <div className="mb-4 mt-2">
-                  <div className="relative">
-                    <select
-                      id="professional-select"
-                      className="block w-full px-4 py-3 text-sm border border-gray-300 rounded-lg shadow-sm appearance-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                      value={editableJob?.category || ""}
+     {isModalOpen && (
+            <div
+              ref={modalRef}
+              className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 "
+            >
+              <div className="bg-white w-[450px] rounded-lg p-6 shadow-lg mx-3">
+                <h2 className="text-xl font-semibold mb-4">{(t('edit_Job'))}</h2>
+                <form>
+                  {/* Title (Select Field) */}
+                  <div className="mb-4">
+                    <label className="block text-sm font-medium text-gray-700">
+                      {(t('titleEdit'))}
+                    </label>
+    
+                    <div className="mb-4 mt-2">
+                      <div className="relative">
+                        <select
+                          id="professional-select"
+                          className="block w-full px-4 py-3 text-sm border border-gray-300 rounded-lg shadow-sm appearance-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                          value={editableJob?.category || ""}
+                          onChange={(e) =>
+                            setEditableJob({
+                              ...editableJob,
+                              category: e.target.value,
+                            })
+                          }
+                        >
+                          <option value="" disabled>
+                            Choose an option
+                          </option>
+                          {categories.map((category: any) => (
+                            <option key={category.id} value={category.categoryName}>
+                              {category.categoryName}
+                            </option>
+                          ))}
+                        </select>
+                        <span className="absolute inset-y-0 right-3 flex items-center pointer-events-none">
+                          <svg
+                            className="w-5 h-5 text-gray-400"
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth="2"
+                              d="M19 9l-7 7-7-7"
+                            />
+                          </svg>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+    
+                  <div className="mb-4">
+                    <label className="block text-sm font-medium text-gray-700">
+                      {(t('select_Date'))}
+                    </label>
+                    <div className="mt-1">
+                      <input
+                        type="date"
+                        name="ServiceDate"
+                                            onChange={(e) => {
+                          setEditableJob({
+                            ...editableJob,
+                            bookingDate: new Date(e.target.value).getTime(),
+                          });
+                        }}
+                        // Register field with validation
+                        className="w-full px-4 py-2 mt-1 bg-gray-50 rounded-md border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
+                      />
+                    </div>
+                  </div>
+    
+                  {/* Select Time Start */}
+                  <div className="mb-4">
+                    <label className="block text-sm font-medium text-gray-700">
+                      {(t('select_Time_Start'))}
+                    </label>
+                    <input
+                      type="time"
                       onChange={(e) =>
                         setEditableJob({
                           ...editableJob,
-                          category: e.target.value,
+                          bookingStart: moment(e.target.value, "HH:mm").valueOf(),
                         })
                       }
-                    >
-                      <option value="" disabled>
-                        Choose an option
-                      </option>
-                      {categories.map((category: any) => (
-                        <option key={category.id} value={category.categoryName}>
-                          {category.categoryName}
-                        </option>
-                      ))}
-                    </select>
-                    <span className="absolute inset-y-0 right-3 flex items-center pointer-events-none">
-                      <svg
-                        className="w-5 h-5 text-gray-400"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                          d="M19 9l-7 7-7-7"
-                        />
-                      </svg>
-                    </span>
+                      value={
+                        editableJob?.bookingStart
+                          ? moment(editableJob.bookingStart).format("HH:mm")
+                          : ""
+                      }
+                      className="w-full px-4 py-2 mt-1 bg-gray-50 rounded-md border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
+                    />
                   </div>
-                </div>
-              </div>
-
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700">
-                  Select Date
-                </label>
-                <div className="mt-1">
-                  <input
-                    type="date"
-                    name="ServiceDate"
-                    onChange={(e) => {
-                      setEditableJob({
-                        ...editableJob,
-                        bookingDate: new Date(e.target.value).getTime(),
-                      });
-                    }}
-                    // Register field with validation
-                    className="w-full px-4 py-2 mt-1 bg-gray-50 rounded-md border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
-                  />
-                </div>
-              </div>
-
-              {/* Select Time Start */}
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700">
-                  Select Time Start
-                </label>
-                <input
-                  type="time"
-                  onChange={(e) =>
-                    setEditableJob({
-                      ...editableJob,
-                      bookingStart: moment(e.target.value, "HH:mm").valueOf(),
-                    })
-                  }
-                  value={
-                    editableJob?.bookingStart
-                      ? moment(editableJob.bookingStart).format("HH:mm")
-                      : ""
-                  }
-                  className="w-full px-4 py-2 mt-1 bg-gray-50 rounded-md border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
-                />
-              </div>
-
-              {/* Select Time End */}
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700">
-                  Select Time End
-                </label>
-                <input
-                  type="time"
-                  onChange={(e) =>
-                    setEditableJob({
-                      ...editableJob,
-                      bookingEnd: moment(e.target.value, "HH:mm").valueOf(),
-                    })
-                  }
-                  value={
-                    editableJob?.bookingEnd
-                      ? moment(editableJob.bookingEnd).format("HH:mm")
-                      : ""
-                  }
-                  className="w-full px-4 py-2 mt-1 bg-gray-50 rounded-md border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
-                />
-              </div>
-
-              {/* Status */}
-
-              <div className="mb-4">
-                <label
-                  htmlFor="professional-select"
-                  className="block text-sm font-medium text-gray-700 mb-2"
-                >
-                  Select Job Status
-                </label>
-                <div className="relative">
-                  <select
-                    value={editableJob?.addStatus || ""}
-                    onChange={(e) =>
-                      setEditableJob({
-                        ...editableJob,
-                        addStatus: e.target.value,
-                      })
-                    }
-                    id="professional-select"
-                    className="block w-full px-4 py-3 text-sm border border-gray-300 rounded-lg shadow-sm appearance-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                  >
-                    <option value="" disabled>
-                      Choose an option
-                    </option>
-                    <option value="active">Active</option>
-                    <option value="moderate">Moderate</option>
-                    <option value="pending">Pending</option>
-                  </select>
-                  <span className="absolute inset-y-0 right-3 flex items-center pointer-events-none">
-                    <svg
-                      className="w-5 h-5 text-gray-400"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
+    
+                  {/* Select Time End */}
+                  <div className="mb-4">
+                    <label className="block text-sm font-medium text-gray-700">
+                      {(t('select_Time_End'))}
+                    </label>
+                    <input
+                      type="time"
+                      onChange={(e) =>
+                        setEditableJob({
+                          ...editableJob,
+                          bookingEnd: moment(e.target.value, "HH:mm").valueOf(),
+                        })
+                      }
+                      value={
+                        editableJob?.bookingEnd
+                          ? moment(editableJob.bookingEnd).format("HH:mm")
+                          : ""
+                      }
+                      className="w-full px-4 py-2 mt-1 bg-gray-50 rounded-md border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
+                    />
+                  </div>
+    
+                  {/* Status */}
+    
+                  <div className="mb-4">
+                    <label
+                      htmlFor="professional-select"
+                      className="block text-sm font-medium text-gray-700 mb-2"
                     >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M19 9l-7 7-7-7"
-                      />
-                    </svg>
-                  </span>
-                </div>
+                      {(t('select_Job_Status'))}
+                    </label>
+                    <div className="relative">
+                      <select
+                        value={editableJob?.addStatus || ""}
+                        onChange={(e) =>
+                          setEditableJob({
+                            ...editableJob,
+                            addStatus: e.target.value,
+                          })
+                        }
+                        id="professional-select"
+                        className="block w-full px-4 py-3 text-sm border border-gray-300 rounded-lg shadow-sm appearance-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      >
+                        <option value="" disabled>
+                          Choose an option
+                        </option>
+                        <option value="active">Active</option>
+                        <option value="moderate">Moderate</option>
+                        <option value="pending">Pending</option>
+                      </select>
+                      <span className="absolute inset-y-0 right-3 flex items-center pointer-events-none">
+                        <svg
+                          className="w-5 h-5 text-gray-400"
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
+                            d="M19 9l-7 7-7-7"
+                          />
+                        </svg>
+                      </span>
+                    </div>
+                  </div>
+    
+                  {/* Buttons */}
+                  <div className="flex justify-end space-x-4">
+                    <button
+                      type="button"
+                      onClick={() => setIsModalOpen(false)}
+                      className="py-2 px-4 bg-gray-500 text-white rounded-md shadow-sm hover:bg-gray-600"
+                    >
+                      {(t('cancel'))}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={handleSave}
+                      className="py-2 px-4 bg-[#00BFFF] text-white rounded-md shadow-sm hover:bg-[#00BFFF]"
+                    >
+                      {(t('update'))}
+                    </button>
+                  </div>
+                </form>
               </div>
-
-              {/* Buttons */}
-              <div className="flex justify-end space-x-4">
-                <button
-                  type="button"
-                  onClick={() => setIsModalOpen(false)}
-                  className="py-2 px-4 bg-gray-500 text-white rounded-md shadow-sm hover:bg-gray-600"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="button"
-                  onClick={handleSave}
-                  className="py-2 px-4 bg-[#00BFFF] text-white rounded-md shadow-sm hover:bg-[#00BFFF]"
-                >
-                  Save
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
+            </div>
+          )}
         <div>
       {detailModalOpen && <BookingModal bookingData={selectedJob} handleClose={()=>SetDetailModalOpen(false)} />}
       </div>

@@ -13,14 +13,17 @@ import {
 } from "firebase/firestore";
 import { db } from "../../config/Firebase/FirebaseConfig";
 import moment from "moment";
+import SuccessModal from "../../components/sucessModal";
 
 function page() {
-  const t = useTranslations("Jobs");
+  const t = useTranslations("Services");
   const router = useRouter();
 
   const [reviewServiceData, setReviewServiceData] = useState<any>();
   const [rateWithTax, setRateWithTax] = useState<number>(0);
   const [paymentSummary , setPaymentSummary]= useState([])
+  const [isDisbale, setIsDisable] = useState<boolean>(false);
+  const [isSucessModalOpen, setIsSucessModalOpen] = useState(false);
 
   useEffect(() => {
     const data = localStorage.getItem("tax");
@@ -45,6 +48,11 @@ function page() {
     setReviewServiceData(reviewService);
   }, []);
 
+  const closeModal = ()=>{
+    setIsSucessModalOpen(false);
+    router.push("/services")
+  }
+
 
 
 
@@ -67,7 +75,7 @@ function page() {
 
 
   const clickNext = async () => {
-    // setIsDisable(true);
+    setIsDisable(true);
 
     const geoPoint = new GeoPoint(
       reviewServiceData.location.lat,
@@ -88,7 +96,7 @@ function page() {
 
       // Data save karna
       await setDoc(newDocRef, {
-        serviceId: newDocRef.id, // Random ID ko data mein shamil karna
+        serviceId: newDocRef.id, 
         category: reviewServiceData?.category,
         subCategory: reviewServiceData?.subcategory,
         createdAt: new Date().getTime(),
@@ -109,13 +117,16 @@ function page() {
           { imagURL: "" },
         ],
       });
+      setIsDisable(false);
+      setIsSucessModalOpen(true);
 
-      console.log("Document written with ID:", newDocRef.id);
+      
       setTimeout(() => {
         router.push("/services");
       }, 3000);
     } catch (error) {
       console.error("Error adding document:", error);
+      setIsDisable(false)
     }
   };
 
@@ -134,7 +145,7 @@ function page() {
                 <div className="space-y-8">
                   <div className="transform transition-all duration-300 hover:translate-x-2">
                     <h2 className="text-xl font-semibold text-gray-900 mb-3">
-                      {t("service")}
+                      {t("category")}
                     </h2>
                     <p className="text-gray-700 text-lg">
                       {reviewServiceData?.category}
@@ -142,7 +153,7 @@ function page() {
                   </div>
                   <div className="transform transition-all duration-300 hover:translate-x-2">
                     <h2 className="text-xl font-semibold text-gray-900 mb-3">
-                      {t("subcategory")}
+                      {t("description")}
                     </h2>
                     <p className="text-gray-700 text-lg">
                       {reviewServiceData?.description}{" "}
@@ -154,21 +165,14 @@ function page() {
                 <div className="space-y-8">
                   <div className="transform transition-all duration-300 hover:translate-x-2">
                     <h2 className="text-xl font-semibold text-gray-900 mb-3">
-                      {t("description")}
+                      {t("subcategory")}
                     </h2>
                     <p className="text-gray-700 text-lg">
                       {reviewServiceData?.subcategory}{" "}
                     </p>
                   </div>
 
-                  <div className="transform transition-all duration-300 hover:translate-x-2">
-                    <h2 className="text-xl font-semibold text-gray-900 mb-3">
-                      {t("duration")}
-                    </h2>
-                    <p className="text-gray-700 text-lg">
-                      {reviewServiceData?.category}
-                    </p>
-                  </div>
+                 
                 </div>
               </div>
             </div>
@@ -181,7 +185,7 @@ function page() {
   <div className="space-y-6">
     <div className="flex justify-between items-center py-4 border-b border-gray-200">
       <span className="text-lg text-gray-700">
-        {t("serviceAmount")}
+      Service Amount
       </span>
       <span className="text-xl text-gray-900 font-semibold">
         € {reviewServiceData?.fixRate}
@@ -217,11 +221,18 @@ function page() {
               <Button
                 type="submit"
                 onClick={clickNext}
+                disabled={isDisbale}
                 className="w-[250px] mb-4 mt-6 h-[45px] text-white bg-[#00BFFF] rounded-lg outline-none hover:bg-[#00A0E0] transition duration-200 ease-in-out"
               >
                 <span>{t("next")}</span>
               </Button>
             </div>
+
+            <SuccessModal
+            text={`${(t('service_created_sucess'))}`}
+            isOpen={isSucessModalOpen}
+            onClose={closeModal}
+          />
             
           </div>
         </div>

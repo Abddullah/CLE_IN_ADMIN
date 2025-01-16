@@ -34,7 +34,7 @@ function page() {
   const [categories, setCategories] = useState<any[]>([]);
   const [timeSlots, setTimeSlots] = useState<any>([]);
   const [addStatus, setAddStatus] = useState("pending");
-  const [detailModalOpen , SetDetailModalOpen] = useState<boolean>(false);
+  const [detailModalOpen, SetDetailModalOpen] = useState<boolean>(false);
 
   const daysOfWeek = [
     "Monday",
@@ -97,10 +97,8 @@ function page() {
 
   const handleJobClick = (job: any) => {
     setSelectedServices(job);
-    SetDetailModalOpen(true)
+    SetDetailModalOpen(true);
   };
-
- 
 
   //delete service function
 
@@ -125,16 +123,36 @@ function page() {
     setIsModalOpen(true);
   };
 
-  const handleTimeChange = (index: number, key: string, value: string) => {
-    const updatedSlots = [...timeSlots];
-    updatedSlots[index][key] = value;
-    setTimeSlots(updatedSlots);
+  const handleDayChange = (index: number, day: string) => {
+    setTimeSlots((prevSlots: any) =>
+      prevSlots.map((slot: any, i: any) =>
+        i === index ? { ...slot, day } : slot
+      )
+    );
   };
 
-  const handleDayChange = (index: number, value: string) => {
-    const updatedSlots = [...timeSlots];
-    updatedSlots[index]["day"] = value;
-    setTimeSlots(updatedSlots);
+  const handleTimeChange = (
+    index: number,
+    field: "openingTime" | "closingTime",
+    value: string
+  ) => {
+    setTimeSlots((prevSlots: any) => {
+      const updatedSlots = [...prevSlots];
+      const currentSlot = updatedSlots[index];
+
+      if (field === "openingTime" && currentSlot.closingTime) {
+        // Ensure opening time is before closing time
+        if (value >= currentSlot.closingTime) return prevSlots;
+      }
+
+      if (field === "closingTime" && currentSlot.openingTime) {
+        // Ensure closing time is after opening time
+        if (value <= currentSlot.openingTime) return prevSlots;
+      }
+
+      updatedSlots[index] = { ...currentSlot, [field]: value };
+      return updatedSlots;
+    });
   };
 
   const handleCategoryChange = (value: string) => {
@@ -144,6 +162,12 @@ function page() {
   const handleStatusChange = (value: string) => {
     setAddStatus(value);
   };
+
+  const { openingTime, closingTime } = timeSlots;
+
+  console.log(openingTime, closingTime);
+
+  // console.log("time slots", timeSlots)
 
   const handleSubmit = async () => {
     try {
@@ -166,7 +190,6 @@ function page() {
   };
 
   console.log(services);
-  
 
   return (
     <>
@@ -179,27 +202,26 @@ function page() {
           </Link>
         </div>
 
-        <JobTab/>
+        <JobTab />
 
         <div className="flex flex-wrap justify-center gap-12 w-full px-4 sm:px-8 sm:justify-start md:px-14 md:justify-start lg:justify-start lg:px-10 mt-4">
           {services.map((job: any) => (
-            <div
-            onClick={()=>handleJobClick(job)}
-              className="w-[310px] mt-[40px]"
-              key={job.id}
-            >
+            <div className="w-[310px] mt-[40px]" key={job.id}>
               <Card
                 price={` € ${job.totalPriceWithTax}`}
                 title={job.category || "No Title"}
                 imageUrl={job.imageUrl || "/assets/servicesIcons/cardImage.svg"}
-                // createdAt={job.createdAt}
                 status={job.addStatus || "Inactive"}
                 createdAt={moment(job.createdAt).fromNow()}
                 statusTextColor={"green-500"}
                 dotsIcon="/assets/categoriesIcons/dots.svg"
-                onEdit={() => handleEditClick(job)}
-                onDelete={() => handleDeleteClick(job)}
-                
+                detailOpen={() => handleJobClick(job)}
+                onEdit={() => {
+                  handleEditClick(job);
+                }}
+                onDelete={() => {
+                  handleDeleteClick(job);
+                }}
               />
             </div>
           ))}
@@ -218,7 +240,7 @@ function page() {
                     ×
                   </button>
                   <h2 className="text-2xl font-semibold text-center mb-4">
-                    Edit Service
+                    {t("edit_Service")}
                   </h2>
 
                   {/* Time Slots Editing */}
@@ -236,11 +258,20 @@ function page() {
                           }
                           className="w-full sm:w-32 p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                         >
-                          {daysOfWeek.map((day, i) => (
-                            <option key={i} value={day}>
-                              {day}
-                            </option>
-                          ))}
+                          {daysOfWeek
+                            .filter(
+                              (day) =>
+                                // Only show days not already selected or selected by this slot
+                                !timeSlots.some(
+                                  (s: any, i: number) =>
+                                    i !== index && s.day === day
+                                )
+                            )
+                            .map((day, i) => (
+                              <option key={i} value={day}>
+                                {day}
+                              </option>
+                            ))}
                         </select>
 
                         {/* Opening Time */}
@@ -279,7 +310,7 @@ function page() {
 
                   <div className="mb-4 mt-3">
                     <label className="block text-sm font-medium text-gray-700">
-                      Title
+                      {t("editTitle")}
                     </label>
 
                     <div className="mb-4 mt-2">
@@ -326,7 +357,7 @@ function page() {
                       htmlFor="addStatus"
                       className="block text-sm font-medium text-gray-700 mb-2"
                     >
-                      Select Job Status
+                      {t("select_Job_status")}
                     </label>
                     <div className="relative">
                       <select
@@ -366,13 +397,13 @@ function page() {
                       className="bg-[#00BFFF] text-white py-2 px-6 rounded-lg hover:bg-[#00BFFF] transition-all"
                       onClick={handleSubmit}
                     >
-                      Update
+                      {t("update")}
                     </button>
                     <button
                       className="bg-gray-500 text-white py-2 px-6 rounded-lg hover:bg-gray-600 transition-all"
                       onClick={closeModal}
                     >
-                      Cancel
+                      {t("cancel")}
                     </button>
                   </div>
                 </div>
@@ -381,9 +412,14 @@ function page() {
           </div>
         )}
 
-<div>
-      {detailModalOpen && <ServiceDetails bookingData={selectedService} handleClose={()=>SetDetailModalOpen(false)} />}
-      </div>
+        <div>
+          {detailModalOpen && (
+            <ServiceDetails
+              bookingData={selectedService}
+              handleClose={() => SetDetailModalOpen(false)}
+            />
+          )}
+        </div>
       </div>
     </>
   );

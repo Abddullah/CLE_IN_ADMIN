@@ -6,6 +6,7 @@ import { useEffect, useRef } from "react";
 import mapboxgl from "mapbox-gl";
 import {  collection, query , getDocs , where} from 'firebase/firestore';
 import { db } from '../../config/Firebase/FirebaseConfig';
+import { useTranslations } from 'next-intl';
 
 
 
@@ -17,6 +18,7 @@ interface Props {
 
 
 const BookingModal = ({ bookingData, handleClose}:Props) => {
+  const t = useTranslations("Services")
   const [customerInfoModal, setCustomerInfoModal] = useState(false);
   const [editDelete, SetEditDelete] = useState<boolean>(false);
   const [customerInfo , setCustomerInfo]=useState<null | any>(null);

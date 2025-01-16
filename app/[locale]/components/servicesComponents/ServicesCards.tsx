@@ -8,7 +8,7 @@ import {
   faEdit,
   faTrashAlt,
 } from "@fortawesome/free-solid-svg-icons";
-import BookingModal from "../jobsComponent/JobDetailsCard";
+import { useTranslations } from "next-intl";
 
 interface CardProps {
   imageUrl: string;
@@ -20,6 +20,7 @@ interface CardProps {
   dotsIcon: string;
   statusTextColor:any;
   createdAt:string;
+  detailOpen:any;
   onEdit: (updatedData: {
     title: string;
     price: string;
@@ -39,9 +40,12 @@ const Card: React.FC<CardProps> = ({
   dotsIcon,
   statusTextColor,
   createdAt,
+  detailOpen,
   onEdit,
   onDelete, // Add onDelete callback
 }) => {
+
+  const t = useTranslations('Jobs')
   const [showOptions, setShowOptions] = useState(false);
   const [editableData, setEditableData] = useState({ title, price, status });
 
@@ -64,6 +68,7 @@ const Card: React.FC<CardProps> = ({
     <div className="cursor-pointer flex">
       <div className="bg-white rounded-lg shadow-md border p-4 w-80 ">
         <Image
+        onClick={detailOpen}
           src={imageUrl}
           alt={title}
           width={200}
@@ -90,14 +95,14 @@ const Card: React.FC<CardProps> = ({
                 className="block w-full px-4 py-2 text-left text-sm text-gray-700"
               >
                 <FontAwesomeIcon icon={faEdit} className="mr-2" />
-                Edit
+                {(t('edit'))}
               </button>
               <button
                 onClick={handleDelete}
                 className="block w-full px-4 py-2 text-left text-sm text-red-600"
               >
                 <FontAwesomeIcon icon={faTrashAlt} className="mr-2" />
-                Delete
+                {(t('delete'))}
               </button>
             </div>
           )}
