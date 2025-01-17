@@ -250,7 +250,9 @@
 "cancel": "Annulla",
 "update": "Aggiorna",
 "select_Job_status": "Seleziona Stato Lavoro",
-"editTitle": "Titolo"
+"editTitle": "Titolo",
+"no_service_available":"Nessun servizio disponibile..."
+
 
 
 
@@ -346,7 +348,9 @@
 "select_Time_End": "Seleziona Ora Fine",
 "select_Job_Status": "Seleziona Stato Lavoro",
 "cancel": "Annulla",
-"update": "Aggiorna"
+"update": "Aggiorna",
+"no_job_available":"Nessun lavoro disponibile..."
+
 
 
   

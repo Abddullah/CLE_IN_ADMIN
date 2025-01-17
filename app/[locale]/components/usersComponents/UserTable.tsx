@@ -16,9 +16,13 @@ import {
   doc,
   deleteDoc,
 } from "firebase/firestore";
+
 import { db } from "../../config/Firebase/FirebaseConfig";
 import { useRouter } from "next/navigation";
 import { useRef } from "react";
+import { getFunctions, httpsCallable } from "firebase/functions";
+
+
 
 interface Invoice {
   Name: string;
@@ -32,6 +36,9 @@ interface Invoice {
 }
 
 export function TableDemo() {
+
+
+
   const [invoices, setInvoices] = useState<Invoice[]>([]);
   const [expandedRows, setExpandedRows] = useState<Set<number>>(new Set());
   const [activeMenu, setActiveMenu] = useState<number | null>(null);
@@ -119,7 +126,14 @@ export function TableDemo() {
     }
   };
 
+  //cloud function for delete user account from firebase
+
+  const functions = getFunctions();
+const deleteUser = httpsCallable(functions, "deleteUser");
+
   const deleteInvoice = async (docId: string) => {
+
+    
     setIsModalOpen(false)
     await deleteDoc(doc(db, "users", docId));
     fetchInvoices();

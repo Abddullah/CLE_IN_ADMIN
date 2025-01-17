@@ -35,6 +35,7 @@ function page() {
   const [timeSlots, setTimeSlots] = useState<any>([]);
   const [addStatus, setAddStatus] = useState("pending");
   const [detailModalOpen, SetDetailModalOpen] = useState<boolean>(false);
+  const [noService , setNoService]= useState<boolean>(false)
 
   const daysOfWeek = [
     "Monday",
@@ -191,6 +192,8 @@ function page() {
 
   console.log(services);
 
+
+ 
   return (
     <>
       <div className="bg-[#F5F7FA] w-full h-full overflow-hidden overflow-y-auto max-h-screen">
@@ -205,27 +208,34 @@ function page() {
         <JobTab />
 
         <div className="flex flex-wrap justify-center gap-12 w-full px-4 sm:px-8 sm:justify-start md:px-14 md:justify-start lg:justify-start lg:px-10 mt-4">
-          {services.map((job: any) => (
-            <div className="w-[310px] mt-[40px]" key={job.id}>
-              <Card
-                price={` € ${job.totalPriceWithTax}`}
-                title={job.category || "No Title"}
-                imageUrl={job.imageUrl || "/assets/servicesIcons/cardImage.svg"}
-                status={job.addStatus || "Inactive"}
-                createdAt={moment(job.createdAt).fromNow()}
-                statusTextColor={"green-500"}
-                dotsIcon="/assets/categoriesIcons/dots.svg"
-                detailOpen={() => handleJobClick(job)}
-                onEdit={() => {
-                  handleEditClick(job);
-                }}
-                onDelete={() => {
-                  handleDeleteClick(job);
-                }}
-              />
-            </div>
-          ))}
-        </div>
+  {services.length != 0 ? (
+    services.map((job: any) => (
+      <div className="w-[310px] mt-[40px]" key={job.id}>
+        <Card
+          price={` € ${job.totalPriceWithTax}`}
+          title={job.category || "No Title"}
+          imageUrl={job.imageUrl || "/assets/servicesIcons/cardImage.svg"}
+          status={job.addStatus || "Inactive"}
+          createdAt={moment(job.createdAt).fromNow()}
+          statusTextColor={"green-500"}
+          dotsIcon="/assets/categoriesIcons/dots.svg"
+          detailOpen={() => handleJobClick(job)}
+          onEdit={() => {
+            handleEditClick(job);
+          }}
+          onDelete={() => {
+            handleDeleteClick(job);
+          }}
+        />
+      </div>
+    ))
+  ) : (
+    <p className="flex items-center justify-center h-[30vh] w-full text-gray-500 text-lg font-semibold">
+      {(t('no_service_available'))}
+    </p>
+  )}
+</div>
+
 
         {isModalOpen && (
           <div className="p-5 space-y-6">

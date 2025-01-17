@@ -72,10 +72,7 @@
       "cleaning_at_factory": "Cleaning at Factory",
       "add_Subcategory":"Add Subcategory",
       "update":"Update"
-      
-     
-    
-    
+ 
   },
   "AddCategory":{
     "add_category": "Add Category",
@@ -194,7 +191,7 @@
     "SubCategories":"Sub Categories", 
     "subcategory":"SubCategory",
     "selectCategory": "Select Category",
-    "upload":"caricamento",
+    "upload":"upload",
     "categoryRequired": "Category is required",
     "selectSubCategory": "Select Subcategory",
     "subcategoryRequired": "Subcategory is required",
@@ -252,11 +249,8 @@
     "cancel":"Cancel",
     "update":"Update",
     "select_Job_status":"Select Job Status",
-    "editTitle":"Title"
-  
-    
-  
-      
+    "editTitle":"Title",
+    "no_service_available":"No Services Available..."
   },
   "Jobs":{
     "AddJobs": "Add Jobs",
@@ -317,6 +311,8 @@
   "select_Job_Status": "Select Job Status",
   "cancel":"Cancel",
     "update":"Update",
+    "no_job_available":"No Jobs Available...",
+
 
 
    

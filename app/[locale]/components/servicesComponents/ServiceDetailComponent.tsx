@@ -109,6 +109,11 @@ const ServiceDetails = ({ bookingData, handleClose}:Props) => {
     return () => map.remove();
   }, []);
 
+
+  
+
+
+
   return (
     <div className="fixed inset-0 flex justify-center items-center bg-gray-900 bg-opacity-50 z-50 ">
       <div className="w-full max-w-4xl sm:max-w-xl mx-auto bg-white rounded-lg shadow-lg p-6 relative max-h-[95vh] overflow-auto">
@@ -158,7 +163,7 @@ const ServiceDetails = ({ bookingData, handleClose}:Props) => {
           <div key={index} className="mt-3">
             <p className="text-sm font-semibold">{slot.day}</p>
             <p className="text-sm text-[#00BFFF]">
-              {moment(slot.openingTime).format('h:mm A')} to {moment(slot.closingTime).format('h:mm A')}
+              {/* {moment(slot.openingTime).format('h:mm A')} to {moment(slot.closingTime).format('h:mm A')} */}
             </p>
           </div>
         ))}

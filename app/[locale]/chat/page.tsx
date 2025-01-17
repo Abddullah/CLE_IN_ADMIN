@@ -272,6 +272,7 @@ const ChatInterface: React.FC = () => {
         return {
           fullName: senderData.fullName || "Unknown",
           status: senderData.online ? "online" : "offline",
+          sender:senderId
         };
       } else {
         console.error("Sender not found.");

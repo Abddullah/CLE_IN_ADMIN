@@ -548,7 +548,7 @@ const selectedRateValue = selectedRate ? selectedRate : 0;
                 setValue("days", updatedDays);
                 clearErrors("days");
               }}
-              className="w-5 h-5 text-blue-600 border-gray-300 rounded"
+              className="w-5 h-5 text-[#00BFFF] border-gray-300 rounded"
             />
             <span className="text-gray-800 font-medium">{day.day}</span>
           </div>

@@ -144,31 +144,31 @@ function Page() {
       <JobTab />
 
       <div className="flex flex-wrap justify-center gap-12 w-full px-4 sm:px-8 sm:justify-start md:px-14 md:justify-start lg:justify-start lg:px-10 mt-4">
-        {jobs.map((job: any) => (
-          <div   className="w-[310px] mt-[40px]" key={job.id}>
-            <Card
-              price={` € ${job.totalPriceWithTax}  `}
-              title={job.category || "No Title"}
-              time={`${moment(job.bookingStart).format("hh:mm A")} - ${moment(
-                job.bookingEnd
-              ).format("hh:mm A")}`}
-              imageUrl={job.imageUrl || "/assets/servicesIcons/company.svg"}
-              status={job.addStatus || "Inactive"}
-              statusTextColor={"yellow-400"}
-              detailOpen={() => handleJobClick(job)}
-              createdAt={moment(job.createdAt).fromNow()}
-              date={
-                         `Date: ${    moment(job.bookingDate).isValid()
-                           ? moment(job.bookingDate).format("MMM -D -YYYY")
-                           : "Invalid Date"}`
-                           }
-              dotsIcon="/assets/categoriesIcons/dots.svg"
-              onEdit={() => handleEditClick(job)}
-              onDelete={() => handleDeleteClick(job)}
-            />
-          </div>
-        ))}
+  {jobs.length === 0 ? (
+    <div className="flex items-center justify-center h-[60vh] w-full text-gray-500 text-xl font-semibold">
+     {(t('no_job_available'))}
+    </div>
+  ) : (
+    jobs.map((job: any) => (
+      <div className="w-[310px] mt-[40px]" key={job.id}>
+        <Card
+          price={` € ${job.totalPriceWithTax}`}
+          title={job.category || "No Title"}
+          time={`${moment(job.bookingStart).format("hh:mm A")} - ${moment(job.bookingEnd).format("hh:mm A")}`}
+          imageUrl={job.imageUrl || "/assets/servicesIcons/cardImage.svg"}
+          status={job.addStatus || "Inactive"}
+          statusTextColor={"green-500"}
+          detailOpen={() => handleJobClick(job)}
+          date={`Date: ${moment(job.bookingDate).isValid() ? moment(job.bookingDate).format("MMM -D -YYYY") : "Invalid Date"}`}
+          createdAt={moment(job.createdAt).fromNow()}
+          dotsIcon="/assets/categoriesIcons/dots.svg"
+          onEdit={() => handleEditClick(job)}
+          onDelete={() => handleDeleteClick(job)}
+        />
       </div>
+    ))
+  )}
+</div>
 
      {isModalOpen && (
             <div
