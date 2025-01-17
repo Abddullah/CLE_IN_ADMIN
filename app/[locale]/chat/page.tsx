@@ -2,10 +2,7 @@
 import { useEffect, useState, useRef, useCallback } from "react";
 import { db } from "../config/Firebase/FirebaseConfig";
 import { useTranslations } from "next-intl";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import InfiniteScroll from "react-infinite-scroll-component";
-
-import { faPaperPlane } from "@fortawesome/free-solid-svg-icons";
 
 import {
   collection,
@@ -52,7 +49,9 @@ const ChatInterface: React.FC = () => {
     null
   );
   const [lastVisible, setLastVisible] = useState<any>(null);
- const [messageLength , setMessageLength] = useState<number>(0)
+  const [messageLength, setMessageLength] = useState<number>(0);
+  const [chatId, setChatId] = useState("");
+
   useEffect(() => {
     const user = localStorage.getItem("currentUser");
     if (user) {
@@ -111,65 +110,28 @@ const ChatInterface: React.FC = () => {
     fetchChatList();
   }, []);
 
-  // Fetch messages for selected user
   const fetchMessages = useCallback(() => {
     if (selectedUser) {
       const chatRef = doc(db, "chats", selectedUser.id);
-  
-      // Using onSnapshot for real-time updates
+
       const unsubscribe = onSnapshot(chatRef, (docSnapshot) => {
         if (docSnapshot.exists()) {
-          // Retrieve messages and sort by timestamp
-          const allMessages = (docSnapshot.data().messages || []).sort(
-            (a: any, b: any) => a.timestamp - b.timestamp // Sort in ascending order
-          );
-  
-          // Log or store the total number of messages
+          const allMessages = docSnapshot.data().messages || [];
 
-          setMessageLength(allMessages.length);
+          console.log("Fetched Messages:", allMessages);
 
-
-         
-          
-  
-          // Ensure no duplicate messages are added
-          const startIndex = lastVisible
-            ? allMessages.findIndex((msg: any) => msg.id === lastVisible.id) - 1
-            : allMessages.length - 20; // Start from the last 20 messages initially
-  
-          const validStartIndex = Math.max(startIndex, 0); // Ensure index is not negative
-          const newMessages = allMessages.slice(
-            validStartIndex,
-            validStartIndex + 20
-          );
-  
-          // Append messages intelligently to avoid duplicates
-          setMessages((prevMessages) => {
-            const newUniqueMessages = newMessages.filter(
-              (msg: any) =>
-                !prevMessages.some((prevMsg) => prevMsg.id === msg.id)
-            );
-            return [...newUniqueMessages.reverse(), ...prevMessages];
-          });
-  
-          // Update lastVisible to the last message in the fetched batch
-          if (newMessages.length > 0) {
-            setLastVisible(newMessages[newMessages.length - 1]);
-          }
-  
-          // Check if there are more messages to fetch
-          setHasMore(validStartIndex > 0);
+          setMessages(allMessages);
         } else {
+          console.log("No document found for this chat.");
           setMessages([]);
         }
       });
-  
-      // Clean up on component unmount
+
       return () => unsubscribe();
     }
   }, [selectedUser]);
 
-  
+  console.log("selected user", selectedUser);
 
   const fetchMore = () => {
     if (selectedUser && hasMore) {
@@ -231,7 +193,7 @@ const ChatInterface: React.FC = () => {
       const senderDetails = await fetchSenderDetails(senderId);
 
       const message: Message = {
-        id: `${Date.now()}`,
+        id: `${selectedUser.id}`,
         text: newMessage.trim(),
         senderId,
         timestamp: Date.now(),
@@ -239,10 +201,8 @@ const ChatInterface: React.FC = () => {
         senderStatus: senderDetails.status,
       };
 
+      const chatId = [senderId, selectedUser.id].sort().join("_");
       const chatRef = doc(db, "chats", selectedUser.id);
-
-      console.log(chatRef);
-      
 
       await setDoc(
         chatRef,
@@ -256,11 +216,13 @@ const ChatInterface: React.FC = () => {
         { merge: true }
       );
 
-      setNewMessage(""); // Clear the input field
+      setNewMessage("");
     } catch (error) {
       console.error("Error sending message:", error);
     }
   };
+
+  const reversedMessages = messages.slice().reverse();
 
   const fetchSenderDetails = async (senderId: string) => {
     try {
@@ -272,7 +234,7 @@ const ChatInterface: React.FC = () => {
         return {
           fullName: senderData.fullName || "Unknown",
           status: senderData.online ? "online" : "offline",
-          sender:senderId
+          sender: senderId,
         };
       } else {
         console.error("Sender not found.");
@@ -326,134 +288,143 @@ const ChatInterface: React.FC = () => {
   return (
     <div className="flex h-screen">
       {/* Chat List */}
-      <div className={`w-full md:w-1/3 lg:w-1/4 bg-white shadow-lg border-r`}>
+      <div
+        className={`${
+          showChat ? "hidden" : "block"
+        } w-full md:w-1/3 lg:w-1/4 bg-white shadow-lg border-r md:block`}
+      >
         <div className="relative h-full max-w-full">
-          <div className="h-full p-2 space-y-4 fixed overflow-y-auto w-full sm:max-w-[50%] lg:max-w-[50%] max-w-full">
-            {users.map((user) => (
-              <div
-                key={user.id}
-                onClick={() => {
-                  setShowChat(true);
-                  handleUserSelect(user);
-                }}
-                className="flex items-center p-4 cursor-pointer transition-all mb-2 w-full"
-              >
-                <div className="w-10 h-10 rounded-full bg-[#00BFFF] flex items-center justify-center">
-                  <span className="text-white font-semibold">
-                    {user.name.charAt(0)}
-                  </span>
-                </div>
-                <div className="ml-4">
-                  <h3 className="font-semibold text-gray-800">{user.name}</h3>
-                  <p className="text-sm text-gray-600">
-                    {user.lastMessage.length > 5
-                      ? user.lastMessage.substring(0, 10) + "..."
-                      : user.lastMessage}
-                    <span className="text-xs text-gray-500 ml-1">
-                      {user.lastMessageTimestamp
-                        ? moment(user.lastMessageTimestamp).format("LT")
-                        : ""}
-                    </span>
-                  </p>
-                </div>
+          <div className="h-full p-2 space-y-4 fixed overflow-y-auto w-full">
+            {users.length === 0 ? (
+              <div className="flex justify-center items-center w-full h-full">
+                <p className="text-gray-600 text-xl">No chats available</p>
               </div>
-            ))}
+            ) : (
+              users.map((user) => (
+                <div
+                  key={user.id}
+                  onClick={() => {
+                    setShowChat(true);
+                    handleUserSelect(user);
+                  }}
+                  className="flex items-center p-4 cursor-pointer transition-all mb-2 w-full"
+                >
+                  <div className="w-10 h-10 rounded-full bg-[#00BFFF] flex items-center justify-center">
+                    <span className="text-white font-semibold">
+                      {user.name.charAt(0)}
+                    </span>
+                  </div>
+                  <div className="ml-4">
+                    <h3 className="font-semibold text-gray-800">{user.name}</h3>
+                    <p className="text-sm text-gray-600">
+                      {user.lastMessage.length > 5
+                        ? user.lastMessage.substring(0, 10) + "..."
+                        : user.lastMessage}
+                      <span className="text-xs text-gray-500 ml-1">
+                        {user.lastMessageTimestamp
+                          ? moment(user.lastMessageTimestamp).format("LT")
+                          : ""}
+                      </span>
+                    </p>
+                  </div>
+                </div>
+              ))
+            )}
           </div>
         </div>
       </div>
 
       {/* Chat Messages */}
       <div
-  className={`flex-1 flex flex-col z-10 bg-gray-100 ${
-    showChat ? "block" : "hidden md:flex"
-  }`}
->
-  {selectedUser ? (
-    <>
-      {/* Chat Header */}
-      <div className="bg-white p-4 shadow-md flex items-center sticky top-0 z-10 border-b">
-        <button
-          className="md:hidden mr-3"
-          onClick={() => setShowChat(false)}
-        >
-          <svg
-            className="w-6 h-6 text-gray-600"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M15 19l-7-7 7-7"
-            />
-          </svg>
-        </button>
-        <div className="w-10 h-10 rounded-full bg-[#00BFFF] flex items-center justify-center">
-          <span className="text-white font-semibold">
-            {selectedUser.name.charAt(0)}
-          </span>
-        </div>
-        <div className="ml-4">
-          <h2 className="font-semibold text-gray-800">{selectedUser.name}</h2>
-          <p
-            className={`text-sm ${
-              selectedUser.status === "online"
-                ? "text-green-500"
-                : "text-gray-500"
-            }`}
-          >
-            {selectedUser.status}
-          </p>
-        </div>
-      </div>
-
-      {/* Messages Container */}
-      <div
-        id="scrollableDiv"
-        className="overflow-auto flex-1 pb-[20px]" 
+        className={`${
+          showChat ? "block" : "hidden md:flex"
+        } flex-1 flex flex-col z-10 bg-gray-100`}
       >
-        <InfiniteScroll
-          dataLength={messages.length}
-          next={fetchMore}
-          style={{ display: "flex", flexDirection: "column-reverse" }}
-          inverse={true}
-          hasMore={messages.length < messageLength}
-          loader={<LoaderSpinner />}
-          scrollableTarget="scrollableDiv"
-        >
-          {messages.map((msg, index) => (
-            <div key={index}>
-              <div
-                className={`flex mx-[20px] mt-4 ${
-                  msg.senderId === senderId
-                    ? "justify-end"
-                    : "justify-start"
-                }`}
+        {selectedUser ? (
+          <>
+            {/* Chat Header */}
+            <div className="bg-white p-4 shadow-md flex items-center sticky top-0 z-10 border-b">
+              <button
+                className="md:hidden mr-3"
+                onClick={() => setShowChat(false)}
               >
-                <div
-                  className={`rounded-lg p-3 max-w-[60%] shadow ${
-                    msg.senderId === senderId
-                      ? "bg-[#98d7ec]"
-                      : "bg-gray-300"
+                <svg
+                  className="w-6 h-6 text-gray-600"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M15 19l-7-7 7-7"
+                  />
+                </svg>
+              </button>
+              <div className="w-10 h-10 rounded-full bg-[#00BFFF] flex items-center justify-center">
+                <span className="text-white font-semibold">
+                  {selectedUser.name.charAt(0)}
+                </span>
+              </div>
+              <div className="ml-4">
+                <h2 className="font-semibold text-gray-800">
+                  {selectedUser.name}
+                </h2>
+                <p
+                  className={`text-sm ${
+                    selectedUser.status === "online"
+                      ? "text-green-500"
+                      : "text-gray-500"
                   }`}
                 >
-                  <p>{msg.text}</p>
-                  <span className="text-xs text-gray-500">
-                    {moment(msg.timestamp).format("LT")}
-                  </span>
-                </div>
+                  {selectedUser.status}
+                </p>
               </div>
             </div>
-          ))}
-        </InfiniteScroll>
-      </div>
 
-      
+            {/* Messages Container */}
+            <div
+              id="scrollableDiv"
+              className=" flex-1 pb-[20px] bg-[#F5F7FA] w-full h-full overflow-hidden overflow-y-auto max-h-screen"
+            >
+              <InfiniteScroll
+                dataLength={messages.length}
+                next={fetchMore}
+                style={{ display: "flex", flexDirection: "column-reverse" }}
+                inverse={true}
+                hasMore={messages.length < messageLength}
+                loader={<LoaderSpinner />}
+                scrollableTarget="scrollableDiv"
+              >
+                {reversedMessages.map((msg, index) => (
+                  <div key={index}>
+                    <div
+                      className={`flex mx-[20px] mt-4 ${
+                        msg.senderId === senderId
+                          ? "justify-end"
+                          : "justify-start"
+                      }`}
+                    >
+                      <div
+                        className={`rounded-lg p-3 max-w-[60%] shadow ${
+                          msg.senderId === senderId
+                            ? "bg-[#98d7ec]"
+                            : "bg-gray-300"
+                        }`}
+                      >
+                        <p>{msg.text}</p>
+                        <span className="text-xs text-gray-500">
+                          {moment(msg.timestamp).format("LT")}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </InfiniteScroll>
+            </div>
 
-
-<div className="bg-white p-3 border-t shadow-lg sticky bottom-0 z-10">
+            <div className="bg-white p-3 border-t shadow-lg sticky bottom-0 z-10">
               <div className="flex items-center space-x-2">
                 <input
                   type="text"
@@ -463,8 +434,11 @@ const ChatInterface: React.FC = () => {
                   placeholder={t("type_message")}
                   className="flex-1 border border-gray-300 rounded-full px-4 py-2 focus:outline-none focus:ring focus:ring-blue-200"
                 />
-                <button ref={buttonRef}
-            onClick={sendMessage} className="bg-[#00BFFF] text-white p-2 rounded-full hover:bg-blue-600 transition">
+                <button
+                  ref={buttonRef}
+                  onClick={sendMessage}
+                  className="bg-[#00BFFF] text-white p-2 rounded-full hover:bg-blue-600 transition"
+                >
                   <svg
                     className="w-6 h-6"
                     fill="none"
@@ -481,16 +455,15 @@ const ChatInterface: React.FC = () => {
                 </button>
               </div>
             </div>
-    </>
-  ) : (
-    <div className="flex-1 flex items-center justify-center">
-      <h3 className="text-xl font-semibold text-gray-600">
-        {t("select_a_user")}
-      </h3>
-    </div>
-  )}
-</div>
-
+          </>
+        ) : (
+          <div className="flex-1 flex items-center justify-center">
+            <h3 className="text-xl font-semibold text-gray-600">
+              {t("select_a_user")}
+            </h3>
+          </div>
+        )}
+      </div>
     </div>
   );
 };
