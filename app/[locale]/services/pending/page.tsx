@@ -191,7 +191,7 @@ function page() {
           imageUrl={job.imageUrl || "/assets/servicesIcons/cardImage.svg"}
           status={job.addStatus || "Inactive"}
           createdAt={moment(job.createdAt).fromNow()}
-          statusTextColor={"green-500"}
+          statusTextColor={"yellow-400"}
           dotsIcon="/assets/categoriesIcons/dots.svg"
           detailOpen={() => handleJobClick(job)}
           onEdit={() => {

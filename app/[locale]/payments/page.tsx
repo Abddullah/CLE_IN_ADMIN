@@ -181,19 +181,7 @@ const Payments = () => {
                   service.active ? "bg-blue-200 border-blue-200" : ""
                 }`}
               >
-                <span
-                  className={`absolute top-2 right-8 text-xs px-2 py-1 rounded-full flex items-center ${
-                    service.active
-                      ? "bg-blue-400 text-white"
-                      : "bg-red-500 text-white"
-                  }`}
-                >
-                  <FontAwesomeIcon
-                    icon={service.active ? faCheckCircle : faTimesCircle}
-                    className="mr-1"
-                  />
-                  {service.active ? t("activate") : t("deactivate")}
-                </span>
+              
 
                 <div className="absolute top-4 right-4">
                   <button
@@ -215,28 +203,17 @@ const Payments = () => {
                       className="block w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100"
                     >
                       <FontAwesomeIcon icon={faEdit} className="mr-2" />
-                      Edit
+                      {(t('edit'))}
                     </button>
                     <button
                       onClick={() => handleDelete(service.id)}
                       className="block w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-red-100"
                     >
                       <FontAwesomeIcon icon={faTrashAlt} className="mr-2" />
-                      Delete
+                      {(t('delete'))}
                     </button>
 
-                    <button
-                      className="block w-full px-4 py-2 text-left text-sm hover:bg-gray-100"
-                      onClick={() => handleActiveToggle(index)}
-                    >
-                      <FontAwesomeIcon
-                        icon={service.active ? faTimesCircle : faCheckCircle}
-                        className=" mr-2"
-                      />
-                      <span>
-                        {service.active ? t("deactivate") : t("activate")}
-                      </span>
-                    </button>
+                  
                   </div>
                 )}
 

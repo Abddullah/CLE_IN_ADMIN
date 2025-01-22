@@ -16,7 +16,7 @@ function ConfigurationTab() {
       setActive("roomAreaSize");
     } else if (path.includes("additionalService")) {
       setActive("additionalService");
-    }else if(path.includes("/configuration")){
+    } else if (path.includes("/configuration")) {
       setActive("fixRates");
     }
   }, [path]);
@@ -24,33 +24,18 @@ function ConfigurationTab() {
   return (
     <>
       <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-4 lg:grid-cols-4 gap-6 mx-6 mt-8">
-        {/* <button
+        <button
           onClick={() => {
             router.push("/configuration");
           }}
-          className={`flex-1 py-4 rounded-md ${
-            active === "hourlyRate"
-              ? "text-white bg-[#00BFFF] hover:bg-[#00BFFF]"
-              : "text-white bg-[#859090] hover:bg-[#859090]"
-          }`}
-        >
-          {t("HourlyRates")}
-        </button> */}
-
-
-        <button
-          onClick={() => {
-            router.push("/configuration/fixRates");
-          }}
-          className={`flex-1 py-4 rounded-md ${
+          className={`flex-1 py-4  rounded-md ${
             active === "fixRates"
               ? "text-white bg-[#00BFFF] hover:bg-[#00BFFF]"
               : "text-white bg-[#859090] hover:bg-[#859090]"
           }`}
         >
-         Fix Rates
+          {(t('Fix Rate'))}
         </button>
-
 
         <button
           onClick={() => {

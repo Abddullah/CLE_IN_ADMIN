@@ -21,14 +21,13 @@ import {
 import getFirebaseErrorMessage from "@/app/firebaseErrorHandler";
 import { db } from "../config/Firebase/FirebaseConfig";
 import ConfigurationTab from "../components/ConfigurationTab";
-
 interface Service {
   id: string;
   rate: string;
 }
 
 function Page() {
-  const t = useTranslations("AdditionalServices");
+  const t = useTranslations("Services");
 
   const [services, setServices] = useState<Service[]>([]); // State for services
   const [openEditDelete, setOpenEditDelete] = useState<number | null>(null); // State for toggle
@@ -40,19 +39,20 @@ function Page() {
 
   // Fetch language from the URL path
   const path = usePathname();
-  const language = path.replace("/configuration/hourlyRate", "");
+  const language = path.replace("/configuration/fixRates", "");
   const lang = language.replace("/", "");
 
   // Fetch services data from Firestore
   useEffect(() => {
     const fetchServices = async () => {
       try {
-        const querySnapshot = await getDocs(collection(db, "hourlyRates"));
+        const querySnapshot = await getDocs(collection(db, "fixRates"));
         const servicesList: Service[] = querySnapshot.docs.map((doc) => ({
           id: doc.id,
           ...doc.data(),
         })) as Service[];
-        setServices(servicesList);
+        setServices(servicesList.sort((a:any, b:any) => a.rate - b.rate));
+        localStorage.setItem("fixRates" , JSON.stringify(servicesList))
       } catch (error: any) {
         const errorCode = error.code;
         const errorMessage = await getFirebaseErrorMessage(errorCode, lang);
@@ -97,19 +97,20 @@ function Page() {
   // Handle service update
   const handleUpdateService = async () => {
     if (editedService) {
-      const serviceRef = doc(db, "hourlyRates", editedService.id);
+      const serviceRef = doc(db, "fixRates", editedService.id);
       try {
-        await updateDoc(serviceRef, { price: editedService.rate });
+        await updateDoc(serviceRef, { rate: editedService.rate });
         setIsModalOpen(false); // Close modal
         setEditedService(null); // Reset edited service
 
         // Fetch updated services
-        const querySnapshot = await getDocs(collection(db, "hourlyRates"));
+        const querySnapshot = await getDocs(collection(db, "fixRates"));
         const updatedServicesList = querySnapshot.docs.map((doc) => ({
           id: doc.id,
           ...doc.data(),
         })) as Service[];
         setServices(updatedServicesList);
+        localStorage.setItem("fixRates" , JSON.stringify(updatedServicesList))
       } catch (error) {
         console.error("Error updating service:", error);
       }
@@ -118,16 +119,17 @@ function Page() {
 
   // Handle delete service
   const handleDeleteService = async (serviceId: string) => {
-    const serviceRef = doc(db, "hourlyRates", serviceId);
+    const serviceRef = doc(db, "fixRates", serviceId);
     try {
       await deleteDoc(serviceRef); // Delete service from Firestore
       // Fetch updated services after deletion
-      const querySnapshot = await getDocs(collection(db, "hourlyRates"));
+      const querySnapshot = await getDocs(collection(db, "fixRates"));
       const updatedServicesList = querySnapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
       })) as Service[];
       setServices(updatedServicesList);
+      localStorage.setItem("fixRates" , JSON.stringify(updatedServicesList))
       setOpenEditDelete(null); // Close the menu
     } catch (error) {
       console.error("Error deleting service:", error);
@@ -135,7 +137,9 @@ function Page() {
   };
 
   return (
-    <div className="bg-[#F5F7FA] w-full h-full overflow-hidden overflow-y-auto max-h-screen relative">
+    <div className="bg-[#F5F7FA] w-full  pt-8 overflow-y-auto">
+
+
       
       <ConfigurationTab />
 
@@ -144,7 +148,7 @@ function Page() {
         {/* Show message if no services are available */}
         {services.length === 0 ? (
           <p className="text-center text-lg font-semibold text-gray-600">
-            {t("no_rate_available")}
+            {t("no_fix_rate_available")}
           </p>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-6 mx-2">
@@ -176,23 +180,21 @@ function Page() {
                           className="block w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100"
                         >
                           <FontAwesomeIcon icon={faEdit} className="mr-2" />
-                          Edit
+                          {(t('edit'))}
                         </button>
                         <button
                           onClick={() => handleDeleteService(service.id)}
                           className="block w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-red-100"
                         >
                           <FontAwesomeIcon icon={faTrashAlt} className="mr-2" />
-                          Delete
+                          {(t('delete'))}
                         </button>
                       </div>
                     )}
 
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                  Hourly Rate
-                </h3>
-                <p className="text-lg font-medium text-gray-700 mb-4">
-                  {t("price")}: {service.rate} €
+              
+                <p className="text-lg font-semibold text-gray-900 mb-2">
+                  {t("fix_Rate")}: {service.rate} €
                 </p>
               </div>
             ))}
@@ -201,13 +203,24 @@ function Page() {
       </div>
 
       {/* Add Button */}
-      <div className="absolute bottom-8 right-8">
-        <Link href={"/configuration/addHourlyRate"}>
-          <button className="w-14 h-14 flex items-center justify-center bg-[#00BFFF] text-white text-3xl rounded-full shadow-lg hover:bg-[#009ACD] focus:outline-none focus:ring-4 focus:ring-blue-300">
-            +
-          </button>
-        </Link>
-      </div>
+     
+
+
+       {/* <div className="absolute bottom-8 right-8">
+              <Link href={"/configuration/addFixRate"}>
+                <button className="w-14 h-14 flex items-center justify-center bg-[#00BFFF] text-white text-3xl rounded-full shadow-lg hover:bg-[#009ACD] focus:outline-none focus:ring-4 focus:ring-blue-300">
+                  +
+                </button>
+              </Link>
+            </div> */}
+
+              <div className="absolute bottom-8 right-8">
+                    <Link href={"/configuration/additionalService/addAdditionalService"}>
+                      <button className="w-14 h-14 flex items-center justify-center bg-[#00BFFF] text-white text-3xl rounded-full shadow-lg hover:bg-[#009ACD] focus:outline-none focus:ring-4 focus:ring-blue-300">
+                        +
+                      </button>
+                    </Link>
+                  </div>
 
       {/* Modal for editing service */}
       {isModalOpen && editedService && (

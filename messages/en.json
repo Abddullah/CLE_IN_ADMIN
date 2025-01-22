@@ -96,6 +96,7 @@
       "role": "Role",
       "address": "Address",
       
+      
       "gender": "Gender",
       "dateOfBirth": "Date of Birth",
       "actions": "Actions",
@@ -143,7 +144,10 @@
       "user_role_provider": "Provider",
       "Add_hourly_rate":"Add Hourly Rate",
       "hourly_rate_placeholder": "Hourly Rate",
-      "hourly_rate_required_error": "Hourly Rate is required"
+      "hourly_rate_required_error": "Hourly Rate is required",
+      "cancel":"Cancel",
+      "save_Changes":"Save Changes",
+      "edit_user":"Edit User"
      
     },
     "Bookings":{
@@ -250,7 +254,9 @@
     "update":"Update",
     "select_Job_status":"Select Job Status",
     "editTitle":"Title",
-    "no_service_available":"No Services Available..."
+    "no_service_available":"No Services Available...",
+    "edit": "Edit",
+  "delete": "Delete"
   },
   "Jobs":{
     "AddJobs": "Add Jobs",
@@ -359,7 +365,8 @@
   "price_required": "Price is required",
   "add_button": "ADD",
   "edit": "Edit",
-      "delete": "Delete",
+  "delete": "Delete",
+  "Fix_Rate":"Fix Rate",
       "service_added_successfully": "Additional Service Added Successfully",
   "additional_service_added_message": "Your additional service has been added successfully to the system.",
   "close_button": "Close",

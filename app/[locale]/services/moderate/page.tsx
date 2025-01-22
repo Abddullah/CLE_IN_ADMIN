@@ -112,7 +112,7 @@ function page() {
       // Delete the document
       await deleteDoc(jobDocRef);
 
-      console.log(`Job with ID ${job.id} has been deleted successfully.`);
+      console.log(`Job  has been deleted successfully.`);
     } catch (error) {
       console.error("Error deleting job:", error);
     }
@@ -153,7 +153,6 @@ function page() {
         addStatus: addStatus,
         category: editableService?.category,
       });
-      alert("Service updated successfully!");
       setIsModalOpen(false);
     } catch (error) {
       console.error("Error updating document: ", error);
@@ -191,7 +190,7 @@ function page() {
           imageUrl={job.imageUrl || "/assets/servicesIcons/cardImage.svg"}
           status={job.addStatus || "Inactive"}
           createdAt={moment(job.createdAt).fromNow()}
-          statusTextColor={"green-500"}
+          statusTextColor={"red-500"}
           dotsIcon="/assets/categoriesIcons/dots.svg"
           detailOpen={() => handleJobClick(job)}
           onEdit={() => {

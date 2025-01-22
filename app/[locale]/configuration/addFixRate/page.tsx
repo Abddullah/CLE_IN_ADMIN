@@ -19,7 +19,7 @@ import { usePathname } from "next/navigation";
 import { useRouter } from "@/i18n/routing";
 
 function page() {
-  const t = useTranslations("AdditionalServices");
+  const t = useTranslations("Services");
 
   type InputTitle = {
     price: number;
@@ -37,34 +37,30 @@ function page() {
   const router = useRouter();
 
   const path = usePathname();
-  const language = path.replace("/configuration/hourlyRate/addHourlyRate", "");
+  const language = path.replace("/configuration/fixRates/addFixRates", "");
   const lang = language.replace("/", "");
 
   const onSubmit: SubmitHandler<InputTitle> = async (data) => {
     try {
       // Check if a card already exists
-      const querySnapshot = await getDocs(collection(db, "hourlyRates"));
-      if (!querySnapshot.empty) {
-        // If a card already exists, show the error modal
-        setErrorModal(true);
-        return; // Prevent further execution
-      }
+      const querySnapshot = await getDocs(collection(db, "fixRates"));
+     
 
       // Add data to Firebase Firestore
-      const docRef = doc(collection(db, "hourlyRates"));
+      const docRef = doc(collection(db, "fixRates"));
 
-      const AdditionalService = {
+      const fixRates = {
         rate: data.priceRequired,
         createdAt: serverTimestamp(),
         id: docRef.id,
       };
-      await setDoc(docRef, AdditionalService);
+      await setDoc(docRef, fixRates);
       reset();
 
 
       setShowModal(true);
       setTimeout(() => {
-        router.push('/configuration')
+        router.push('/configuration/fixRates')
 
       },3000)
     } catch (e: any) {
@@ -84,18 +80,18 @@ function page() {
 
   return (
     <>
-      <div className="bg-[#F5F7FA] min-h-screen w-full flex items-start justify-start pt-8">
+     <div className="bg-[#F5F7FA] min-h-screen w-full flex items-start justify-start pt-8">
         <form
           onSubmit={handleSubmit(onSubmit)}
           className="w-full max-w-md overflow-hidden px-4 sm:px-8 md:px-12 lg:px-16"
         >
-          <h1 className="text-2xl font-bold mb-4">{t("add_hourly_rate")}</h1>
+          <h1 className="text-2xl font-bold mb-4">{t("add_fix_rate")}</h1>
 
         
 
           <div className="grid w-full max-w-sm items-center gap-1.5 mt-4">
             <Label htmlFor="text" className="font-semibold text-md">
-              {t("price")}
+              {t("fix_Rate")}
             </Label>
             <Input
               type="number"
@@ -103,19 +99,19 @@ function page() {
                 required: true,
                 pattern: /^\d+$/,
               })}
-              placeholder={t("price_placeholder")}
+              placeholder={t("Enter_fixRates")}
               className="h-[50px] border-[#4BB1D3]"
               id="number"
             />
             {errors.priceRequired && (
-              <span className="text-red-600">{t("price_required")}</span>
+              <span className="text-red-600">{t("fix_rate_required")}</span>
             )}
           </div>
 
           <div className="mt-6">
             <Button
               type="submit"
-              className="border-[#4BB1D3] w-full h-[40px] mt-5 text-white bg-[#00BFFF] rounded-lg outline-none hover:bg-[#00A0E0] transition duration-200 ease-in-out sm:w-[100px] sm:h-[45px]"
+              className="border-[#4BB1D3] w-full h-[40px] mt-5 text-white bg-[#00BFFF] rounded-lg outline-none hover:bg-[#00A0E0] transition duration-200 ease-in-out sm:w-[150px] sm:h-[45px]"
             >
               <span>{t("add_button")}</span>
             </Button>
@@ -123,45 +119,7 @@ function page() {
         </form>
       </div>
 
-      {/* Success Modal */}
-      {showModal && (
-        <div className="fixed inset-0 bg-gray-500 bg-opacity-75 flex justify-center items-center z-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-96">
-            <h2 className="text-2xl font-bold text-center text-green-500">
-              {t("rate_added_sucessfully")}
-            </h2>
-            <p className="text-center text-gray-600 mt-2">
-              {t("rate_added_message")}
-            </p>
-            <div className="mt-4 flex justify-center">
-              <Button
-                onClick={closeModal}
-                className="bg-[#00BFFF] text-white hover:bg-[#00A0E0]"
-              >
-                {t("close_button")}
-              </Button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Error Modal */}
-      {errorModal && (
-        <div className="fixed inset-0 flex justify-center items-center bg-gray-500 bg-opacity-50">
-          <div className="bg-white p-6 rounded-lg">
-            <h2 className="text-xl font-semibold text-red-600">
-              {t("error_occured")}
-            </h2>
-            <p className="mt-2">{t("error_message")}</p>
-            <button
-              onClick={() => setErrorModal(false)}
-              className="mt-4 px-4 py-2 bg-[#00BFFF] text-white rounded"
-            >
-              {t("close_button")}
-            </button>
-          </div>
-        </div>
-      )}
+    
     </>
   );
 }

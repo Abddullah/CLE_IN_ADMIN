@@ -106,7 +106,9 @@
     "address_required_error": "L'indirizzo è obbligatorio",
      "dob_required_error": "La data di nascita è obbligatoria",
      "dob_placeholder": "Data di nascita",
-
+     "cancel": "Annulla",
+"save_Changes": "Salva le modifiche",
+"edit_user": "Modifica utente",
     "roleLabel": "Ruolo:",
     "addressLabel": "Indirizzo:",
     "genderLabel": "Genere:",
@@ -251,7 +253,9 @@
 "update": "Aggiorna",
 "select_Job_status": "Seleziona Stato Lavoro",
 "editTitle": "Titolo",
-"no_service_available":"Nessun servizio disponibile..."
+"no_service_available":"Nessun servizio disponibile...",
+"edit": "Modifica",
+"delete": "Elimina"
 
 
 
@@ -394,12 +398,8 @@
 "service": "Servizio",
   "rooms": "Camere",
   "area": "Area",
-  "rate": "Tariffa"
-
-
-
-
-
+  "rate": "Tariffa",
+  "Fix Rate": "Tariffa Fissa"
   },
   "logout":{
     "are_you_sure_logout": "Sei sicuro di voler uscire?",

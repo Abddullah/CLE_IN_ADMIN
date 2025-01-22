@@ -26,7 +26,7 @@ import { db } from "../../config/Firebase/FirebaseConfig";
 
 function page() {
   const t = useTranslations("Services");
-  const location = useSelector((state: any) => state.location); // Redux location state
+  const location = useSelector((state: any) => state.location); 
   const router = useRouter();
   const [images, setImages] = useState<(string | null)[]>(Array(6).fill(null));
 
@@ -49,21 +49,42 @@ function page() {
     input.click();
   };
 
-  const handleProviderChange = (selectedProvider: string) => {
-    // Find the selected user by userId (which is the value of the SelectItem)
-    const selectedUser = providers.find(
-      (user: any) => user.userId === selectedProvider
-    );
 
-    if (selectedUser) {
-      localStorage.setItem("servicePostId", selectedProvider);
+  const [selectedUserId, setSelectedUserId] = useState(null); 
+
+
+
+
+  // const handleProviderChange = (selectedProvider: string) => {
+  //   // Find the selected user by userId (which is the value of the SelectItem)
+  //   const selectedUser = providers.find(
+  //     (user: any) => user.userId === selectedProvider
+  //   );
+
+  //   if (selectedUser) {
+  //     localStorage.setItem("servicePostId", selectedProvider);
+  //   }
+  //   console.log(selectedProvider);
+    
+  // };
+
+  const handleProviderChange = (value:any) => {
+    const selectedProvider = providers.find((user:any) => user.fullName === value);
+    if (selectedProvider) {
+      setSelectedUserId(selectedProvider.userId); // Set the userId in state
+      
     }
+    localStorage.setItem("servicePostId", selectedUserId);
   };
+  
+  console.log(selectedUserId);
   const handleRemoveImage = (index: number) => {
     const updatedImages = [...images];
     updatedImages[index] = null; // Remove the selected image
     setImages(updatedImages); // Update the state
   };
+
+  
 
   interface Props {
     provider: string;
@@ -138,6 +159,9 @@ function page() {
 
   //testing the checkbox functionality
 
+
+
+  
  
  
 
@@ -302,44 +326,43 @@ const selectedRateValue = selectedRate ? selectedRate : 0;
             <h1 className="text-2xl font-bold mt-2">{t("addServices")}</h1>
 
             <div className="grid w-full items-center gap-1.5 mt-6">
-              <Controller
-                name="provider"
-                control={control}
-                rules={{
-                  required: t("providerRequired"),
-                }}
-                render={({ field: { value, onChange } }) => (
-                  <Select
-                    onValueChange={(value) => {
-                      onChange(value);
-                      handleProviderChange(value); // Update the hourly rate when the provider changes
-                    }}
-                    value={value}
-                  >
-                    <SelectTrigger className="w-full h-[55px] rounded-lg border border-[#4BB1D3] bg-gray-50 mt-1 pr-6 outline-[#4BB1D3] focus:border-[#4BB1D3] focus:outline-none focus:border-none">
-                      <SelectValue placeholder={t("selectProvider")} />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectGroup>
-                        <SelectLabel>{t("selectProvider")}</SelectLabel>
-                        {providers.map((user: any) => (
-                          <SelectItem key={user.userId} value={user.fullName}>
-                            {" "}
-                            {/* Use userId as the value */}
-                            {user.fullName}
-                          </SelectItem>
-                        ))}
-                      </SelectGroup>
-                    </SelectContent>
-                  </Select>
-                )}
-              />
-              {errors.provider && (
-                <p className="text-red-500 text-sm mt-1">
-                  {errors.provider.message}
-                </p>
-              )}
-            </div>
+      <Controller
+        name="provider"
+        control={control}
+        rules={{
+          required: t("providerRequired"),
+        }}
+        render={({ field: { value, onChange } }) => (
+          <Select
+            onValueChange={(value) => {
+              onChange(value);
+              handleProviderChange(value); // Set the userId when provider changes
+            }}
+            value={value}
+          >
+            <SelectTrigger className="w-full h-[55px] rounded-lg border border-[#4BB1D3] bg-gray-50 mt-1 pr-6 outline-[#4BB1D3] focus:border-[#4BB1D3] focus:outline-none focus:border-none">
+              <SelectValue placeholder={t("selectProvider")} />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                <SelectLabel>{t("selectProvider")}</SelectLabel>
+                {providers.map((user: any) => (
+                  <SelectItem key={user.userId} value={user.fullName}>
+                    {user.fullName}
+                  </SelectItem>
+                ))}
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+        )}
+      />
+      {errors.provider && (
+        <p className="text-red-500 text-sm mt-1">
+          {errors.provider.message}
+        </p>
+      )}
+   
+    </div>
             <div className="grid w-full items-center gap-1.5 mt-3">
               <p className="text-xl font-semibold mt-6 mb-4">{(t('selectCategory'))}</p>
               <label className="text-md font-semibold" htmlFor="category">
