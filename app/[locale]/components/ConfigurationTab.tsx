@@ -34,7 +34,7 @@ function ConfigurationTab() {
               : "text-white bg-[#859090] hover:bg-[#859090]"
           }`}
         >
-          {(t('Fix Rate'))}
+          {(t('Fix_Rate'))}
         </button>
 
         <button

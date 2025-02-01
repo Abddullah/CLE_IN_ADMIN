@@ -460,7 +460,7 @@ export function TableDemo() {
                       <strong>Gender:</strong> {invoice.gender}
                     </p>
                     <p>
-                      <strong>DOB:</strong> {invoice.dateBirth}
+                      <strong>DOB:</strong> {moment(invoice.dateBirth).format("D-M-YYYY")}
                     </p>
                     <p>
                       <strong>Role:</strong> {invoice.role}

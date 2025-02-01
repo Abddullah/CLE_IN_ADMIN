@@ -40,6 +40,8 @@ const t = useTranslations('navbar');
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   const [pathName, setPathName] = useState("");
 
+  
+
   const handleSearchChange = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       setSearchTerm(event.target.value);

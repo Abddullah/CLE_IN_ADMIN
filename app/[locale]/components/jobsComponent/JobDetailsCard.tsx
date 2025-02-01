@@ -125,11 +125,9 @@ const BookingModal = ({ bookingData, handleClose}:Props) => {
           </div>
 
           <h3 className="text-gray-600 text-sm sm:text-lg font-semibold">
-            {bookingData?.category} 
+            {bookingData?.category} / {bookingData?.subCategory}
           </h3>
-          <p className="text-gray-600 text-xs sm:text-sm">
-            {bookingData?.subCategory}
-          </p>
+        
 
           {/* Price, Cleaners, etc. */}
           <div className="max-w-full w-full bg-white shadow-lg rounded-lg p-6 mt-4 border border-gray-200">

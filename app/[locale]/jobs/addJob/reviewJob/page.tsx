@@ -13,7 +13,8 @@ import {
   serverTimestamp,
   GeoPoint,
   doc,
-  setDoc
+  setDoc,
+  getDocs
 } from "firebase/firestore";
 import SuccessModal from "@/app/[locale]/components/sucessModal";
 
@@ -66,6 +67,32 @@ function Page() {
   const timeStart = moment(reviewData[2]?.startTime, "HH:mm").format("hh:mm A")
   const timeEnd = moment(reviewData[2]?.endTime, "HH:mm").format("hh:mm A")
 
+  //fetch additional Service
+
+  const [additionalService , setAdditionalService]= useState([]);
+
+  
+
+  const fetchAdditionalServices = async (titlesToMatch:any) => {
+     // Initialize Firestore
+    const servicesCollection = collection(db, "additionalServices");  // Reference to your collection
+    
+    try {
+      const querySnapshot = await getDocs(servicesCollection);  // Fetch the data from the collection
+      const servicesList = querySnapshot.docs.map(doc => doc.data());  // Extract the data from each document
+      
+      // Filter the services based on matching titles
+      const filteredServices = servicesList.filter(service => titlesToMatch?.includes(service.title));
+    setAdditionalService(filteredServices)
+      
+      console.log(filteredServices);  // Log the filtered services
+    } catch (error) {
+      console.error("Error fetching additional services: ", error);
+    }
+  };
+
+  fetchAdditionalServices(reviewData[0]?.Additionalservices)
+  
 
   
 
@@ -99,7 +126,7 @@ function Page() {
         howManyHourDoYouNeed: reviewData[0]?.hour,
         howManyProfessionalDoYouNeed: reviewData[0]?.professional,
         subCategory: reviewData[0]?.subcategory,
-        aditionalServices: reviewData[0]?.Additionalservices,
+        aditionalServices: additionalService || [],
         createdAt: new Date().getTime(),
         addStatus: "pending",
         addType: "job",

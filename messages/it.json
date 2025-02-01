@@ -177,6 +177,7 @@
 
   },
   "Services":{
+   
     "addServices": "Aggiungi Servizi",
     "selectProvider": "Seleziona Nome del Fornitore",
     "providerRequired": "Il nome del fornitore è obbligatorio",
@@ -199,12 +200,15 @@
   "imageAlt": "immagine",
   "title": "Titolo",
   "serviceTitle": "Pulizia a Casa",
+  "save_changes":"Salva Modifiche",
   "descriptionTitle": "Descrizione",
   "descriptionText": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Blanditiis assumenda necessitatibus expedita, dicta iure eius dolorem voluptatum officia aut neque sint distinctio quia quasi sed recusandae voluptatibus voluptas magni error?",
 
  
   
     "titleJob": "Dettagli del Lavoro",
+
+"price":"Prezzo Aggiornato",
     "priceLabel": "Prezzo",
     "cleanersLabel": "Pulitori",
     "workFrequencyLabel": "Frequenza del Lavoro",
@@ -266,6 +270,8 @@
 
   },
   "Jobs":{
+    "select_hour": "Seleziona Ora",
+    "selected_professional": "Seleziona Professionista",
     "AddJobs": "Aggiungi lavori",
     "Provider": "Seleziona nome del provider",
     "HowManyHours": "Quante ore ti servono?",
@@ -312,6 +318,10 @@
   "moderate":"Moderato",
   "Pending":"Sospeso",
   "job_created_sucess": "Il tuo lavoro è stato creato con successo",
+  
+  "SelectSubcategory": "Seleziona sottocategoria",
+  "Categories": "Categorie",
+  "upload":"caricare",
 
 
     
@@ -368,6 +378,7 @@
     "price_placeholder": "Inserisci il prezzo",
     "price_required": "Il prezzo è obbligatorio",
     "add_button": "AGGIUNGI",
+    "Fix_Rate":"Tasso Fisso",
      "edit": "Modifica",
   "delete": "Elimina",
   "no_additional_service": "Nessun servizio aggiuntivo disponibile",

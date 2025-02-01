@@ -16,17 +16,18 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { setJobSlice } from '../../config/Redux/reducers/jobSlice';  // Import the action
-
+import { setJobSlice } from "../../config/Redux/reducers/jobSlice"; // Import the action
 
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import { useTranslations } from "next-intl";
 import MapComponent from "../../components/map/map";
 import { db } from "../../config/Firebase/FirebaseConfig";
-import { collection, getDocs , query , where } from "firebase/firestore";
+import { collection, getDocs, query, where } from "firebase/firestore";
 import { useDispatch } from "react-redux";
 import { setCategory } from "../../config/Redux/reducers/categorySlice";
 import FrequencyModal from "../../components/ChooseFrequencyModal";
+import { doc, getDoc } from "firebase/firestore";
+import { isFloat32Array } from "util/types";
 
 function page() {
   const t = useTranslations("Jobs");
@@ -56,8 +57,8 @@ function page() {
     Additionalservices: string[];
     location: { lng: number; lat: number };
     plan: { value: string };
-    total:number;
-    totalWithTax:number;
+    total: number;
+    totalWithTax: number;
   };
 
   interface RoomSize {
@@ -83,50 +84,57 @@ function page() {
     },
   });
 
-  
-
   const [form, setForm] = useState({
-    provider: '',
-    category: '',
-    subcategory: '',
+    provider: "",
+    category: "",
+    subcategory: "",
     hour: 0,
     professional: 0,
-    roomsizes: '',
-    numberofrooms: '',
-    needmaterial: '',
+    roomsizes: "",
+    numberofrooms: "",
+    needmaterial: "",
     Additionalservices: [],
     location: { lng: 0, lat: 0 },
-    plan: { value: '' }
+    plan: { value: "" },
   });
-
-  
 
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(true);
 
-  const onSubmit: SubmitHandler<FormInputs> = (data:any) => {
-   
+  const onSubmit: SubmitHandler<FormInputs> = (data: any) => {
+    dispatch(setJobSlice(data)); // Dispatch form data to Redux store
 
-    
-    
-    dispatch(setJobSlice(data));  // Dispatch form data to Redux store
-
-    localStorage.setItem('addJob' , JSON.stringify(data));    
+    localStorage.setItem("addJob", JSON.stringify(data));
     console.log(data);
     router.push("/jobs/addJob/location");
   };
 
+  const [isflag, setIsFlag] = useState<boolean>(false);
+  const [isflagForSubCat, setisflagForSubCat] = useState<boolean>(false);
+
+  const [categories, setCategories] = useState<any[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string>("");
+
   const [subCategories, setSubCategories] = useState<string[]>([]);
+  const [selectedSubCategory, setSelectedSubCategory] = useState("");
+  const CleaningAndHygineService = "Cleaning and Hygiene Services";
+
+  const [roomSizes, setRoomSizes] = useState<string[]>([]);
+  const [selectedRoomAreaSize, setSelectedRoomAreaSize] = useState("");
+  const [selectedRoomSizePrice , setSelectedRoomSizePrice]= useState(0);
 
   const [noOfRooms, setNoOfRooms] = useState<string[]>([]);
-  const [roomSizes, setRoomSizes] = useState<string[]>([]);
+  const [selectedNoOfRooms, setSelectedNoOfRooms] = useState("");
+  const [selectedNoOfRoomsPrice , setSelectedNoOfRoomsPrice]= useState(0);
+
+
+
+  const [selectedNeedMaterial, setSelectedNeedMaterial] = useState("");
   const [additionalServices, setAdditionalServices] = useState<string[]>([]);
   const [hourPrice, setHourPrice] = useState<number>(0);
   const [error, setError] = useState<any>(null);
   const [roomPrices, setRoomPrices] = useState<any>();
   const [roomCountsPrices, setRoomCountsPrices] = useState<string[]>([]);
-
   const [selectedRoomPrice, setSelectedRoomPrice] = useState<number>(0);
   const [selectedRoomCountPrice, setSelectedRoomCountPrice] =
     useState<number>(0);
@@ -135,22 +143,117 @@ function page() {
   const [additionalServicePrice, setAdditionalServicesPrice] = useState<any>();
   const [selectedProfessional, setSelectedProfessional] = useState<number>(0);
   const [images, setImages] = useState<(string | null)[]>(Array(6).fill(null));
-
   const [selectedServices, setSelectedServices] = useState<string[]>([]);
 
   const [totalPrice, setTotalPrice] = useState<number>(0);
 
   const [selectedHour, setSelectedHour] = useState<number>(0);
 
-  const [categories, setCategories] = useState<{ [key: string]: string[] }>({});
-
   const [selectedMaterialPrice, setSelectedMaterialPrice] = useState<number>(0);
   const [users, setUsers] = useState<any[]>([]);
-  const [previousUserRate , setPreviouUserRate] = useState<number>(0);
+  const [previousUserRate, setPreviouUserRate] = useState<number>(0);
+  const [selectedName, setSelectedName] = useState("");
+
+  const getUserName = async (userId: string) => {
+    try {
+      const userRef = doc(db, "users", userId);
+      const userDoc = await getDoc(userRef);
+
+      if (userDoc.exists()) {
+        setSelectedName(userDoc.data().fullName);
+      } else {
+        console.log("User not found");
+      }
+    } catch (error) {
+      console.error("Error fetching user:", error);
+    }
+  };
+
+  const editHandler = () => {
+    const data = localStorage.getItem("editJob");
+    if (data) {
+      const parsedData = JSON.parse(data);
+      const matchedUser = users.find(
+        (user: any) => user.userId === parsedData[0].postedBy
+      );
+      if (matchedUser) {
+        setSelectedName(matchedUser.fullName);
+      }
+      setSelectedHour(Number(parsedData[0].howManyHourDoYouNeed));
+      setSelectedProfessional(
+        Number(parsedData[0].howManyProfessionalDoYouNeed)
+      );
+      setSelectedCategory(parsedData[0].category);
+      setSelectedSubCategory(parsedData[0].subCategory);
+      setSelectedRoomAreaSize(parsedData[0].roomSize);
+      setSelectedNoOfRooms(parsedData[0].roomsQty);
+      setSelectedNeedMaterial(parsedData[0].needCleaningMaterials);
+      setTotalPrice(Number(parsedData[0].totalPrice));
+      const additionalService = parsedData[0].aditionalServices.map(
+        (item: any) => item.title
+      );
+      setSelectedServices(additionalService);
+      
+    }
+  };
+
+
+  useEffect(() => {
+    const myIndex = roomSizes.indexOf(selectedRoomAreaSize);
+    if (myIndex !== -1) {
+      const myIndexPrice = parseFloat(roomPrices[myIndex] || 0);
+      setSelectedRoomSizePrice(myIndexPrice);
+    }
+  
+    const myIndexNoOfRooms = noOfRooms.indexOf(selectedNoOfRooms);
+    if (myIndexNoOfRooms !== -1) {
+      const myIndexPrice = parseFloat(roomCountsPrices[myIndexNoOfRooms] || '0');
+      setSelectedNoOfRoomsPrice(myIndexPrice);
+    }
+  }, [selectedRoomAreaSize, selectedNoOfRooms , editHandler]);
+  
+console.log(selectedNoOfRoomsPrice , 'no of rooms ki price')
+
+const userHourlyRate = users.find((user) => user.fullName === selectedName)?.hourlyRate || 'N/A'
+
+
+const calculateTotal = (
+  roomPrice: number,
+  roomCountPrice: number,
+  hours: number,
+  selectedProfessional: number, 
+  hourlyRate: number 
+) => {
+  // Calculate room price
+  const totalRoomPrice = roomPrice + roomCountPrice;
+
+  // Calculate hourly price
+  const totalHourlyPrice = hourlyRate * hours ;
+
+  // Calculate professional price
+  const totalProfessionalPrice =
+    selectedProfessional > 1
+      ? (selectedProfessional - 1) * totalHourlyPrice
+      : 0;
+
+  // Calculate final total
+  const total = totalRoomPrice + totalHourlyPrice + totalProfessionalPrice;
+
   
 
-  //fetch the users from the firebase 
+  setTotalPrice(total);
+ 
+};
 
+
+
+
+
+
+
+
+
+  //fetch the users from the firebase
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -171,33 +274,57 @@ function page() {
         console.error("Error fetching users:", error);
       }
     };
-
+    
     fetchUsers();
   }, []);
 
+
+  
+  
+
+ 
+
+
+
+  
+
   const handleProviderChange = (selectedProvider: string) => {
     // Find the selected user by userId (which is the value of the SelectItem)
-    const selectedUser = users.find((user: any) => user.userId === selectedProvider);
+    console.log()
+    const selectedUser = users.find(
+      (user: any) => user.userId === selectedProvider
+    );
 
     if (selectedUser) {
-        const newHourlyRate = Number(selectedUser.hourlyRate);
-        setHourPrice(newHourlyRate);
-        
-        // Save userId in local storage
-        localStorage.setItem('JobPostUserId', selectedProvider);
+      // const newHourlyRate = Number(selectedUser.
+      //   hourlyRate || 0);
+    
+   
+      // Save userId in local storage
+      localStorage.setItem("JobPostUserId", selectedProvider);
+
+      // Update hourly rate
+      setHourPrice(userHourlyRate);
+
     }
-};
+  };
+  console.log(hourPrice , 'user ky hourlyrates')
 
 
+
+  
+
+  // Watch for changes in `hourPrice` to update the total price
   useEffect(() => {
-    // Optionally handle state changes, if needed
-    console.log("Total:", totalPrice); // Log the updated total
-  }, [totalPrice]);
+    // Recalculate total price based on the updated hourly rate
+    if (hourPrice && selectedHour) {
+      const newTotalPrice = hourPrice * selectedHour;
+      setTotalPrice(newTotalPrice);
+      console.log("Total price updated:", newTotalPrice);
+    }
+  }, [hourPrice, selectedHour]); 
 
-
-
-
-
+ 
   const location = useSelector((state: any) => state.location);
   const plane = useSelector((state: any) => state.plan);
 
@@ -224,44 +351,56 @@ function page() {
 
   const handleRemoveImage = (index: number) => {
     const updatedImages = [...images];
-    updatedImages[index] = null; // Remove the selected image
-    setImages(updatedImages); // Update the state
+    updatedImages[index] = null;
+    setImages(updatedImages);
   };
 
   useEffect(() => {
-    const fetchCategories = async () => {
-      const categoriesCollection = collection(db, "categories");
-      const categorySnapshot = await getDocs(categoriesCollection);
-      const categoriesData: { [key: string]: string[] } = {};
-
-      categorySnapshot.forEach((doc) => {
-        const data = doc.data();
-        const categoryName = data.categoryName;
-        const subCategories: string[] = data.subCategories || [];
-        categoriesData[categoryName] = subCategories;
-      });
-
-      setCategories(categoriesData);
-      dispatch(setCategory(categoriesData));
-    };
-
     fetchCategories();
   }, []);
 
   useEffect(() => {
-    // Update subCategories based on selectedCategory
-    if (selectedCategory && categories[selectedCategory]) {
-      setSubCategories(categories[selectedCategory]);
-    } else {
-      setSubCategories([]);
-    }
-  }, [selectedCategory, categories]);
+    editHandler();
+  }, [isflag]);
 
-  const handleCategoryChange = (value: string) => {
-    setSelectedCategory(value);
+  const fetchCategories = () => {
+    const data = localStorage.getItem("editJob");
+
+    const categoriesCollection = collection(db, "categories");
+    getDocs(categoriesCollection)
+      .then((snapshot) => {
+        const categories = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setCategories(categories);
+        
+
+        if (data) {
+          const parsedData: { category: string }[] = JSON.parse(data);
+          if (Array.isArray(parsedData) && parsedData.length > 0) {
+            const subCat = (categories as any).find(
+              (category: any) =>
+                category?.categoryName === parsedData[0]?.category
+            );
+            setSubCategories(subCat?.subCategories ?? []);
+            setIsFlag(!isflag);
+          }
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching categories:", error);
+      });
   };
 
-  
+  const categoryHandler = (categoryName: any) => {
+    setSelectedCategory(categoryName);
+    let subCat = categories.find(
+      (category) => category.categoryName === categoryName
+    );
+    setSubCategories(subCat?.subCategories);
+  };
+
   // Fetch room sizes and their prices
   useEffect(() => {
     const fetchRoomSizes = async () => {
@@ -301,39 +440,21 @@ function page() {
     };
     fetchNumberOfRooms();
   }, []);
+  
 
-  const calculateTotal = (
-    roomPrice: number,
-    roomCountPrice: number,
-    hours: number,
-    selectedProfessional: number, // Number of professionals selected
-    hourlyRate: number // Hourly rate for the service
-  ) => {
-    // Calculate room price
-    const totalRoomPrice = roomPrice + roomCountPrice;
-
-    // Calculate hourly price
-    const totalHourlyPrice = hourlyRate * hours;
-
-    // Calculate professional price
-    const totalProfessionalPrice =
-      selectedProfessional > 1
-        ? (selectedProfessional - 1) * totalHourlyPrice
-        : 0;
-
-    // Calculate final total
-    const total = totalRoomPrice + totalHourlyPrice + totalProfessionalPrice;
-    setTotalPrice(total); // Update total price in state
-    
-  };
+  
+  
+  
 
   // Updated handleHourChange function to explicitly pass hourPrice
   const handleHourChange = (hours: number) => {
     setSelectedHour(hours);
-    setValue("hour", hours);
+    console.log(selectedHour , "selected hour")
+    setValue("hour", hours );
+   
     calculateTotal(
-      selectedRoomPrice,
-      selectedRoomCountPrice,
+      selectedRoomSizePrice,
+      selectedNoOfRoomsPrice,
       hours,
       selectedProfessional,
       hourPrice // Pass the current hourPrice
@@ -344,14 +465,21 @@ function page() {
   const handleSelectProfessional = (professional: number) => {
     setSelectedProfessional(professional);
     setValue("professional", professional);
+   
     calculateTotal(
       selectedRoomPrice,
       selectedRoomCountPrice,
       selectedHour || 0,
-      professional,
+      selectedProfessional,
       hourPrice // Pass the current hourPrice
     );
   };
+  
+
+  
+
+
+ 
 
   // Ensure room size and room count functions also pass hourPrice
   const handleRoomSizeChange = (value: string) => {
@@ -360,22 +488,23 @@ function page() {
     setSelectedRoomPrice(price);
     calculateTotal(
       price,
-      selectedRoomCountPrice,
+      selectedRoomSizePrice,
       selectedHour || 0,
       selectedProfessional,
-      hourPrice // Pass the current hourPrice
+      hourPrice 
     );
   };
 
   const handleNoOfRoomsChange = (value: string) => {
+    setSelectedNoOfRooms(value);
     const selectedIndex = noOfRooms.indexOf(value);
     const price = parseFloat(roomCountsPrices[selectedIndex] || "0");
     setSelectedRoomCountPrice(price);
     calculateTotal(
-      selectedRoomPrice,
+      selectedNoOfRoomsPrice,
       price,
       selectedHour || 0,
-      selectedProfessional,
+      selectedProfessional ,
       hourPrice // Pass the current hourPrice
     );
   };
@@ -393,8 +522,9 @@ function page() {
     }
     setTotalPrice((prevPrice) => prevPrice - selectedMaterialPrice + price);
     setSelectedMaterialPrice(price);
-    setValue("needmaterial" , matererialSelectedOption)
+    setValue("needmaterial", matererialSelectedOption);
   };
+
   useEffect(() => {
     if (location) {
       setValue("location", { lng: location.lng, lat: location.lat });
@@ -410,8 +540,8 @@ function page() {
   useEffect(() => {
     const fetchServicesAndPrices = async () => {
       try {
-        const servicesRef = collection(db, "additionalServices"); // Fetching collection of additional services
-        const querySnapshot = await getDocs(servicesRef); // Getting all documents
+        const servicesRef = collection(db, "additionalServices"); 
+        const querySnapshot = await getDocs(servicesRef); 
 
         let servicesData: any[] = [];
         let servicesPrice: any = {};
@@ -424,7 +554,7 @@ function page() {
         });
 
         setAdditionalServices(servicesData); // Set the services list
-        
+
         setAdditionalServicesPrice(servicesPrice); // Set the prices for each service
       } catch (err) {
         console.error("Error fetching services: ", err);
@@ -434,22 +564,19 @@ function page() {
     fetchServicesAndPrices();
   }, []); // Only run once when the component mounts
 
- 
-
-
   const handleCheckboxChange = (service: string): void => {
     setSelectedServices((prevSelectedServices) => {
       const updatedServices = prevSelectedServices.includes(service)
         ? prevSelectedServices.filter((item) => item !== service)
         : [...prevSelectedServices, service];
-  
+
       // Set the updated services in the form value
       setValue("Additionalservices", updatedServices);
-  
+
       return updatedServices;
     });
-  
-    const servicePrice = additionalServicePrice[service] || 0; // Get price of the selected service
+
+    const servicePrice = additionalServicePrice[service] || 0;
     if (selectedServices.includes(service)) {
       // If already selected, deselect it and subtract the price
       setTotalPrice((prevPrice) => prevPrice - servicePrice); // Subtract price from total
@@ -458,7 +585,6 @@ function page() {
       setTotalPrice((prevPrice) => prevPrice + servicePrice); // Add price to total
     }
   };
-  
 
   //set total when user change the category from cleaning to someother category
 
@@ -488,44 +614,34 @@ function page() {
     }
   }, [selectedCategory]);
 
-  setValue('total' , totalPrice)
+  setValue("total", totalPrice);
 
-  useEffect(()=>{
+  useEffect(() => {
     const data = localStorage.getItem("tax");
 
-const tax = data ? JSON.parse(data) : 0;
+    const tax = data ? JSON.parse(data) : 0;
 
-// Check if tax is an array
-if (Array.isArray(tax)) {
-  const totalPercentage = tax
-    .map(item => Number(item.percentage)) 
-    .reduce((sum, percentage) => sum + percentage, 0); 
-    const totalWithTax = Number((totalPrice * (1 + (totalPercentage/100) )).toFixed(1));
-    setValue('totalWithTax', totalWithTax);
+    // Check if tax is an array
+    if (Array.isArray(tax)) {
+      const totalPercentage = tax
+        .map((item) => Number(item.percentage))
+        .reduce((sum, percentage) => sum + percentage, 0);
+      const totalWithTax = Number(
+        (totalPrice * (1 + totalPercentage / 100)).toFixed(1)
+      );
+      setValue("totalWithTax", totalWithTax);
+    } else {
+      console.log("No valid tax data found.");
+      setValue("totalWithTax", totalPrice);
+    }
+  }, [totalPrice]);
 
-
- 
-} else {
-  console.log("No valid tax data found.");
-  setValue("totalWithTax" , totalPrice)
-}
-
-  } , [totalPrice])
-
-
-  
-  
-
-  
-   
-  
-  
   return (
     <>
       <div className="bg-[#F5F7FA] min-h-screen w-full flex items-start justify-start relative">
-        <div className="flex items-center justify-center h-screen">
+        {/* <div className="flex items-center justify-center h-screen">
           <FrequencyModal />
-        </div>
+        </div> */}
 
         <div className="max-w-7xl mx-auto p-4 sm:p-6 lg">
           <form
@@ -534,39 +650,47 @@ if (Array.isArray(tax)) {
           >
             <h1 className="text-2xl font-bold mt-2">{t("AddJobs")}</h1>
             <div className="grid w-full items-center gap-1.5">
-      <Controller
-        name="provider"
-        control={control}
-        rules={{
-          required: t("ProviderRequired"),
-        }}
-        render={({ field: { value, onChange } }) => (
-          <Select onValueChange={(value) => {
-            onChange(value);
-            handleProviderChange(value); // Update the hourly rate when the provider changes
-          }} value={value}>
-            <SelectTrigger className="w-full h-[55px] rounded-lg border border-[#4BB1D3] bg-gray-50 mt-1 pr-6 outline-[#4BB1D3] focus:border-[#4BB1D3] focus:outline-none focus:border-none">
-              <SelectValue placeholder={t("Provider")} />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                <SelectLabel>{t("Provider")}</SelectLabel>
-                {users.map((user: any) => (
-                  <SelectItem key={user.userId} value={user.userId}> {/* Use userId as the value */}
-                    {user.fullName}
-                  </SelectItem>
-                ))}
-              </SelectGroup>
-            </SelectContent>
-          </Select>
-        )}
-      />
-      {errors.provider && (
-        <p className="text-red-500 text-sm mt-1">
-          {errors.provider.message}
-        </p>
-      )}
-    </div>
+              <Controller
+                name="provider"
+                control={control}
+                rules={{
+                  required: t("ProviderRequired"),
+                }}
+                render={({ field: { value, onChange } }) => (
+                  <Select
+                    value={value || selectedName} // Show correct initial value
+                    onValueChange={(newValue) => {
+                      setSelectedName(newValue);
+                      onChange(newValue);
+                      handleProviderChange(newValue);
+                    }}
+                  >
+                    <SelectTrigger className="w-full h-[55px] rounded-lg border border-[#4BB1D3] bg-gray-50 mt-1 pr-6 outline-[#4BB1D3] focus:border-[#4BB1D3] focus:outline-none focus:border-none">
+                      <SelectValue
+                        placeholder={selectedName || t("Provider")}
+                      />
+                    </SelectTrigger>
+
+                    <SelectContent>
+                      <SelectGroup>
+                        <SelectLabel>{t("Provider")}</SelectLabel>
+                        {users.map((user: any) => (
+                          <SelectItem key={user.userId} value={user.fullName}>
+                            {user.fullName}
+                          </SelectItem>
+                        ))}
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                )}
+              />
+
+              {errors.provider && (
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.provider.message}
+                </p>
+              )}
+            </div>
 
             <div className="flex flex-col mt-6 h-full">
               <h2 className="text-lg font-semibold text-gray-800">
@@ -627,40 +751,53 @@ if (Array.isArray(tax)) {
             </div>
 
             <div className="grid w-full items-center gap-1.5 mt-3">
-              <p className="text-xl font-semibold mt-6 mb-4">Select Category</p>
+              <p className="text-xl font-semibold mt-6 mb-4">
+                {t("SelectCategory")}
+              </p>
               <label className="text-md font-semibold" htmlFor="category">
-                Category
+                {t("Category")}
               </label>
+
               <Controller
                 name="category"
                 control={control}
                 rules={{
-                  required: "Category is required",
+                  required: t("CategoryRequired"),
                 }}
                 render={({ field }) => (
                   <Select
                     value={selectedCategory}
                     onValueChange={(value) => {
                       field.onChange(value);
-                      handleCategoryChange(value);
+                      categoryHandler(value);
                     }}
                   >
                     <SelectTrigger className="w-full h-[55px] rounded-lg border p-4 pr-6 border-[#4BB1D3] bg-gray-50 outline-[#4BB1D3] focus:border-blue-500 focus:outline-none">
-                      <SelectValue placeholder="Select Category" />
+                      <SelectValue
+                        placeholder={
+                          field.value || selectedCategory || t("SelectCategory")
+                        }
+                      />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectGroup>
-                        <SelectLabel>Categories</SelectLabel>
-                        {Object.keys(categories).map((category) => (
-                          <SelectItem key={category} value={category}>
-                            {category}
-                          </SelectItem>
-                        ))}
+                        <SelectLabel>{t("categories")}</SelectLabel>
+
+                        {categories &&
+                          categories.map((category, index) => (
+                            <SelectItem
+                              key={index}
+                              value={category.categoryName}
+                            >
+                              {category.categoryName}
+                            </SelectItem>
+                          ))}
                       </SelectGroup>
                     </SelectContent>
                   </Select>
                 )}
               />
+
               {errors.category && (
                 <p className="text-red-500 mt-2 text-sm">
                   {errors.category.message}
@@ -668,33 +805,41 @@ if (Array.isArray(tax)) {
               )}
 
               {/* Render subcategories if available */}
-              {subCategories.length > 0 && (
+              {subCategories?.length != 0 && (
                 <div className="grid w-full items-center gap-1.5 mt-4">
                   <label
                     className="text-md font-semibold"
                     htmlFor="subcategory"
                   >
-                    Subcategories
+                    {t("Subcategories")}
                   </label>
                   <Controller
                     name="subcategory"
                     control={control}
                     rules={{
-                      required: "Subcategory is required",
+                      required: (t('SubcategoryRequired')),
                     }}
                     render={({ field: { value, onChange } }) => (
-                      <Select value={value} onValueChange={onChange}>
+                      <Select
+                        value={selectedSubCategory}
+                        onValueChange={(newValue: any) => {
+                          setSelectedSubCategory(newValue);
+                          onChange(newValue);
+                        }}
+                      >
                         <SelectTrigger className="w-full h-[55px] rounded-lg border p-4 pr-6 border-[#4BB1D3] bg-gray-50 outline-[#4BB1D3] focus:border-blue-500 focus:outline-none">
-                          <SelectValue placeholder="Select Subcategory" />
+                          <SelectValue placeholder={t("Select_SubCategory")} />
                         </SelectTrigger>
                         <SelectContent>
                           <SelectGroup>
-                            <SelectLabel>Subcategories</SelectLabel>
-                            {subCategories.map((subCategory) => (
-                              <SelectItem key={subCategory} value={subCategory}>
-                                {subCategory}
-                              </SelectItem>
-                            ))}
+                            <SelectLabel> {t("Subcategories")}</SelectLabel>
+                            {subCategories != undefined &&
+                              subCategories.length != 0 &&
+                              subCategories?.map((subCategory, index) => (
+                                <SelectItem key={index} value={subCategory}>
+                                  {subCategory}
+                                </SelectItem>
+                              ))}
                           </SelectGroup>
                         </SelectContent>
                       </Select>
@@ -719,21 +864,25 @@ if (Array.isArray(tax)) {
                       {t("RoomAreaSize")}
                     </label>
                     <Controller
-                      name="roomsizes"
-                      control={control}
-                      rules={{
-                        required: t("RoomSizeRequired"),
-                      }}
-                      render={({ field: { value, onChange } }) => (
-                        <Select
-                          onValueChange={(value) => {
-                            onChange(value);
-                            handleRoomSizeChange(value); // Update the price when room size changes
-                          }}
-                          value={value}
-                        >
+  name="roomsizes"
+  control={control}
+  rules={{
+    required: t("RoomSizeRequired"),
+  }}
+  defaultValue={selectedRoomAreaSize}
+  render={({ field: { value, onChange } }) => (
+    <Select
+      value={value}
+      onValueChange={(newValue) => {
+        setSelectedRoomAreaSize(newValue);
+        handleRoomSizeChange(value);
+        onChange(newValue);
+      }}
+    >
                           <SelectTrigger className="w-full h-[55px] rounded-lg border border-[#4BB1D3] bg-gray-50 mt-1 pr-6 outline-[#4BB1D3] focus:border-[#4BB1D3] focus:outline-none focus:border-none">
-                            <SelectValue placeholder={t("RoomAreaSize")} />
+                            <SelectValue  placeholder={
+        selectedRoomAreaSize || t("RoomAreaSize")
+      }/>
                           </SelectTrigger>
                           <SelectContent>
                             <SelectGroup>
@@ -762,22 +911,24 @@ if (Array.isArray(tax)) {
                     >
                       {t("NumberOfRoom")}
                     </label>
-                    <Controller
-                      name="numberofrooms"
-                      control={control}
-                      rules={{
-                        required: t("RequiredNumberOfRoom"),
-                      }}
-                      render={({ field: { value, onChange } }) => (
-                        <Select
-                          onValueChange={(value) => {
-                            onChange(value);
-                            handleNoOfRoomsChange(value);
-                          }}
-                          value={value}
-                        >
+                    
+
+<Controller
+  name="numberofrooms"
+  control={control}
+  rules={{
+    required: t("RequiredNumberOfRoom"),
+  }}
+  render={({ field: { value, onChange } }) => (
+    <Select
+      value={value || selectedNoOfRooms}
+      onValueChange={(newValue) => {
+        onChange(newValue);
+        handleNoOfRoomsChange(newValue);
+      }}
+    >
                           <SelectTrigger className="w-full h-[55px] rounded-lg border border-[#4BB1D3] bg-gray-50 mt-1 pr-6 outline-[#4BB1D3] focus:border-[#4BB1D3] focus:outline-none focus:border-none">
-                            <SelectValue placeholder={t("NumberOfRoom")} />
+                            <SelectValue placeholder={t("NumberOfRoom") || selectedNoOfRooms} />
                           </SelectTrigger>
                           <SelectContent>
                             <SelectGroup>
@@ -870,7 +1021,7 @@ if (Array.isArray(tax)) {
               </>
             )}
             <div className="grid w-full items-center gap-2 mt-3">
-              <p className="font-semibold text-lg">Photos</p>
+              <p className="font-semibold text-lg">{t("photos")}</p>
               <div className="flex flex-wrap gap-10">
                 {images.map((image, index) => (
                   <div
@@ -897,7 +1048,7 @@ if (Array.isArray(tax)) {
                       </>
                     ) : (
                       <span className="text-gray-500 text-sm font-medium">
-                        + Upload
+                        + {t("upload")}
                       </span>
                     )}
                   </div>
@@ -924,13 +1075,13 @@ if (Array.isArray(tax)) {
         </div>
 
         <div className="fixed bottom-0 w-full sm:left-[10%] sm:w-[100%] bg-[#00BFFF]  text-gray-200 z-20 p-3 rounded-t-lg shadow-2xl">
-  <div className="flex justify-center items-center">
-    <span className="text-lg font-semibold uppercase tracking-wide">Total Amount : </span>
-    <span className="text-2xl font-bold ml-2"> € {totalPrice}</span>
-  </div>
-</div>
-
-
+          <div className="flex justify-center items-center">
+            <span className="text-lg font-semibold uppercase tracking-wide">
+              Total Amount :{" "}
+            </span>
+            <span className="text-2xl font-bold ml-2"> € {totalPrice}</span>
+          </div>
+        </div>
       </div>
     </>
   );

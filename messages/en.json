@@ -256,7 +256,10 @@
     "editTitle":"Title",
     "no_service_available":"No Services Available...",
     "edit": "Edit",
-  "delete": "Delete"
+  "delete": "Delete",
+  "save_changes":"Save Changes",
+  "price":"Updated Price"
+  
   },
   "Jobs":{
     "AddJobs": "Add Jobs",
@@ -318,6 +321,14 @@
   "cancel":"Cancel",
     "update":"Update",
     "no_job_available":"No Jobs Available...",
+    "select_hour":"Select Hour",
+    "selected_professional":"Select Professional",
+
+   
+    
+   
+    "SelectSubcategory": "Select Subcategory",
+    "Categories": "Categories",
 
 
 
@@ -352,7 +363,8 @@
       "total": "Total",
       "subcategory":"SubCategory",
       "edit": "Edit",
-      "delete": "Delete"
+      "delete": "Delete",
+      "upload":"upload"
 
   }, 
   "AdditionalServices":{
