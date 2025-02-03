@@ -120,10 +120,12 @@ function page() {
   const CleaningAndHygineService = "Cleaning and Hygiene Services";
 
   const [roomSizes, setRoomSizes] = useState<string[]>([]);
+  const [previousRoomSizeRate , setPreviousRoomSizeRate]= useState(0);
   const [selectedRoomAreaSize, setSelectedRoomAreaSize] = useState("");
   const [selectedRoomSizePrice , setSelectedRoomSizePrice]= useState(0);
 
   const [noOfRooms, setNoOfRooms] = useState<string[]>([]);
+  const [selectedRoomNoOfSizePrice , setSelectedRoomNoOfSizePrice]= useState(0);
   const [selectedNoOfRooms, setSelectedNoOfRooms] = useState("");
   const [selectedNoOfRoomsPrice , setSelectedNoOfRoomsPrice]= useState(0);
 
@@ -153,6 +155,11 @@ function page() {
   const [users, setUsers] = useState<any[]>([]);
   const [previousUserRate, setPreviouUserRate] = useState<number>(0);
   const [selectedName, setSelectedName] = useState("");
+  const [isEdited , setIsEdited]= useState();
+  const [allRoomSize , setAllRoomSize]= useState([]);
+  const [allNoOfRooms , setAllNoOfRoom] = useState([]);
+  const [hasEdited, setHasEdited] = useState(false);
+ 
 
   const getUserName = async (userId: string) => {
     try {
@@ -173,6 +180,7 @@ function page() {
     const data = localStorage.getItem("editJob");
     if (data) {
       const parsedData = JSON.parse(data);
+      setIsEdited(parsedData[0]);
       const matchedUser = users.find(
         (user: any) => user.userId === parsedData[0].postedBy
       );
@@ -198,23 +206,24 @@ function page() {
   };
 
 
-  useEffect(() => {
-    const myIndex = roomSizes.indexOf(selectedRoomAreaSize);
-    if (myIndex !== -1) {
-      const myIndexPrice = parseFloat(roomPrices[myIndex] || 0);
-      setSelectedRoomSizePrice(myIndexPrice);
-    }
+//   useEffect(() => {
+//     const myIndex = roomSizes.indexOf(selectedRoomAreaSize);
+//     if (myIndex !== -1) {
+//       const myIndexPrice = parseFloat(roomPrices[myIndex] || 0);
+//       setSelectedRoomSizePrice(myIndexPrice);
+//     }
   
-    const myIndexNoOfRooms = noOfRooms.indexOf(selectedNoOfRooms);
-    if (myIndexNoOfRooms !== -1) {
-      const myIndexPrice = parseFloat(roomCountsPrices[myIndexNoOfRooms] || '0');
-      setSelectedNoOfRoomsPrice(myIndexPrice);
-    }
-  }, [selectedRoomAreaSize, selectedNoOfRooms , editHandler]);
+//     const myIndexNoOfRooms = noOfRooms.indexOf(selectedNoOfRooms);
+//     if (myIndexNoOfRooms !== -1) {
+//       const myIndexPrice = parseFloat(roomCountsPrices[myIndexNoOfRooms] || '0');
+//       setSelectedNoOfRoomsPrice(myIndexPrice);
+//     }
+//   }, [selectedRoomAreaSize, selectedNoOfRooms , editHandler]);
   
-console.log(selectedNoOfRoomsPrice , 'no of rooms ki price')
+// console.log(selectedNoOfRoomsPrice , 'no of rooms ki price')
 
 const userHourlyRate = users.find((user) => user.fullName === selectedName)?.hourlyRate || 'N/A'
+
 
 
 const calculateTotal = (
@@ -296,8 +305,7 @@ const calculateTotal = (
     );
 
     if (selectedUser) {
-      // const newHourlyRate = Number(selectedUser.
-      //   hourlyRate || 0);
+      
     
    
       // Save userId in local storage
@@ -308,7 +316,7 @@ const calculateTotal = (
 
     }
   };
-  console.log(hourPrice , 'user ky hourlyrates')
+  
 
 
 
@@ -411,8 +419,12 @@ const calculateTotal = (
 
         querySnapshot.forEach((doc) => {
           const data = doc.data() as RoomSize;
+         
           sizes.push(data.title);
           prices.push(data.rate);
+          allRoomSize.push(data);
+          setAllRoomSize([...allRoomSize])
+
         });
 
         setRoomSizes(sizes);
@@ -432,8 +444,11 @@ const calculateTotal = (
         const querySnapshot = await getDocs(collection(db, "NoOfRooms"));
         const roomNumbers = querySnapshot.docs.map((doc) => doc.data().title);
         const prices = querySnapshot.docs.map((doc) => doc.data().price);
+        const data = querySnapshot.docs.map((doc) => doc.data());
+        setAllNoOfRoom(data);
         setNoOfRooms(roomNumbers);
         setRoomCountsPrices(prices);
+
       } catch (error) {
         console.error("Error fetching number of rooms: ", error);
       }
@@ -442,9 +457,6 @@ const calculateTotal = (
   }, []);
   
 
-  
-  
-  
 
   // Updated handleHourChange function to explicitly pass hourPrice
   const handleHourChange = (hours: number) => {
@@ -505,7 +517,7 @@ const calculateTotal = (
       price,
       selectedHour || 0,
       selectedProfessional ,
-      hourPrice // Pass the current hourPrice
+      hourPrice 
     );
   };
 
@@ -635,6 +647,58 @@ const calculateTotal = (
       setValue("totalWithTax", totalPrice);
     }
   }, [totalPrice]);
+
+ 
+  const totalForEdit = () => {
+    let total = 0;
+  
+    // Check if data is available
+  
+    // Find and add room size rate
+    const findRoomSize = allRoomSize.find(item => item.title === isEdited.roomSize);
+    if (findRoomSize) {
+      const roomSizeRate = Number(findRoomSize.rate) || 0;
+      total += roomSizeRate;
+      setPreviousRoomSizeRate(roomSizeRate);
+    } else {
+      console.warn('No matching room size found');
+    }
+  
+    // Find and add room quantity price
+    const findNoOfRooms = noOfRooms.find(item => item.title === isEdited.roomsQty);
+    if (findNoOfRooms) {
+      const roomsPrice = Number(findNoOfRooms.price) || 0;
+      total += roomsPrice;
+      setSelectedNoOfRoomsPrice(roomsPrice);
+    } else {
+      console.warn('No matching room quantity found');
+    }
+  
+      setTotalPrice(prevPrice => prevPrice + total);
+  };
+
+
+
+  
+  
+ 
+
+
+ 
+  useEffect(() => {
+    if (isEdited && !hasEdited) {
+      const timeout = setTimeout(() => {
+        setHasEdited(true);
+        if (isEdited.addType === 'job') totalForEdit();
+      }, 0);
+      editHandler();
+      return () => clearTimeout(timeout);
+    }
+  }, [isEdited, hasEdited]);
+  
+
+  
+  
 
   return (
     <>

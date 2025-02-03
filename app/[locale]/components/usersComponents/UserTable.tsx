@@ -16,13 +16,14 @@ import {
   doc,
   deleteDoc,
 } from "firebase/firestore";
-
 import { db } from "../../config/Firebase/FirebaseConfig";
-import { useRouter } from "next/navigation";
 import { useRef } from "react";
 import { getFunctions, httpsCallable } from "firebase/functions";
 import moment from "moment";
 import { useTranslations } from "next-intl";
+import { useRouter } from "next/navigation";
+
+
 
 interface Invoice {
   Name: string;
@@ -41,6 +42,7 @@ export function TableDemo() {
   const [expandedRows, setExpandedRows] = useState<Set<number>>(new Set());
   const [activeMenu, setActiveMenu] = useState<number | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [filterData , setFilterData] = useState();
   const [selectedInvoice, setSelectedInvoice] = useState<Invoice | null>(null);
   const [formData, setFormData] = useState<Invoice>({
     Name: "",
@@ -52,6 +54,24 @@ export function TableDemo() {
     dateBirth: "",
     docId: "",
   });
+  const router = useRouter();
+  
+
+  
+
+  const  email  = "provider@gmail.com"
+
+
+
+
+ 
+
+
+  
+  
+  
+
+  
   const fetchInvoices = async () => {
     const invoicesCollection = collection(db, "users");
     const invoiceSnapshot = await getDocs(invoicesCollection);
@@ -70,6 +90,23 @@ export function TableDemo() {
     });
     setInvoices(invoiceList);
   };
+  
+
+
+
+useEffect(()=>{
+  if (email) {
+    // Filter invoices based on email
+    const filterData = invoices.filter((user) =>
+      user.email.includes(email as string)
+    );
+    invoices.push(filterData);
+    setInvoices([...invoices])  
+    console.log(invoices)
+  } else {
+    setInvoices(invoices);  // If no email, show all invoices
+  }
+} , [email])
 
   const toggleRowExpansion = (index: number) => {
     setExpandedRows((prev) => {

@@ -3,11 +3,11 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBell, faSearch } from "@fortawesome/free-solid-svg-icons";
 import Image from "next/image";
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { usePathname } from "next/navigation";
-import { useRouter } from "next/navigation";
 import {useTranslations} from 'next-intl';
+import { useRouter } from "@/i18n/routing";
 
 
 const pathMapping: Record<string, string> = {
@@ -29,11 +29,14 @@ const pathMapping: Record<string, string> = {
 
 const hidePaths = ["/it" , "/en" ];
 
+
 const Navbar = () => {
   
 const t = useTranslations('navbar');
 
+
   const pathname = usePathname();
+  const router = useRouter()
   const notificationsRef = useRef<HTMLDivElement>(null);
 
   const [searchTerm, setSearchTerm] = useState("");
@@ -42,12 +45,7 @@ const t = useTranslations('navbar');
 
   
 
-  const handleSearchChange = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) => {
-      setSearchTerm(event.target.value);
-    },
-    []
-  );
+  
 
   const toggleNotifications = useCallback(() => {
     setIsNotificationsOpen(prev => !prev);
@@ -80,6 +78,37 @@ const t = useTranslations('navbar');
     return null;
   }
 
+ 
+
+  const searchPlaceholderMapping: Record<string, string> = {
+    "/users": "Search by email...",
+    "/jobs": "Search by job title...",
+    "/categories": "Search by category...",
+  };
+
+  const placeholderText = useMemo(
+    () => searchPlaceholderMapping[pathname] || "Search...",
+    [pathname]
+  );
+
+
+  const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const query = event.target.value;
+    setSearchTerm(query);
+
+    // Redirect with query only if there is a search term
+    if (query) {
+      router.push(`/users?email=${encodeURIComponent(query)}`);
+    } else {
+      router.push("/users"); // Reset to users route without query when empty
+    }
+  };
+  
+  
+
+
+
+
   return (
     <aside>
       <div className="w-full flex items-center justify-between bg-white p-5 sm:p-4 md:px-6 md:py-3 rounded-lg relative">
@@ -92,8 +121,8 @@ const t = useTranslations('navbar');
             type="text"
             
             value={searchTerm}
-            onChange={handleSearchChange}
-            placeholder={(t('search_placeholder'))}
+        onChange={handleSearch}
+        placeholder={placeholderText}
             className="w-full h-9 sm:h-12 bg-gray-100 rounded-full py-1 pl-10 pr-4 focus:outline-none focus:ring-2 focus:ring-blue-400"
           />
           <FontAwesomeIcon
