@@ -649,33 +649,33 @@ const calculateTotal = (
   }, [totalPrice]);
 
  
-  const totalForEdit = () => {
-    let total = 0;
+  // const totalForEdit = () => {
+  //   let total = 0;
   
-    // Check if data is available
+  //   // Check if data is available
   
-    // Find and add room size rate
-    const findRoomSize = allRoomSize.find(item => item.title === isEdited.roomSize);
-    if (findRoomSize) {
-      const roomSizeRate = Number(findRoomSize.rate) || 0;
-      total += roomSizeRate;
-      setPreviousRoomSizeRate(roomSizeRate);
-    } else {
-      console.warn('No matching room size found');
-    }
+  //   // Find and add room size rate
+  //   const findRoomSize = allRoomSize.find(item => item.title === isEdited.roomSize);
+  //   if (findRoomSize) {
+  //     const roomSizeRate = Number(findRoomSize.rate) || 0;
+  //     total += roomSizeRate;
+  //     setPreviousRoomSizeRate(roomSizeRate);
+  //   } else {
+  //     console.warn('No matching room size found');
+  //   }
   
-    // Find and add room quantity price
-    const findNoOfRooms = noOfRooms.find(item => item.title === isEdited.roomsQty);
-    if (findNoOfRooms) {
-      const roomsPrice = Number(findNoOfRooms.price) || 0;
-      total += roomsPrice;
-      setSelectedNoOfRoomsPrice(roomsPrice);
-    } else {
-      console.warn('No matching room quantity found');
-    }
+  //   // Find and add room quantity price
+  //   const findNoOfRooms = noOfRooms.find(item => item.title === isEdited.roomsQty);
+  //   if (findNoOfRooms) {
+  //     const roomsPrice = Number(findNoOfRooms.price) || 0;
+  //     total += roomsPrice;
+  //     setSelectedNoOfRoomsPrice(roomsPrice);
+  //   } else {
+  //     console.warn('No matching room quantity found');
+  //   }
   
-      setTotalPrice(prevPrice => prevPrice + total);
-  };
+  //     setTotalPrice(prevPrice => prevPrice + total);
+  // };
 
 
 
@@ -685,16 +685,16 @@ const calculateTotal = (
 
 
  
-  useEffect(() => {
-    if (isEdited && !hasEdited) {
-      const timeout = setTimeout(() => {
-        setHasEdited(true);
-        if (isEdited.addType === 'job') totalForEdit();
-      }, 0);
-      editHandler();
-      return () => clearTimeout(timeout);
-    }
-  }, [isEdited, hasEdited]);
+  // useEffect(() => {
+  //   if (isEdited && !hasEdited) {
+  //     const timeout = setTimeout(() => {
+  //       setHasEdited(true);
+  //       if (isEdited.addType === 'job') totalForEdit();
+  //     }, 0);
+  //     editHandler();
+  //     return () => clearTimeout(timeout);
+  //   }
+  // }, [isEdited, hasEdited]);
   
 
   
