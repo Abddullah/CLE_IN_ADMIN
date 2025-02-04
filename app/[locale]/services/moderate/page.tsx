@@ -20,10 +20,13 @@ import { db } from "../../config/Firebase/FirebaseConfig";
 import Card from "../../components/servicesComponents/ServicesCards";
 import ServiceDetails from "../../components/servicesComponents/ServiceDetailComponent";
 import JobTab from "../../components/JobTab";
+import { useSelector } from "react-redux";
 ;
 
 function page() {
   const t = useTranslations("Services");
+  const searchData = useSelector((state: any) => state.search.search);
+
 
   //states
 
@@ -35,6 +38,7 @@ function page() {
   const [timeSlots, setTimeSlots] = useState<any>([]);
   const [addStatus, setAddStatus] = useState("pending");
   const [detailModalOpen , SetDetailModalOpen] = useState<boolean>(false);
+  const [allServices, setAllServices] = useState<any[]>([]);
 
   const daysOfWeek = [
     "Monday",
@@ -86,12 +90,26 @@ function page() {
       }));
 
       setServices(jobList);
+      setAllServices(jobList);
     });
 
     return () => unsubscribe(); // Clean up the listener on unmount
   }, []);
 
-  console.log(services);
+ useEffect(() => {
+     if (searchData !== "") {
+       const formattedSearchData =
+         searchData.charAt(0).toUpperCase() + searchData.slice(1);
+ 
+       const filterData = services.filter(
+         (data) => data.category && data.category.includes(formattedSearchData)
+       );
+ 
+       setServices(filterData);
+     } else {
+       setServices(allServices);
+     }
+   }, [searchData]);
 
   //handle Click job
 

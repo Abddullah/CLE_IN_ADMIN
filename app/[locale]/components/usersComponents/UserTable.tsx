@@ -21,9 +21,8 @@ import { useRef } from "react";
 import { getFunctions, httpsCallable } from "firebase/functions";
 import moment from "moment";
 import { useTranslations } from "next-intl";
-import { useRouter } from "next/navigation";
-
-
+import { useRouter } from "@/i18n/routing";
+import { useSelector } from "react-redux";
 
 interface Invoice {
   Name: string;
@@ -42,8 +41,11 @@ export function TableDemo() {
   const [expandedRows, setExpandedRows] = useState<Set<number>>(new Set());
   const [activeMenu, setActiveMenu] = useState<number | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [filterData , setFilterData] = useState();
+  const [filterData, setFilterData] = useState();
   const [selectedInvoice, setSelectedInvoice] = useState<Invoice | null>(null);
+  const [emailValue, setEmailValue] = useState("");
+  const [isSearch, setIsSearch] = useState(false);
+  const [allFetchData, setAllFetchData] = useState<any[]>([]);
   const [formData, setFormData] = useState<Invoice>({
     Name: "",
     email: "",
@@ -54,29 +56,19 @@ export function TableDemo() {
     dateBirth: "",
     docId: "",
   });
-  const router = useRouter();
-  
 
-  
+  const searchData = useSelector((state: any) => state.search.search);
 
-  const  email  = "provider@gmail.com"
+  useEffect(() => {
+    setEmailValue(searchData);
+  }, [searchData]);
 
-
-
-
- 
-
-
-  
-  
-  
-
-  
   const fetchInvoices = async () => {
     const invoicesCollection = collection(db, "users");
     const invoiceSnapshot = await getDocs(invoicesCollection);
     const invoiceList = invoiceSnapshot.docs.map((doc) => {
       const data = doc.data();
+
       return {
         Name: data.fullName || "",
         email: data.email || "",
@@ -89,24 +81,21 @@ export function TableDemo() {
       };
     });
     setInvoices(invoiceList);
+    setAllFetchData(invoiceList);
   };
-  
 
-
-
-useEffect(()=>{
-  if (email) {
-    // Filter invoices based on email
-    const filterData = invoices.filter((user) =>
-      user.email.includes(email as string)
-    );
-    invoices.push(filterData);
-    setInvoices([...invoices])  
-    console.log(invoices)
-  } else {
-    setInvoices(invoices);  // If no email, show all invoices
-  }
-} , [email])
+  useEffect(() => {
+    if (emailValue.trim() !== "") {
+      const filterData = allFetchData.filter(
+        (user) =>
+          user.email &&
+          user.email.toLowerCase().includes(emailValue.trim().toLowerCase())
+      );
+      setInvoices(filterData);
+    } else {
+      setInvoices(allFetchData);
+    }
+  }, [emailValue, allFetchData]);
 
   const toggleRowExpansion = (index: number) => {
     setExpandedRows((prev) => {
@@ -285,19 +274,15 @@ useEffect(()=>{
         </div>
       )} */}
 
-{isModalOpen && (
-        <div
-          className="fixed inset-0 bg-gray-500 bg-opacity-75 flex justify-center items-center z-50"
-          
-        >
+      {isModalOpen && (
+        <div className="fixed inset-0 bg-gray-500 bg-opacity-75 flex justify-center items-center z-50">
           <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-md sm:max-w-lg">
-            <h2 className="text-xl font-semibold mb-4">{(t('edit_user'))}</h2>
+            <h2 className="text-xl font-semibold mb-4">{t("edit_user")}</h2>
             <form>
               {[
-                { label: ((t('name'))), name: "Name" },
-                { label: ((t('phoneNo'))), name: "PhoneNo" },
-                { label: ((t('address'))), name: "address" },
-               
+                { label: t("name"), name: "Name" },
+                { label: t("phoneNo"), name: "PhoneNo" },
+                { label: t("address"), name: "address" },
               ].map((field, idx) => (
                 <div className="mb-4" key={idx}>
                   <label className="block text-sm font-medium text-gray-700">
@@ -316,7 +301,7 @@ useEffect(()=>{
               {/* Gender Select */}
               <div className="mb-4">
                 <label className="block text-sm font-medium text-gray-700">
-                  {(t('gender'))}
+                  {t("gender")}
                 </label>
                 <select
                   name="gender"
@@ -333,7 +318,7 @@ useEffect(()=>{
               {/* Role Select */}
               <div className="mb-4">
                 <label className="block text-sm font-medium text-gray-700">
-                  {(t('role'))}
+                  {t("role")}
                 </label>
                 <select
                   name="role"
@@ -350,7 +335,7 @@ useEffect(()=>{
               {/* Date of Birth */}
               <div className="mb-4">
                 <label className="block text-sm font-medium text-gray-700">
-                  {(t('dateOfBirth'))}
+                  {t("dateOfBirth")}
                 </label>
                 <input
                   type="date"
@@ -367,14 +352,14 @@ useEffect(()=>{
                   onClick={closeModal}
                   className="px-4 py-2 text-white bg-gray-400 rounded-md"
                 >
-                  {(t('cancel'))}
+                  {t("cancel")}
                 </button>
                 <button
                   type="button"
                   onClick={updateInvoice}
                   className="px-4 py-2 text-white bg-[#00BFFF] rounded-md"
                 >
-                  {(t('save_Changes'))}
+                  {t("save_Changes")}
                 </button>
               </div>
             </form>
@@ -382,31 +367,32 @@ useEffect(()=>{
         </div>
       )}
 
-
       <table className="table-auto w-full divide-y divide-gray-200 mt-4">
         <thead className="bg-gray-200">
           <tr>
-            <th className="px-4 py-3 text-left text-sm font-semibold">{(t('name'))}</th>
+            <th className="px-4 py-3 text-left text-sm font-semibold">
+              {t("name")}
+            </th>
             <th className="px-4 py-3 text-left text-sm font-semibold hidden sm:table-cell">
-              {(t('email'))}
+              {t("email")}
             </th>
             <th className="px-4 py-3 text-left text-sm font-semibold hidden lg:table-cell">
-            {(t('phoneNo'))}
+              {t("phoneNo")}
             </th>
             <th className="px-4 py-3 text-left text-sm font-semibold hidden lg:table-cell">
-              {(t('address'))}
+              {t("address")}
             </th>
             <th className="px-4 py-3 text-left text-sm font-semibold hidden lg:table-cell">
-              {(t('gender'))}
+              {t("gender")}
             </th>
             <th className="px-4 py-3 text-left text-sm font-semibold hidden lg:table-cell">
               DOB
             </th>
             <th className="px-4 py-3 text-left text-sm font-semibold hidden lg:table-cell">
-              {(t('role'))}
+              {t("role")}
             </th>
             <th className="px-4 py-3 text-left text-sm font-semibold">
-              {(t('actions'))}
+              {t("actions")}
             </th>
           </tr>
         </thead>
@@ -466,14 +452,14 @@ useEffect(()=>{
                           className="block w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100"
                         >
                           <FontAwesomeIcon icon={faEdit} className="mr-2" />
-                          {(t('edit'))}
+                          {t("edit")}
                         </button>
                         <button
                           onClick={() => deleteInvoice(invoice.docId)}
                           className="block w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-red-100"
                         >
                           <FontAwesomeIcon icon={faTrashAlt} className="mr-2" />
-                          {(t('delete'))}
+                          {t("delete")}
                         </button>
                       </div>
                     )}
@@ -497,7 +483,8 @@ useEffect(()=>{
                       <strong>Gender:</strong> {invoice.gender}
                     </p>
                     <p>
-                      <strong>DOB:</strong> {moment(invoice.dateBirth).format("D-M-YYYY")}
+                      <strong>DOB:</strong>{" "}
+                      {moment(invoice.dateBirth).format("D-M-YYYY")}
                     </p>
                     <p>
                       <strong>Role:</strong> {invoice.role}

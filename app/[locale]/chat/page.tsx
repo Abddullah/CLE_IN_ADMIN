@@ -18,6 +18,7 @@ import {
 } from "firebase/firestore";
 import moment from "moment";
 import LoaderSpinner from "../components/Spinner";
+import { useSelector } from "react-redux";
 
 interface Message {
   id: string;
@@ -38,7 +39,9 @@ interface User {
 
 const ChatInterface: React.FC = () => {
   const t = useTranslations("chats");
+  const searchData = useSelector((state: any) => state.search.search);
   const [users, setUsers] = useState<User[]>([]);
+  const [allusers , setAllUsers]= useState<any[]>([]);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [showChat, setShowChat] = useState<boolean>(false);
   const [messages, setMessages] = useState<Message[]>([]);
@@ -51,6 +54,8 @@ const ChatInterface: React.FC = () => {
   const [lastVisible, setLastVisible] = useState<any>(null);
   const [messageLength, setMessageLength] = useState<number>(0);
   const [chatId, setChatId] = useState("");
+
+  
 
   useEffect(() => {
     const user = localStorage.getItem("currentUser");
@@ -98,6 +103,7 @@ const ChatInterface: React.FC = () => {
             );
 
             setUsers(fetchedUsers);
+            setAllUsers(fetchedUsers);
           }
         );
 
@@ -109,6 +115,44 @@ const ChatInterface: React.FC = () => {
 
     fetchChatList();
   }, []);
+ 
+
+  // useEffect(() => {
+  //       if (searchData !== "") {
+  //         const formattedSearchData =
+  //           searchData.charAt(0).toUpperCase() + searchData.slice(1);
+    
+  //         const filterData = users.filter(
+  //           (data:any) => data.name && data.name.includes(formattedSearchData)
+  //         );
+   
+  //         setUsers(filterData);
+         
+  //       } else {
+  //         setUsers(allusers);
+  //       }
+  //     }, [searchData ]);
+
+
+
+
+  useEffect(() => {
+    if (searchData.trim() !== "") {
+      const formattedSearchData = searchData.trim().toLowerCase();
+  
+      const filterData = allusers.filter(
+        (data: any) =>
+          data.name && data.name.toLowerCase().includes(formattedSearchData)
+      );
+  
+      setUsers(filterData);
+    } else {
+      setUsers(allusers);
+    }
+  }, [searchData]);
+  
+
+
 
   const fetchMessages = useCallback(() => {
     if (selectedUser) {
@@ -131,7 +175,6 @@ const ChatInterface: React.FC = () => {
     }
   }, [selectedUser]);
 
-  console.log("selected user", selectedUser);
 
   const fetchMore = () => {
     if (selectedUser && hasMore) {
@@ -174,7 +217,7 @@ const ChatInterface: React.FC = () => {
     }
   };
 
-  console.log("Messages", messages);
+  
 
   useEffect(() => {
     fetchMessages();

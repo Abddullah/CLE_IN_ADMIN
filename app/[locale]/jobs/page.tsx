@@ -20,10 +20,13 @@ import { Link, useRouter } from "@/i18n/routing";
 // import BookingModal from "../components/jobsComponent/JobDetailsCard";
 import JobTab from "../components/JobTab";
 import BookingModal from "../components/jobsComponent/JobDetailsCard";
+import { useSelector } from "react-redux";
 
 function Page() {
   const t = useTranslations("Jobs"); 
+  const searchData = useSelector((state: any) => state.search.search);
   const [jobs, setJobs] = useState<any>([]);
+  const [allJobs , setAllJobs] = useState<any>([]);
   const [editableJob, setEditableJob] = useState<null | any>(null); // Store the job being edited
   const [isModalOpen, setIsModalOpen] = useState(false); // Modal visibility
   const [categories, setCategories] = useState<any[]>([]);
@@ -72,12 +75,29 @@ function Page() {
      
       
       setJobs(jobList);
+      setAllJobs(jobList);
     });
 
     return () => unsubscribe(); // Clean up the listener on unmount
   }, []);
 
-  console.log(jobs);
+  
+
+
+  useEffect(() => {
+      if (searchData !== "") {
+        const formattedSearchData =  searchData.charAt(0).toUpperCase() + searchData.slice(1);
+        const filterData = jobs.filter(
+          (data:any) => data.category && data.category.includes(formattedSearchData)
+        );
+  
+        setJobs(filterData);
+      } else {
+        setJobs(allJobs);
+      }
+    }, [searchData]);
+
+  
   
 
   useEffect(() => {
@@ -98,12 +118,7 @@ function Page() {
     fetchCategories();
   }, []);
 
-  // const handleEditClick = (job: any) => {
-  //   setEditableJob(job);
-  //   setIsModalOpen(true);
-  // };
-
-  //fetch the job from db by id 
+ 
 
 
   const fetchJobById = async (jobId:string) => {

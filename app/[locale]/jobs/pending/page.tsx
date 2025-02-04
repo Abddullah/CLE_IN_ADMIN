@@ -19,9 +19,13 @@ import { useTranslations } from "use-intl";
 import { Link } from "@/i18n/routing";
 import JobTab from "../../components/JobTab";
 import BookingModal from "../../components/jobsComponent/JobDetailsCard";
+import { useSelector } from "react-redux";
 function Page() {
   const t = useTranslations("Jobs");
+  const searchData = useSelector((state: any) => state.search.search);
+
   const [jobs, setJobs] = useState<any>([]);
+    const [allJobs , setAllJobs] = useState<any>([]);
   const [editableJob, setEditableJob] = useState<null | any>(null); // Store the job being edited
   const [isModalOpen, setIsModalOpen] = useState(false); // Modal visibility
   const [categories, setCategories] = useState<any[]>([]);
@@ -62,11 +66,28 @@ function Page() {
         ...doc.data(),
       }));
       setJobs(jobList);
+      setAllJobs(jobList);
     });
 
     return () => unsubscribe(); // Clean up the listener on unmount
   }, []);
 
+
+  useEffect(() => {
+        if (searchData !== "") {
+          const formattedSearchData =
+            searchData.charAt(0).toUpperCase() + searchData.slice(1);
+    
+          const filterData = jobs.filter(
+            (data:any) => data.category && data.category.includes(formattedSearchData)
+          );
+    
+          setJobs(filterData);
+        } else {
+          setJobs(allJobs);
+        }
+      }, [searchData]);
+    
 
   const handleJobClick = (job:any) => {
     setSelectedJob(job);

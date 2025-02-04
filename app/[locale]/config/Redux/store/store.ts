@@ -5,6 +5,7 @@ import categoriesReducer from "../reducers/categorySlice";
 import jobReducer from "../reducers/jobSlice";
 import formReducer from "../reducers/addressSlice";
 import serviceReducer from '../reducers/ServiceTimeSlice'
+import searchReducer from "../reducers/searchSlice"
 
 const store = configureStore({
   reducer: {
@@ -13,7 +14,8 @@ const store = configureStore({
     category: categoriesReducer,
     job: jobReducer,
     address: formReducer,
-    service: serviceReducer
+    service: serviceReducer,
+    search: searchReducer,
   },
 });
 
