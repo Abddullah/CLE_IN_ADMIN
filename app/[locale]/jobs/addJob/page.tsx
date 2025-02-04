@@ -26,8 +26,6 @@ import { collection, getDocs, query, where } from "firebase/firestore";
 import { useDispatch } from "react-redux";
 import { setCategory } from "../../config/Redux/reducers/categorySlice";
 import FrequencyModal from "../../components/ChooseFrequencyModal";
-import { doc, getDoc } from "firebase/firestore";
-import { isFloat32Array } from "util/types";
 
 function page() {
   const t = useTranslations("Jobs");
@@ -109,9 +107,6 @@ function page() {
     router.push("/jobs/addJob/location");
   };
 
-  const [isflag, setIsFlag] = useState<boolean>(false);
-  const [isflagForSubCat, setisflagForSubCat] = useState<boolean>(false);
-
   const [categories, setCategories] = useState<any[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string>("");
 
@@ -120,26 +115,10 @@ function page() {
   const CleaningAndHygineService = "Cleaning and Hygiene Services";
 
   const [roomSizes, setRoomSizes] = useState<string[]>([]);
-  const [previousRoomSizeRate , setPreviousRoomSizeRate]= useState(0);
-  const [selectedRoomAreaSize, setSelectedRoomAreaSize] = useState("");
-  const [selectedRoomSizePrice , setSelectedRoomSizePrice]= useState(0);
 
-  const [noOfRooms, setNoOfRooms] = useState<string[]>([]);
-  const [selectedRoomNoOfSizePrice , setSelectedRoomNoOfSizePrice]= useState(0);
-  const [selectedNoOfRooms, setSelectedNoOfRooms] = useState("");
-  const [selectedNoOfRoomsPrice , setSelectedNoOfRoomsPrice]= useState(0);
-
-
-
-  const [selectedNeedMaterial, setSelectedNeedMaterial] = useState("");
   const [additionalServices, setAdditionalServices] = useState<string[]>([]);
   const [hourPrice, setHourPrice] = useState<number>(0);
   const [error, setError] = useState<any>(null);
-  const [roomPrices, setRoomPrices] = useState<any>();
-  const [roomCountsPrices, setRoomCountsPrices] = useState<string[]>([]);
-  const [selectedRoomPrice, setSelectedRoomPrice] = useState<number>(0);
-  const [selectedRoomCountPrice, setSelectedRoomCountPrice] =
-    useState<number>(0);
   const [matererialSelectedOption, setMaterialSelectedOption] =
     useState<string>("");
   const [additionalServicePrice, setAdditionalServicesPrice] = useState<any>();
@@ -153,114 +132,28 @@ function page() {
 
   const [selectedMaterialPrice, setSelectedMaterialPrice] = useState<number>(0);
   const [users, setUsers] = useState<any[]>([]);
-  const [previousUserRate, setPreviouUserRate] = useState<number>(0);
-  const [selectedName, setSelectedName] = useState("");
-  const [isEdited , setIsEdited]= useState();
-  const [allRoomSize , setAllRoomSize]= useState([]);
-  const [allNoOfRooms , setAllNoOfRoom] = useState([]);
-  const [hasEdited, setHasEdited] = useState(false);
- 
 
-  const getUserName = async (userId: string) => {
-    try {
-      const userRef = doc(db, "users", userId);
-      const userDoc = await getDoc(userRef);
+  const calculateTotal = (
+    hours: number,
+    selectedProfessional: number,
+    hourlyRate: number
+  ) => {
+    // Calculate room price
 
-      if (userDoc.exists()) {
-        setSelectedName(userDoc.data().fullName);
-      } else {
-        console.log("User not found");
-      }
-    } catch (error) {
-      console.error("Error fetching user:", error);
-    }
+    // Calculate hourly price
+    const totalHourlyPrice = hourlyRate * hours;
+
+    // Calculate professional price
+    const totalProfessionalPrice =
+      selectedProfessional > 1
+        ? (selectedProfessional - 1) * totalHourlyPrice
+        : 0;
+
+    // Calculate final total
+    const total = totalHourlyPrice + totalProfessionalPrice;
+
+    setTotalPrice(total);
   };
-
-  const editHandler = () => {
-    const data = localStorage.getItem("editJob");
-    if (data) {
-      const parsedData = JSON.parse(data);
-      setIsEdited(parsedData[0]);
-      const matchedUser = users.find(
-        (user: any) => user.userId === parsedData[0].postedBy
-      );
-      if (matchedUser) {
-        setSelectedName(matchedUser.fullName);
-      }
-      setSelectedHour(Number(parsedData[0].howManyHourDoYouNeed));
-      setSelectedProfessional(
-        Number(parsedData[0].howManyProfessionalDoYouNeed)
-      );
-      setSelectedCategory(parsedData[0].category);
-      setSelectedSubCategory(parsedData[0].subCategory);
-      setSelectedRoomAreaSize(parsedData[0].roomSize);
-      setSelectedNoOfRooms(parsedData[0].roomsQty);
-      setSelectedNeedMaterial(parsedData[0].needCleaningMaterials);
-      setTotalPrice(Number(parsedData[0].totalPrice));
-      const additionalService = parsedData[0].aditionalServices.map(
-        (item: any) => item.title
-      );
-      setSelectedServices(additionalService);
-      
-    }
-  };
-
-
-//   useEffect(() => {
-//     const myIndex = roomSizes.indexOf(selectedRoomAreaSize);
-//     if (myIndex !== -1) {
-//       const myIndexPrice = parseFloat(roomPrices[myIndex] || 0);
-//       setSelectedRoomSizePrice(myIndexPrice);
-//     }
-  
-//     const myIndexNoOfRooms = noOfRooms.indexOf(selectedNoOfRooms);
-//     if (myIndexNoOfRooms !== -1) {
-//       const myIndexPrice = parseFloat(roomCountsPrices[myIndexNoOfRooms] || '0');
-//       setSelectedNoOfRoomsPrice(myIndexPrice);
-//     }
-//   }, [selectedRoomAreaSize, selectedNoOfRooms , editHandler]);
-  
-// console.log(selectedNoOfRoomsPrice , 'no of rooms ki price')
-
-const userHourlyRate = users.find((user) => user.fullName === selectedName)?.hourlyRate || 'N/A'
-
-
-
-const calculateTotal = (
-  roomPrice: number,
-  roomCountPrice: number,
-  hours: number,
-  selectedProfessional: number, 
-  hourlyRate: number 
-) => {
-  // Calculate room price
-  const totalRoomPrice = roomPrice + roomCountPrice;
-
-  // Calculate hourly price
-  const totalHourlyPrice = hourlyRate * hours ;
-
-  // Calculate professional price
-  const totalProfessionalPrice =
-    selectedProfessional > 1
-      ? (selectedProfessional - 1) * totalHourlyPrice
-      : 0;
-
-  // Calculate final total
-  const total = totalRoomPrice + totalHourlyPrice + totalProfessionalPrice;
-
-  
-
-  setTotalPrice(total);
- 
-};
-
-
-
-
-
-
-
-
 
   //fetch the users from the firebase
 
@@ -270,7 +163,7 @@ const calculateTotal = (
         // Firestore query to exclude admin users
         const usersQuery = query(
           collection(db, "users"),
-          where("role", "!=", "admin") // Only fetch users whose role is not admin
+          where("role", "==", "user") // Only fetch users whose role is user
         );
 
         const querySnapshot = await getDocs(usersQuery);
@@ -283,58 +176,12 @@ const calculateTotal = (
         console.error("Error fetching users:", error);
       }
     };
-    
+
     fetchUsers();
   }, []);
 
-
-  
-  
-
- 
-
-
-
-  
-
-  const handleProviderChange = (selectedProvider: string) => {
-    // Find the selected user by userId (which is the value of the SelectItem)
-    console.log()
-    const selectedUser = users.find(
-      (user: any) => user.userId === selectedProvider
-    );
-
-    if (selectedUser) {
-      
-    
-   
-      // Save userId in local storage
-      localStorage.setItem("JobPostUserId", selectedProvider);
-
-      // Update hourly rate
-      setHourPrice(userHourlyRate);
-
-    }
-  };
-  
-
-
-
-  
-
-  // Watch for changes in `hourPrice` to update the total price
-  useEffect(() => {
-    // Recalculate total price based on the updated hourly rate
-    if (hourPrice && selectedHour) {
-      const newTotalPrice = hourPrice * selectedHour;
-      setTotalPrice(newTotalPrice);
-      console.log("Total price updated:", newTotalPrice);
-    }
-  }, [hourPrice, selectedHour]); 
-
- 
-  const location = useSelector((state: any) => state.location);
-  const plane = useSelector((state: any) => state.plan);
+  const location = useSelector((state: any) => state.location);//fetch the selected location lng , lat from the redux toolkit
+  const plane = useSelector((state: any) => state.plan);//fetch the selected user plan of service frequency from the redux toolkit
 
   //image upload
 
@@ -357,19 +204,19 @@ const calculateTotal = (
     input.click();
   };
 
+  //for remove the upload image
+
   const handleRemoveImage = (index: number) => {
     const updatedImages = [...images];
     updatedImages[index] = null;
     setImages(updatedImages);
   };
 
+  //for fetching the categories from the firebase
+
   useEffect(() => {
     fetchCategories();
   }, []);
-
-  useEffect(() => {
-    editHandler();
-  }, [isflag]);
 
   const fetchCategories = () => {
     const data = localStorage.getItem("editJob");
@@ -382,7 +229,6 @@ const calculateTotal = (
           ...doc.data(),
         }));
         setCategories(categories);
-        
 
         if (data) {
           const parsedData: { category: string }[] = JSON.parse(data);
@@ -392,7 +238,6 @@ const calculateTotal = (
                 category?.categoryName === parsedData[0]?.category
             );
             setSubCategories(subCat?.subCategories ?? []);
-            setIsFlag(!isflag);
           }
         }
       })
@@ -400,6 +245,8 @@ const calculateTotal = (
         console.error("Error fetching categories:", error);
       });
   };
+
+  //category handler function
 
   const categoryHandler = (categoryName: any) => {
     setSelectedCategory(categoryName);
@@ -409,35 +256,8 @@ const calculateTotal = (
     setSubCategories(subCat?.subCategories);
   };
 
-  // Fetch room sizes and their prices
-  useEffect(() => {
-    const fetchRoomSizes = async () => {
-      try {
-        const querySnapshot = await getDocs(collection(db, "roomSize"));
-        const sizes: string[] = [];
-        const prices: any[] = [];
+  // Fetch number of rooms and their prices from the firebase
 
-        querySnapshot.forEach((doc) => {
-          const data = doc.data() as RoomSize;
-         
-          sizes.push(data.title);
-          prices.push(data.rate);
-          allRoomSize.push(data);
-          setAllRoomSize([...allRoomSize])
-
-        });
-
-        setRoomSizes(sizes);
-        setRoomPrices(prices);
-      } catch (error) {
-        console.error("Error fetching room sizes: ", error);
-      }
-    };
-
-    fetchRoomSizes();
-  }, []);
-
-  // Fetch number of rooms and their prices
   useEffect(() => {
     const fetchNumberOfRooms = async () => {
       try {
@@ -445,28 +265,20 @@ const calculateTotal = (
         const roomNumbers = querySnapshot.docs.map((doc) => doc.data().title);
         const prices = querySnapshot.docs.map((doc) => doc.data().price);
         const data = querySnapshot.docs.map((doc) => doc.data());
-        setAllNoOfRoom(data);
-        setNoOfRooms(roomNumbers);
-        setRoomCountsPrices(prices);
-
       } catch (error) {
         console.error("Error fetching number of rooms: ", error);
       }
     };
     fetchNumberOfRooms();
   }, []);
-  
-
 
   // Updated handleHourChange function to explicitly pass hourPrice
   const handleHourChange = (hours: number) => {
     setSelectedHour(hours);
-    console.log(selectedHour , "selected hour")
-    setValue("hour", hours );
-   
+    console.log(selectedHour, "selected hour");
+    setValue("hour", hours);
+
     calculateTotal(
-      selectedRoomSizePrice,
-      selectedNoOfRoomsPrice,
       hours,
       selectedProfessional,
       hourPrice // Pass the current hourPrice
@@ -477,54 +289,18 @@ const calculateTotal = (
   const handleSelectProfessional = (professional: number) => {
     setSelectedProfessional(professional);
     setValue("professional", professional);
-   
+
     calculateTotal(
-      selectedRoomPrice,
-      selectedRoomCountPrice,
       selectedHour || 0,
       selectedProfessional,
       hourPrice // Pass the current hourPrice
     );
   };
-  
 
-  
-
-
- 
-
-  // Ensure room size and room count functions also pass hourPrice
-  const handleRoomSizeChange = (value: string) => {
-    const selectedIndex = roomSizes.indexOf(value);
-    const price = parseFloat(roomPrices[selectedIndex] || 0);
-    setSelectedRoomPrice(price);
-    calculateTotal(
-      price,
-      selectedRoomSizePrice,
-      selectedHour || 0,
-      selectedProfessional,
-      hourPrice 
-    );
-  };
-
-  const handleNoOfRoomsChange = (value: string) => {
-    setSelectedNoOfRooms(value);
-    const selectedIndex = noOfRooms.indexOf(value);
-    const price = parseFloat(roomCountsPrices[selectedIndex] || "0");
-    setSelectedRoomCountPrice(price);
-    calculateTotal(
-      selectedNoOfRoomsPrice,
-      price,
-      selectedHour || 0,
-      selectedProfessional ,
-      hourPrice 
-    );
-  };
-
-  //needed material
+  //handling needed cleaning  material yes or No
 
   const handleMaterialSelectedOption = (option: any) => {
-    let price = 0; // Assume 5 for "yes"
+    let price = 0;
     if (option === t("yes")) {
       price = 6;
       setMaterialSelectedOption(t("yes"));
@@ -537,23 +313,28 @@ const calculateTotal = (
     setValue("needmaterial", matererialSelectedOption);
   };
 
+  //set the location value of location like lng , lat
   useEffect(() => {
     if (location) {
-      setValue("location", { lng: location.lng, lat: location.lat });
+      setValue("location", { lng: location.lng, lat: location.lat });//set value is not state it is a react hook form property for set a value in the form
     }
   }, [location, setValue]);
 
+  //set the user selected service frequency plan
+
   useEffect(() => {
     if (plane) {
-      setValue("plan", { value: plane.value });
+      setValue("plan", { value: plane.value });//set value is not state it is a react hook form property for set a value in the form
     }
   }, [plane, setValue]);
+
+  //fetch all the additional service from the firebase
 
   useEffect(() => {
     const fetchServicesAndPrices = async () => {
       try {
-        const servicesRef = collection(db, "additionalServices"); 
-        const querySnapshot = await getDocs(servicesRef); 
+        const servicesRef = collection(db, "additionalServices");
+        const querySnapshot = await getDocs(servicesRef);
 
         let servicesData: any[] = [];
         let servicesPrice: any = {};
@@ -574,7 +355,9 @@ const calculateTotal = (
     };
 
     fetchServicesAndPrices();
-  }, []); // Only run once when the component mounts
+  }, []); 
+
+  //handle the checkbox of additional services
 
   const handleCheckboxChange = (service: string): void => {
     setSelectedServices((prevSelectedServices) => {
@@ -588,6 +371,8 @@ const calculateTotal = (
       return updatedServices;
     });
 
+    //handle the price of the selected additional services
+
     const servicePrice = additionalServicePrice[service] || 0;
     if (selectedServices.includes(service)) {
       // If already selected, deselect it and subtract the price
@@ -598,7 +383,7 @@ const calculateTotal = (
     }
   };
 
-  //set total when user change the category from cleaning to someother category
+  //set total change when user change the category from cleaning to someother category
 
   useEffect(() => {
     if (selectedCategory !== "Cleaning and Hygiene Services") {
@@ -611,22 +396,18 @@ const calculateTotal = (
 
       setTotalPrice(
         (prevPrice) =>
-          prevPrice -
-          selectedRoomPrice -
-          selectedRoomCountPrice -
-          selectedMaterialPrice -
-          additionalServicesTotal
+          prevPrice - selectedMaterialPrice - additionalServicesTotal
       );
 
       // Reset states
-      setSelectedRoomPrice(0);
-      setSelectedRoomCountPrice(0);
       setSelectedMaterialPrice(0);
       setSelectedServices([]);
     }
   }, [selectedCategory]);
 
-  setValue("total", totalPrice);
+  setValue("total", totalPrice);//set value is not state it is a react hook form property for set a value in the form
+
+  //In this get the tax amount from the local storage and add it to the total price
 
   useEffect(() => {
     const data = localStorage.getItem("tax");
@@ -647,58 +428,6 @@ const calculateTotal = (
       setValue("totalWithTax", totalPrice);
     }
   }, [totalPrice]);
-
- 
-  // const totalForEdit = () => {
-  //   let total = 0;
-  
-  //   // Check if data is available
-  
-  //   // Find and add room size rate
-  //   const findRoomSize = allRoomSize.find(item => item.title === isEdited.roomSize);
-  //   if (findRoomSize) {
-  //     const roomSizeRate = Number(findRoomSize.rate) || 0;
-  //     total += roomSizeRate;
-  //     setPreviousRoomSizeRate(roomSizeRate);
-  //   } else {
-  //     console.warn('No matching room size found');
-  //   }
-  
-  //   // Find and add room quantity price
-  //   const findNoOfRooms = noOfRooms.find(item => item.title === isEdited.roomsQty);
-  //   if (findNoOfRooms) {
-  //     const roomsPrice = Number(findNoOfRooms.price) || 0;
-  //     total += roomsPrice;
-  //     setSelectedNoOfRoomsPrice(roomsPrice);
-  //   } else {
-  //     console.warn('No matching room quantity found');
-  //   }
-  
-  //     setTotalPrice(prevPrice => prevPrice + total);
-  // };
-
-
-
-  
-  
- 
-
-
- 
-  // useEffect(() => {
-  //   if (isEdited && !hasEdited) {
-  //     const timeout = setTimeout(() => {
-  //       setHasEdited(true);
-  //       if (isEdited.addType === 'job') totalForEdit();
-  //     }, 0);
-  //     editHandler();
-  //     return () => clearTimeout(timeout);
-  //   }
-  // }, [isEdited, hasEdited]);
-  
-
-  
-  
 
   return (
     <>
@@ -722,17 +451,13 @@ const calculateTotal = (
                 }}
                 render={({ field: { value, onChange } }) => (
                   <Select
-                    value={value || selectedName} // Show correct initial value
+                    value={value} // Show correct initial value
                     onValueChange={(newValue) => {
-                      setSelectedName(newValue);
                       onChange(newValue);
-                      handleProviderChange(newValue);
                     }}
                   >
                     <SelectTrigger className="w-full h-[55px] rounded-lg border border-[#4BB1D3] bg-gray-50 mt-1 pr-6 outline-[#4BB1D3] focus:border-[#4BB1D3] focus:outline-none focus:border-none">
-                      <SelectValue
-                        placeholder={selectedName || t("Provider")}
-                      />
+                      <SelectValue placeholder={t("Provider")} />
                     </SelectTrigger>
 
                     <SelectContent>
@@ -881,7 +606,7 @@ const calculateTotal = (
                     name="subcategory"
                     control={control}
                     rules={{
-                      required: (t('SubcategoryRequired')),
+                      required: t("SubcategoryRequired"),
                     }}
                     render={({ field: { value, onChange } }) => (
                       <Select
@@ -928,25 +653,20 @@ const calculateTotal = (
                       {t("RoomAreaSize")}
                     </label>
                     <Controller
-  name="roomsizes"
-  control={control}
-  rules={{
-    required: t("RoomSizeRequired"),
-  }}
-  defaultValue={selectedRoomAreaSize}
-  render={({ field: { value, onChange } }) => (
-    <Select
-      value={value}
-      onValueChange={(newValue) => {
-        setSelectedRoomAreaSize(newValue);
-        handleRoomSizeChange(value);
-        onChange(newValue);
-      }}
-    >
+                      name="roomsizes"
+                      control={control}
+                      rules={{
+                        required: t("RoomSizeRequired"),
+                      }}
+                      render={({ field: { value, onChange } }) => (
+                        <Select
+                          value={value}
+                          onValueChange={(newValue) => {
+                            onChange(newValue);
+                          }}
+                        >
                           <SelectTrigger className="w-full h-[55px] rounded-lg border border-[#4BB1D3] bg-gray-50 mt-1 pr-6 outline-[#4BB1D3] focus:border-[#4BB1D3] focus:outline-none focus:border-none">
-                            <SelectValue  placeholder={
-        selectedRoomAreaSize || t("RoomAreaSize")
-      }/>
+                            <SelectValue placeholder={t("RoomAreaSize")} />
                           </SelectTrigger>
                           <SelectContent>
                             <SelectGroup>
@@ -975,33 +695,26 @@ const calculateTotal = (
                     >
                       {t("NumberOfRoom")}
                     </label>
-                    
 
-<Controller
-  name="numberofrooms"
-  control={control}
-  rules={{
-    required: t("RequiredNumberOfRoom"),
-  }}
-  render={({ field: { value, onChange } }) => (
-    <Select
-      value={value || selectedNoOfRooms}
-      onValueChange={(newValue) => {
-        onChange(newValue);
-        handleNoOfRoomsChange(newValue);
-      }}
-    >
+                    <Controller
+                      name="numberofrooms"
+                      control={control}
+                      rules={{
+                        required: t("RequiredNumberOfRoom"),
+                      }}
+                      render={({ field: { value, onChange } }) => (
+                        <Select
+                          value={value}
+                          onValueChange={(newValue) => {
+                            onChange(newValue);
+                          }}
+                        >
                           <SelectTrigger className="w-full h-[55px] rounded-lg border border-[#4BB1D3] bg-gray-50 mt-1 pr-6 outline-[#4BB1D3] focus:border-[#4BB1D3] focus:outline-none focus:border-none">
-                            <SelectValue placeholder={t("NumberOfRoom") || selectedNoOfRooms} />
+                            <SelectValue placeholder={t("NumberOfRoom")} />
                           </SelectTrigger>
                           <SelectContent>
                             <SelectGroup>
                               <SelectLabel>{t("NumberOfRoom")}</SelectLabel>
-                              {noOfRooms.map((room, index) => (
-                                <SelectItem key={index} value={room}>
-                                  {room}
-                                </SelectItem>
-                              ))}
                             </SelectGroup>
                           </SelectContent>
                         </Select>
