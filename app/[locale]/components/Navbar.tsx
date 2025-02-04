@@ -93,15 +93,15 @@ const t = useTranslations('navbar');
 
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const query = event.target.value;
-    setSearchTerm(query);
+    // const query = event.target.value;
+    // setSearchTerm(query);
 
-    // Redirect with query only if there is a search term
-    if (query) {
-      router.push(`/users?email=${encodeURIComponent(query)}`);
-    } else {
-      router.push("/users"); // Reset to users route without query when empty
-    }
+    // // Redirect with query only if there is a search term
+    // if (query) {
+    //   router.push(`/users?email=${encodeURIComponent(query)}`);
+    // } else {
+    //   router.push("/users"); // Reset to users route without query when empty
+    // }
   };
   
   
