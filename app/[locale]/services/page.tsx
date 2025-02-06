@@ -101,20 +101,23 @@ function page() {
 
   console.log(services);
 
-  useEffect(() => {
-    if (searchData !== "") {
-      const formattedSearchData =
-        searchData.charAt(0).toUpperCase() + searchData.slice(1);
+  
 
-      const filterData = services.filter(
-        (data) => data.category && data.category.includes(formattedSearchData)
-      );
 
-      setServices(filterData);
-    } else {
-      setServices(allServices);
-    }
-  }, [searchData]);
+   useEffect(() => {
+        const trimmedSearchData = searchData.trim().toLowerCase();
+      
+        if (trimmedSearchData !== "") {
+          const filterData = allServices.filter(
+            (data:any) =>
+              data.category &&
+              data.category.toLowerCase().includes(trimmedSearchData)
+          );
+          setServices(filterData);
+        } else {
+          setServices(allServices);
+        }
+      }, [searchData, allServices]);
 
   //handle Click job
 

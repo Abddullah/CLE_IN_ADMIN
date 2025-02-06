@@ -170,7 +170,10 @@
       "status_offline": "offline",
       "send_message": "Send Message",
       "type_message": "Type your message...",
-      "message":"I'm doing great! How about you?"
+     "Selected_user_not_exist":"Selected user document does not exist.",
+     "Error sending message":"Error sending message",
+     "Error fetching sender details":"Error fetching sender details",
+     "Sender not found":"Sender not found"
 
 
     },
@@ -367,6 +370,8 @@
       "upload":"upload"
 
   }, 
+
+  
   "AdditionalServices":{
    "add_additional_services": "Add Additional Services",
   "title": "Title",
@@ -412,6 +417,7 @@
 "rate":"Rate"
 
   },
+  
   "logout":{
     "are_you_sure_logout": "Are you sure you want to log out?",
     "yes": "Yes",
@@ -459,6 +465,11 @@
     "select":"Select",
     "most_popular":"Most Popular"
     
+  },
+  "banner":{
+    "upload_Banner":"Upload Banners",
+    "select_Image":"Select Images"
+
   }
   
   

@@ -28,10 +28,13 @@ type FormData = {
 
 function Page() {
   const t = useTranslations("category");
+  const searchData = useSelector((state: any) => state.search.search);
   const [categories, setCategories] = useState<Category[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [categoryToEdit, setCategoryToEdit] = useState<Category | null>(null);
   const [newSubcategories, setNewSubcategories] = useState<string[]>([]);
+  const [allCategories , setAllCategories] = useState<Category[]>([]);
+  const [debouncedSearch, setDebouncedSearch] = useState("");
   const dispatch = useDispatch();
   
   
@@ -61,10 +64,33 @@ function Page() {
         };
       });
       setCategories(categoriesData);
+      setAllCategories(categoriesData);
     };
-
+    
     fetchCategories();
   }, []);
+  
+
+
+  useEffect(() => {
+    const trimmedSearchData = searchData.trim().toLowerCase();
+  
+    if (trimmedSearchData !== "") {
+      const filterData = allCategories.filter(
+        (category) =>
+          category.title &&
+          category.title.toLowerCase().includes(trimmedSearchData)
+      );
+      setCategories(filterData);
+    } else {
+      setCategories(allCategories);
+    }
+  }, [searchData, allCategories]);
+  
+  
+
+
+
 
   const handleDeleteCategory = async (id: string) => {
     const categoryRef = doc(db, "categories", id);

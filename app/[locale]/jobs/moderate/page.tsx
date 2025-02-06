@@ -78,19 +78,20 @@ function Page() {
   }, []);
 
    useEffect(() => {
-        if (searchData !== "") {
-          const formattedSearchData =
-            searchData.charAt(0).toUpperCase() + searchData.slice(1);
-    
-          const filterData = jobs.filter(
-            (data:any) => data.category && data.category.includes(formattedSearchData)
+        const trimmedSearchData = searchData.trim().toLowerCase();
+      
+        if (trimmedSearchData !== "") {
+          const filterData = allJobs.filter(
+            (data:any) =>
+              data.category &&
+              data.category.toLowerCase().includes(trimmedSearchData)
           );
-    
           setJobs(filterData);
         } else {
           setJobs(allJobs);
         }
-      }, [searchData]);
+      }, [searchData, allJobs]);
+    
     
   
 

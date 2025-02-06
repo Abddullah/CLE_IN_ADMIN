@@ -117,24 +117,7 @@ const ChatInterface: React.FC = () => {
   }, []);
  
 
-  // useEffect(() => {
-  //       if (searchData !== "") {
-  //         const formattedSearchData =
-  //           searchData.charAt(0).toUpperCase() + searchData.slice(1);
-    
-  //         const filterData = users.filter(
-  //           (data:any) => data.name && data.name.includes(formattedSearchData)
-  //         );
-   
-  //         setUsers(filterData);
-         
-  //       } else {
-  //         setUsers(allusers);
-  //       }
-  //     }, [searchData ]);
-
-
-
+  
 
   useEffect(() => {
     if (searchData.trim() !== "") {
@@ -261,7 +244,7 @@ const ChatInterface: React.FC = () => {
 
       setNewMessage("");
     } catch (error) {
-      console.error("Error sending message:", error);
+      console.error((t('Error sending message')), error);
     }
   };
 
@@ -280,11 +263,11 @@ const ChatInterface: React.FC = () => {
           sender: senderId,
         };
       } else {
-        console.error("Sender not found.");
+        console.error(t("Sender_not_found"));
         return { fullName: "Unknown", status: "offline" };
       }
     } catch (error) {
-      console.error("Error fetching sender details:", error);
+      console.error((t('Error fetching sender details')), error);
       return { fullName: "Unknown", status: "offline" };
     }
   };
@@ -313,7 +296,7 @@ const ChatInterface: React.FC = () => {
           lastMessage: userData.lastMessage?.text || "",
         });
       } else {
-        console.error("Selected user document does not exist.");
+        console.error(t('Selected_user_not_exist'));
       }
     });
 

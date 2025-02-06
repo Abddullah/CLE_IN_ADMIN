@@ -164,7 +164,11 @@
     "status_offline": "Offline",
     "send_message": "Invia Messaggio",
     "type_message": "Scrivi il tuo messaggio...",
-    "message": "Sto andando alla grande! E tu?"
+    "message": "Sto andando alla grande! E tu?",
+    "Selected_user_not_exist": "Il documento utente selezionato non esiste.",
+  "Error_sending_message": "Errore nell'invio del messaggio",
+  "Error_fetching_sender_details": "Errore nel recupero dei dettagli del mittente",
+  "Sender_not_found": "Mittente non trovato"
   },
   "Settings": {
     "privacy_policy": "Informativa sulla privacy",
@@ -369,6 +373,8 @@
 
   
   },
+
+ 
   "AdditionalServices":{
     "add_additional_services": "Aggiungi Servizi Aggiuntivi",
     "title": "Titolo",
@@ -412,6 +418,8 @@
   "rate": "Tariffa",
   "Fix Rate": "Tariffa Fissa"
   },
+  
+
   "logout":{
     "are_you_sure_logout": "Sei sicuro di voler uscire?",
     "yes": "Sì",
@@ -459,6 +467,10 @@
     "one_time_details": "Quando il tuo programma è incerto",
     "select": "Seleziona",
     "most_popular": "Più Popolare"
+},
+"banner": {
+  "upload_Banner": "Carica Banner",
+  "select_Image": "Seleziona Immagini"
 }
 
 

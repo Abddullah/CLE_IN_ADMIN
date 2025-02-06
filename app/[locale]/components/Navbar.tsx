@@ -27,7 +27,18 @@ const pathMapping: Record<string, string> = {
   banner: "Banners",
 };
 
+interface SearchProps {
+  setSearchTerm: (term: string) => void;
+}
+
 const hidePaths = ["/it", "/en"];
+const SearchHiddenRoutes = [
+  "/en/dashboard",
+  "/en/configuration",
+  "/en/settings",
+  "/en/payments",
+  "/en/banner",
+];
 
 const Navbar = () => {
   const t = useTranslations("navbar");
@@ -40,6 +51,17 @@ const Navbar = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   const [pathName, setPathName] = useState("");
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [languageCode, setLanguageCode] = useState("");
+
+  useEffect(() => {
+    if (pathname.includes("/en")) {
+      setLanguageCode("en");
+      return;
+    }
+
+    setLanguageCode("it");
+  }, [setLanguageCode]);
 
   const toggleNotifications = useCallback(() => {
     setIsNotificationsOpen((prev) => !prev);
@@ -72,22 +94,17 @@ const Navbar = () => {
     return null;
   }
 
-  const searchPlaceholderMapping: Record<string, string> = {
-    "/users": "Search by email...",
-    "/jobs": "Search by job title...",
-    "/categories": "Search by category...",
-  };
-
-  const placeholderText = useMemo(
-    () => searchPlaceholderMapping[pathname] || "Search...",
-    [pathname]
-  );
-
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     const query = event.target.value.trim();
     dispatch(setSearch(query));
     setSearchTerm(query);
   };
+
+  //empty the serach bar when route changes
+
+  useEffect(() => {
+    setSearchTerm("");
+  }, [pathname]);
 
   return (
     <aside>
@@ -96,19 +113,29 @@ const Navbar = () => {
           {pathName}
         </div>
 
-        <div className="flex-1 gap-3 mt-2 max-w-[75%] sm:max-w-[50%] md:max-w-[40%] lg:max-w-[30%] relative ml-auto sm:mr-4 md:mr-9 px-2">
-          <input
-            type="text"
-            value={searchTerm}
-            onChange={handleSearch}
-            placeholder={placeholderText}
-            className="w-full h-9 sm:h-12 bg-gray-100 rounded-full py-1 pl-10 pr-4 focus:outline-none focus:ring-2 focus:ring-blue-400"
-          />
-          <FontAwesomeIcon
-            icon={faSearch}
-            className="absolute left-5 top-1/2 transform -translate-y-1/2 text-gray-400"
-          />
-        </div>
+        {!pathname.includes(`/${languageCode}/dashboard`) &&
+          !pathname.includes(`/${languageCode}/configuration`) &&
+          !pathname.includes(`/${languageCode}/banner`) &&
+          !pathname.includes(`/${languageCode}/payments`) &&
+          !pathname.includes(`/${languageCode}/settings`) && 
+          !pathname.includes(`/${languageCode}/jobs/addJob`) &&
+          !pathname.includes(`/${languageCode}/services/addService`) &&
+          !pathname.includes(`/${languageCode}/services/reviewService`) &&
+          (
+            <div className="flex-1 gap-3 mt-2 max-w-[75%] sm:max-w-[50%] md:max-w-[40%] lg:max-w-[30%] relative ml-auto sm:mr-4 md:mr-9 px-2">
+              <input
+                type="text"
+                value={searchTerm}
+                onChange={handleSearch}
+                placeholder={t("search_placeholder")}
+                className="w-full h-9 sm:h-12 bg-gray-100 rounded-full py-1 pl-10 pr-4 focus:outline-none focus:ring-2 focus:ring-blue-400"
+              />
+              <FontAwesomeIcon
+                icon={faSearch}
+                className="absolute left-5 top-1/2 transform -translate-y-1/2 text-gray-400"
+              />
+            </div>
+          )}
 
         <div className="flex items-center space-x-3 mr-2 sm:space-x-4 relative">
           <div

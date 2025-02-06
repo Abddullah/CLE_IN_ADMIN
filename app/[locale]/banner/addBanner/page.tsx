@@ -1,7 +1,9 @@
 "use client";
+import { useTranslations } from 'next-intl';
 import { useState, ChangeEvent, FormEvent } from 'react';
 
 const AddBannerPage = () => {
+  const t = useTranslations('banner');
   const [images, setImages] = useState<File[]>([]);
 
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -25,10 +27,10 @@ const AddBannerPage = () => {
       <form 
         onSubmit={handleSubmit} 
         className=" rounded-2xl p-10 w-full max-w-3xl space-y-8 mx-auto md:mx-0">
-        <h2 className="text-3xl font-bold text-gray-800 mb-6">Upload Banners</h2>
+        <h2 className="text-3xl font-bold text-gray-800 mb-6">{(t('upload_Banner'))}</h2>
 
         <div className="flex flex-col space-y-4">
-          <label className="text-lg text-gray-700 font-medium">Select Images</label>
+          <label className="text-lg text-gray-700 font-medium">{(t('select_Image'))}</label>
           <input
             type="file"
             accept="image/*"
@@ -63,7 +65,7 @@ const AddBannerPage = () => {
           type="submit"
           className="w-full bg-[#00BFFF] text-white px-6 py-3 rounded-lg text-lg font-semibold shadow-md hover:bg-[#00BFFF] focus:outline-none focus:ring-4 focus:ring-blue-300"
         >
-          Upload Banners
+          {(t('upload_Banner'))}
         </button>
       </form>
     </div>
