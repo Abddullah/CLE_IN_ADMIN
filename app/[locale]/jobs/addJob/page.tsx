@@ -185,8 +185,8 @@ function page() {
     );
     setSelectedCategory((editData as any).category);
     setSelectedSubCategory((editData as any).subCategory);
-    handleRoomSizeChange((editData as any).roomSize);
-    handleNoOfRoomsChange((editData as any).roomsQty);
+    setSelectedRoomAreaSize((editData as any).roomSize);
+    setSelectedNoOfRooms((editData as any).roomsQty);
     const additionalService = (editData as any).aditionalServices.map(
       (item: any) => item.title
     );
@@ -492,54 +492,53 @@ function page() {
           <FrequencyModal />
         </div> */}
 
-        <div className="max-w-7xl mx-auto p-4 sm:p-6 lg">
-          <form
-            onSubmit={handleSubmit(onSubmit)}
-            className="w-full max-w-6xl px-8 lg:px-16 mt-6 mb-0"
+<div className="w-full mx-auto p-4 sm:p-6 lg:px-8">
+  <form
+    onSubmit={handleSubmit(onSubmit)}
+    className="w-full max-w-full px-4 sm:px-8 lg:px-12 mt-6 mb-0"
+  >
+    <h1 className="text-2xl font-bold mt-2">{t("AddJobs")}</h1>
+
+    <div className="w-full flex items-start justify-start">
+      <Controller
+        name="provider"
+        control={control}
+        rules={{ required: t("ProviderRequired") }}
+        render={({ field: { value, onChange } }) => (
+          <Select
+            value={value || selectedName}
+            onValueChange={(newValue) => {
+              setSelectedName(newValue);
+              onChange(newValue);
+              handleProviderChange(newValue);
+            }}
           >
-            <h1 className="text-2xl font-bold mt-2">{t("AddJobs")}</h1>
-
-            <div className="grid w-full">
-              <Controller
-                name="provider"
-                control={control}
-                rules={{ required: t("ProviderRequired") }}
-                render={({ field: { value, onChange } }) => (
-                  <Select
-                    value={value || selectedName}
-                    onValueChange={(newValue) => {
-                      setSelectedName(newValue);
-                      onChange(newValue);
-                      handleProviderChange(newValue);
-                    }}
-                  >
-                    <SelectTrigger className="w-full h-[55px] rounded-lg border border-[#4BB1D3] bg-gray-50 mt-1 pr-6 outline-[#4BB1D3] focus:border-[#4BB1D3] focus:outline-none focus:border-none">
-                      <SelectValue
-                        placeholder={selectedName || t("Provider")}
-                      />
-                    </SelectTrigger>
-
-                    <SelectContent>
-                      <SelectGroup>
-                        <SelectLabel>{t("Provider")}</SelectLabel>
-                        {users.map((user: any) => (
-                          <SelectItem key={user.userId} value={user.userId}>
-                            {user.fullName}
-                          </SelectItem>
-                        ))}
-                      </SelectGroup>
-                    </SelectContent>
-                  </Select>
-                )}
+            <SelectTrigger className="w-full h-[55px] rounded-lg border border-[#4BB1D3] bg-gray-50 mt-1 pr-6 outline-[#4BB1D3] focus:border-[#4BB1D3] focus:outline-none">
+              <SelectValue
+                placeholder={selectedName || t("Provider")}
               />
+            </SelectTrigger>
 
-              {errors.provider && (
-                <p className="text-red-500 text-sm mt-1">
-                  {errors.provider.message}
-                </p>
-              )}
-            </div>
+            <SelectContent>
+              <SelectGroup>
+                <SelectLabel>{t("Provider")}</SelectLabel>
+                {users.map((user: any) => (
+                  <SelectItem key={user.userId} value={user.userId}>
+                    {user.fullName}
+                  </SelectItem>
+                ))}
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+        )}
+      />
 
+      {errors.provider && (
+        <p className="text-red-500 text-sm mt-1">
+          {errors.provider.message}
+        </p>
+      )}
+    </div>
             {selectedName && (
               <>
                 <div className="flex flex-col mt-6 h-full">
