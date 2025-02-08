@@ -117,10 +117,7 @@ function page() {
   const [hourPrice, setHourPrice] = useState<number>(0);
 
   const [selectedHour, setSelectedHour] = useState<number>(1);
-  const [previousHourPrice , setPreviouHourPrice]= useState(0);
-
   const [selectedProfessional, setSelectedProfessional] = useState<number>(1);
-  const [previousProfessionalPrice , setPreviousProfessionalPrice]= useState(0);
 
   const [categories, setCategories] = useState<any[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string>("");
@@ -130,15 +127,14 @@ function page() {
 
   const [roomSizes, setRoomSizes] = useState<any[]>([]);
   const [selectedRoomAreaSize, setSelectedRoomAreaSize] = useState("");
-  const [previousRoomSizePrice, setPreviousRoomSizePrice] = useState(0);
+  // const [previousRoomSizePrice, setPreviousRoomSizePrice] = useState(0);
 
   const [noOfRooms, setNoOfRooms] = useState<any[]>([]);
   const [selectedNoOfRooms, setSelectedNoOfRooms] = useState("");
-  const [previousNoOfRoomsPrice, setPreviousNoOfRoomsPrice] = useState(0);
+  // const [previousNoOfRoomsPrice, setPreviousNoOfRoomsPrice] = useState(0);
 
-  const [matererialSelectedOption, setMaterialSelectedOption] =
-    useState<string>("");
-  const [previousNeedMaterialPrice, setPreviousNeedMaterialPrice] = useState(0);
+  const [matererialSelectedOption, setMaterialSelectedOption] = useState<string>(t("No"));
+  // const [previousNeedMaterialPrice, setPreviousNeedMaterialPrice] = useState(0);
 
   const [additionalServices, setAdditionalServices] = useState<string[]>([]);
   const [additionalServicePrice, setAdditionalServicesPrice] = useState<any>();
@@ -155,46 +151,46 @@ function page() {
 
   //get edit data from local storage in the state
 
-  useEffect(() => {
-    const data = localStorage.getItem("editJob");
-    if (data) {
-      try {
-        const parsedData = JSON.parse(data);
-        setEditData(parsedData[0]);
-      } catch (error) {
-        console.error("Invalid JSON data:", error);
-      }
-    }
-  }, []);
+  // useEffect(() => {
+  //   const data = localStorage.getItem("editJob");
+  //   if (data) {
+  //     try {
+  //       const parsedData = JSON.parse(data);
+  //       setEditData(parsedData[0]);
+  //     } catch (error) {
+  //       console.error("Invalid JSON data:", error);
+  //     }
+  //   }
+  // }, []);
 
   //for edit the job
 
-  useEffect(() => {
-    if (!editData) return;
+  // useEffect(() => {
+  //   if (!editData) return;
 
-    const user = users.find(({ id }) => id === (editData as any).postedBy);
-    const userName = user?.fullName;
+  //   const user = users.find(({ id }) => id === (editData as any).postedBy);
+  //   const userName = user?.fullName;
 
-    // Update the state only if the name has changed to avoid redundant renders
-    if (userName && userName !== selectedName) {
-      setSelectedName(userName);
-      handleProviderChange(userName);
-    }
+  //   // Update the state only if the name has changed to avoid redundant renders
+  //   if (userName && userName !== selectedName) {
+  //     setSelectedName(userName);
+  //     handleProviderChange(userName);
+  //   }
 
-    // Type assertion to treat editData as an object
-    handleHourChange(Number((editData as any).howManyHourDoYouNeed));
-    handleSelectProfessional(
-      Number((editData as any).howManyProfessionalDoYouNeed)
-    );
-    setSelectedCategory((editData as any).category);
-    setSelectedSubCategory((editData as any).subCategory);
-    setSelectedRoomAreaSize((editData as any).roomSize);
-    setSelectedNoOfRooms((editData as any).roomsQty);
-    const additionalService = (editData as any).aditionalServices.map(
-      (item: any) => item.title
-    );
-    setSelectedServices(additionalService);
-  }, [editData, users, selectedName, setSelectedName]);
+  //   // Type assertion to treat editData as an object
+  //   handleHourChange(Number((editData as any).howManyHourDoYouNeed));
+  //   handleSelectProfessional(
+  //     Number((editData as any).howManyProfessionalDoYouNeed)
+  //   );
+  //   setSelectedCategory((editData as any).category);
+  //   setSelectedSubCategory((editData as any).subCategory);
+  //   setSelectedRoomAreaSize((editData as any).roomSize);
+  //   setSelectedNoOfRooms((editData as any).roomsQty);
+  //   const additionalService = (editData as any).aditionalServices.map(
+  //     (item: any) => item.title
+  //   );
+  //   setSelectedServices(additionalService);
+  // }, [editData, users, selectedName, setSelectedName]);
 
   //get tax data from local storage and add the tax amount to the tax state
 
@@ -246,6 +242,9 @@ function page() {
         ...doc.data(),
       }));
       setUsers(fetchedUsers);
+
+
+
     } catch (error) {
       console.error("Error fetching users:", error);
     }
@@ -327,6 +326,7 @@ function page() {
     if (selectedUser) {
       localStorage.setItem("JobPostUserId", selectedProvider);
       setHourPrice(Number(selectedUser.hourlyRate));
+      setTotalPrice(selectedHour * Number(selectedUser.hourlyRate) * selectedProfessional);
     }
   };
 
@@ -359,7 +359,6 @@ function page() {
   const handleRoomSizeChange = (value: string) => {
     const findRoomSize = roomSizes.find((data) => data.title === value);
     setSelectedRoomAreaSize(value);
-
     if (findRoomSize?.rate) {
       const roomSizePrice = Number(findRoomSize.rate);
       totalAmount(roomSizePrice, "roomSize");
@@ -373,7 +372,6 @@ function page() {
   const handleNoOfRoomsChange = (value: string) => {
     const findNoOfRooms = noOfRooms.find((data) => data.title === value);
     setSelectedNoOfRooms(value);
-
     if (findNoOfRooms && findNoOfRooms.price) {
       const noOfRoomsPrice = Number(findNoOfRooms.price);
       totalAmount(noOfRoomsPrice, "NoOfRooms");
@@ -385,24 +383,26 @@ function page() {
   //handle the select need cleaning material
 
   const handleMaterialSelectedOption = (option: any) => {
-    let price = 0; // Assume 6 for "yes"
-    if (option === t("yes")) {
-      price = 6;
-      setMaterialSelectedOption(t("yes"));
-    } else {
-      price = 0;
-      setMaterialSelectedOption(t("No"));
+    if (option === matererialSelectedOption) {
+      return;
     }
-    totalAmount(price, "needMaterial");
+    if (option === t("yes")) {
+      setMaterialSelectedOption(t("yes"));
+      setTotalPrice((prevPrice) => prevPrice + 6);
+    } else {
+      setMaterialSelectedOption(t("No"));
+      setTotalPrice((prevPrice) => prevPrice - 6);
+    }
   };
 
   //handle the check box of additional services
 
   const handleCheckboxChange = (service: string): void => {
+    console.log(service, 'service');
+
     setSelectedServices((prevSelectedServices) => {
-      const updatedServices = prevSelectedServices.includes(service)
-        ? prevSelectedServices.filter((item) => item !== service)
-        : [...prevSelectedServices, service];
+      const updatedServices = prevSelectedServices.includes(service) ? prevSelectedServices.filter((item) => item !== service) : [...prevSelectedServices, service];
+      console.log(updatedServices, 'updatedServices');
       setValue("Additionalservices", updatedServices);
       return updatedServices;
     });
@@ -419,35 +419,43 @@ function page() {
   const totalAmount = (value: any, type: any) => {
     let total = 0;
 
-    total = totalPrice;
 
     if (type === "hour") {
-      total = total + value * hourPrice * selectedProfessional - previousHourPrice;
-      setPreviouHourPrice(total + value * hourPrice * selectedProfessional);
+      total = value * hourPrice;
     }
 
     if (type === "professional") {
-      total = total + value * selectedHour * hourPrice - previousProfessionalPrice;
-      setPreviousProfessionalPrice(value * selectedHour * hourPrice);
+      total = value * selectedHour * hourPrice;
     }
 
     if (type === "roomSize") {
-      total = totalPrice - previousRoomSizePrice + value;
-      setPreviousRoomSizePrice(value);
+      if (selectedNoOfRooms != '') {
+        const findNoOfRooms = noOfRooms.find((data) => data.title === selectedNoOfRooms);
+        let needCleaningMaterial = matererialSelectedOption === t('yes') ? 6 : 0;
+        let totalPriceAdditionalService = selectedServices.reduce((total, service) => { return total + (additionalServicePrice[service] || 0); }, 0);
+        total = total + value + hourPrice * selectedProfessional * selectedHour + Number(findNoOfRooms.price) + needCleaningMaterial + totalPriceAdditionalService;
+      }
+      else {
+        total = total + value + hourPrice * selectedProfessional * selectedHour;
+      }
     }
 
     if (type === "NoOfRooms") {
-      total = totalPrice - previousNoOfRoomsPrice + value;
-      setPreviousNoOfRoomsPrice(value);
+      if (selectedRoomAreaSize != '') {
+        const findRoomSize = roomSizes.find((data) => data.title === selectedRoomAreaSize);
+        let needCleaningMaterial = matererialSelectedOption === t('yes') ? 6 : 0;
+        let totalPriceAdditionalService = selectedServices.reduce((total, service) => { return total + (additionalServicePrice[service] || 0); }, 0);
+        total = total + value + hourPrice * selectedProfessional * selectedHour + Number(findRoomSize.rate) + needCleaningMaterial + totalPriceAdditionalService;
+      }
+      else {
+        total = total + value + hourPrice * selectedProfessional * selectedHour;
+      }
     }
 
-    if (type === "needMaterial") {
-      total = totalPrice - previousNeedMaterialPrice + value;
-      setPreviousNeedMaterialPrice(value);
-    }
-
+    console.log(total, "total");
     setTotalPrice(total);
   };
+
 
   //handle the image upload
 
@@ -497,53 +505,53 @@ function page() {
           <FrequencyModal />
         </div> */}
 
-<div className="w-full mx-auto p-4 sm:p-6 lg:px-8">
-  <form
-    onSubmit={handleSubmit(onSubmit)}
-    className="w-full max-w-full px-4 sm:px-8 lg:px-12 mt-6 mb-0"
-  >
-    <h1 className="text-2xl font-bold mt-2">{t("AddJobs")}</h1>
-
-    <div className="w-full flex items-start justify-start">
-      <Controller
-        name="provider"
-        control={control}
-        rules={{ required: t("ProviderRequired") }}
-        render={({ field: { value, onChange } }) => (
-          <Select
-            value={value || selectedName}
-            onValueChange={(newValue) => {
-              setSelectedName(newValue);
-              onChange(newValue);
-              handleProviderChange(newValue);
-            }}
+        <div className="w-full mx-auto p-4 sm:p-6 lg:px-8">
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            className="w-full max-w-full px-4 sm:px-8 lg:px-12 mt-6 mb-0"
           >
-            <SelectTrigger className="w-full h-[55px] rounded-lg border border-[#4BB1D3] bg-gray-50 mt-1 pr-6 outline-[#4BB1D3] focus:border-[#4BB1D3] focus:outline-none">
-              <SelectValue
-                placeholder={selectedName || t("Provider")}
+            <h1 className="text-2xl font-bold mt-2">{t("AddJobs")}</h1>
+
+            <div className="w-full flex items-start justify-start">
+              <Controller
+                name="provider"
+                control={control}
+                rules={{ required: t("ProviderRequired") }}
+                render={({ field: { value, onChange } }) => (
+                  <Select
+                    value={value || selectedName}
+                    onValueChange={(newValue) => {
+                      setSelectedName(newValue);
+                      onChange(newValue);
+                      handleProviderChange(newValue);
+                    }}
+                  >
+                    <SelectTrigger className="w-full h-[55px] rounded-lg border border-[#4BB1D3] bg-gray-50 mt-1 pr-6 outline-[#4BB1D3] focus:border-[#4BB1D3] focus:outline-none">
+                      <SelectValue
+                        placeholder={selectedName || t("Provider")}
+                      />
+                    </SelectTrigger>
+
+                    <SelectContent>
+                      <SelectGroup>
+                        <SelectLabel>{t("Provider")}</SelectLabel>
+                        {users.map((user: any) => (
+                          <SelectItem key={user.userId} value={user.userId}>
+                            {user.fullName}
+                          </SelectItem>
+                        ))}
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                )}
               />
-            </SelectTrigger>
 
-            <SelectContent>
-              <SelectGroup>
-                <SelectLabel>{t("Provider")}</SelectLabel>
-                {users.map((user: any) => (
-                  <SelectItem key={user.userId} value={user.userId}>
-                    {user.fullName}
-                  </SelectItem>
-                ))}
-              </SelectGroup>
-            </SelectContent>
-          </Select>
-        )}
-      />
-
-      {errors.provider && (
-        <p className="text-red-500 text-sm mt-1">
-          {errors.provider.message}
-        </p>
-      )}
-    </div>
+              {errors.provider && (
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.provider.message}
+                </p>
+              )}
+            </div>
             {selectedName && (
               <>
                 <div className="flex flex-col mt-6 h-full">
@@ -556,11 +564,10 @@ function page() {
                         key={hour}
                         type="button"
                         onClick={() => handleHourChange(hour)}
-                        className={`w-8 h-8 text-lg font-bold rounded-full border transition duration-300 ${
-                          selectedHour === hour
-                            ? "bg-[#4BB1D3] text-white"
-                            : "text-[#4BB1D3] border-[#4BB1D3] hover:bg-[#4BB1D3] hover:text-white"
-                        }`}
+                        className={`w-8 h-8 text-lg font-bold rounded-full border transition duration-300 ${selectedHour === hour
+                          ? "bg-[#4BB1D3] text-white"
+                          : "text-[#4BB1D3] border-[#4BB1D3] hover:bg-[#4BB1D3] hover:text-white"
+                          }`}
                       >
                         {hour}
                       </button>
@@ -588,11 +595,10 @@ function page() {
                         <button
                           type="button"
                           onClick={() => handleSelectProfessional(professional)}
-                          className={`w-8 h-8 text-lg font-bold rounded-full border transition duration-300 ${
-                            selectedProfessional === professional
-                              ? "bg-[#4BB1D3] text-white"
-                              : "text-[#4BB1D3] border-[#4BB1D3] hover:bg-[#4BB1D3] hover:text-white"
-                          }`}
+                          className={`w-8 h-8 text-lg font-bold rounded-full border transition duration-300 ${selectedProfessional === professional
+                            ? "bg-[#4BB1D3] text-white"
+                            : "text-[#4BB1D3] border-[#4BB1D3] hover:bg-[#4BB1D3] hover:text-white"
+                            }`}
                         >
                           {professional}
                         </button>
@@ -835,11 +841,10 @@ function page() {
                                     onChange(option);
                                     handleMaterialSelectedOption(option);
                                   }}
-                                  className={`px-4 py-2 rounded-full text-md font-medium transition duration-300 ${
-                                    matererialSelectedOption === option
-                                      ? "bg-[#00A0E0] text-white"
-                                      : "bg-[#d5dce4] text-black "
-                                  }`}
+                                  className={`px-4 py-2 rounded-full text-md font-medium transition duration-300 ${matererialSelectedOption === option
+                                    ? "bg-[#00A0E0] text-white"
+                                    : "bg-[#d5dce4] text-black "
+                                    }`}
                                 >
                                   {option}
                                 </button>
