@@ -117,7 +117,10 @@ function page() {
   const [hourPrice, setHourPrice] = useState<number>(0);
 
   const [selectedHour, setSelectedHour] = useState<number>(1);
+  const [previousHourPrice , setPreviouHourPrice]= useState(0);
+
   const [selectedProfessional, setSelectedProfessional] = useState<number>(1);
+  const [previousProfessionalPrice , setPreviousProfessionalPrice]= useState(0);
 
   const [categories, setCategories] = useState<any[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string>("");
@@ -419,11 +422,13 @@ function page() {
     total = totalPrice;
 
     if (type === "hour") {
-      total = value * hourPrice;
+      total = total + value * hourPrice * selectedProfessional - previousHourPrice;
+      setPreviouHourPrice(total + value * hourPrice * selectedProfessional);
     }
 
     if (type === "professional") {
-      total = value * selectedHour * hourPrice;
+      total = total + value * selectedHour * hourPrice - previousProfessionalPrice;
+      setPreviousProfessionalPrice(value * selectedHour * hourPrice);
     }
 
     if (type === "roomSize") {
