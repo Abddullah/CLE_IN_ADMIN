@@ -337,7 +337,6 @@ setSelectedServices(additionalService);
     );
     if (selectedUser) {
       localStorage.setItem("JobPostUserId", selectedProvider);
-      console.log(selectedUser, "selectedUser");
       setHourPrice(Number(selectedUser.hourlyRate));
       setTotalPrice(
         selectedHour * Number(selectedUser.hourlyRate) * selectedProfessional
@@ -601,6 +600,7 @@ setSelectedServices(additionalService);
                 name="provider"
                 control={control}
                 // rules={{ required: t("ProviderRequired") }}
+                defaultValue={selectedName}
                 render={({ field: { value, onChange } }) => (
                   <Select
                     value={selectedName}
@@ -630,11 +630,11 @@ setSelectedServices(additionalService);
                 )}
               />
 
-              {/* {errors.provider && (
+               {/* {errors.provider && (
                 <p className="text-red-500 text-sm mt-1">
                   {errors.provider.message}
                 </p>
-              )} */}
+              )}  */}
             </div>
             {selectedName && (
               <>
@@ -712,6 +712,7 @@ setSelectedServices(additionalService);
                     rules={{
                       required: t("CategoryRequired"),
                     }}
+                    defaultValue={selectedCategory}
                     render={({ field }) => (
                       <Select
                         value={selectedCategory}
@@ -766,6 +767,7 @@ setSelectedServices(additionalService);
                         name="subcategory"
                         control={control}
                         rules={{ required: t("SubcategoryRequired") }}
+                        defaultValue={selectedSubCategory}
                         render={({ field: { value, onChange } }) => (
                           <Select
                             value={selectedSubCategory}
@@ -868,6 +870,7 @@ setSelectedServices(additionalService);
                           rules={{
                             required: t("RequiredNumberOfRoom"),
                           }}
+                          defaultValue={selectedNoOfRooms}
                           render={({ field: { value, onChange } }) => (
                             <Select
                               value={value || selectedNoOfRooms}
@@ -875,6 +878,7 @@ setSelectedServices(additionalService);
                                 onChange(newValue);
                                 handleNoOfRoomsChange(newValue);
                               }}
+                             
                             >
                               <SelectTrigger className="w-full h-[55px] rounded-lg border border-[#4BB1D3] bg-gray-50 mt-1 pr-6 outline-[#4BB1D3] focus:border-[#4BB1D3] focus:outline-none focus:border-none">
                                 <SelectValue
@@ -902,6 +906,9 @@ setSelectedServices(additionalService);
                           </p>
                         )}
                       </div>
+
+
+                      
                     </div>
 
                     {/* Cleaning Material started */}
@@ -913,6 +920,7 @@ setSelectedServices(additionalService);
                         name="needmaterial"
                         control={control}
                         rules={{ required: t("RequiredCleaningMaterial") }}
+                        defaultValue={matererialSelectedOption}
                         render={({
                           field: { onChange },
                           fieldState: { error },

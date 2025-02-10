@@ -32,8 +32,8 @@ function Page() {
   const [reviewData, setReviewData] = useState<any[]>([]);
   const [reviewJob, setReviewJob] = useState<any[]>([]);
   const [paymentSummary, setPaymentSummary] = useState([]);
-  const [editData , setEditData] = useState();
-
+  const [editData, setEditData] = useState();
+  const [amountAfterDiscount, setAmountAfterDiscount] = useState(0);
 
   useEffect(() => {
     const data = localStorage.getItem("editJob");
@@ -62,8 +62,6 @@ function Page() {
     const tax = localStorage.getItem("tax");
     const taxData = tax ? JSON.parse(tax) : null;
 
-   
-  
     //push the get data from local storage to the state array
 
     reviewData.push(jobData, addressData, serviceData);
@@ -84,7 +82,7 @@ function Page() {
 
   const fetchAdditionalServices = async (titlesToMatch: any) => {
     // Initialize Firestore
-    const servicesCollection = collection(db, "additionalServices"); // Reference to your collection
+    const servicesCollection = collection(db, "additionalServices");
 
     try {
       const querySnapshot = await getDocs(servicesCollection); // Fetch the data from the collection
@@ -94,9 +92,7 @@ function Page() {
       const filteredServices = servicesList.filter((service) =>
         titlesToMatch?.includes(service.title)
       );
-      setAdditionalService((filteredServices as any));
-
-      console.log(filteredServices); // Log the filtered services
+      setAdditionalService(filteredServices as any);
     } catch (error) {
       console.error("Error fetching additional services: ", error);
     }
@@ -110,6 +106,31 @@ function Page() {
     setIsSucessModalOpen(false);
     router.push("/jobs");
   };
+
+  let totalWithDiscount = 0;
+
+  useEffect(() => {
+    if (reviewData[0]?.plan.value == "Weekly") {
+      totalWithDiscount = Number(
+        (
+          reviewData[0]?.totalWithTax -
+          reviewData[0]?.totalWithTax * 0.1
+        ).toFixed(2)
+      );
+      setAmountAfterDiscount(totalWithDiscount);
+    } else if (reviewData[0]?.plan.value == "Every 2 Weeks") {
+      totalWithDiscount = Number(
+        (
+          reviewData[0]?.totalWithTax -
+          reviewData[0]?.totalWithTax * 0.05
+        ).toFixed(2)
+      );
+      setAmountAfterDiscount(totalWithDiscount);
+    } else {
+      totalWithDiscount = reviewData[0]?.totalWithTax;
+      setAmountAfterDiscount(totalWithDiscount);
+    }
+  }, [setAmountAfterDiscount, totalWithDiscount]);
 
   const clickNext = async () => {
     setIsDisable(true);
@@ -133,67 +154,75 @@ function Page() {
       isSelect: true,
     }));
 
-    //calculate discount in total according to the selected frequency
-
-    let totalWithDiscount = 0;
-
-    if(reviewData[0]?.plan.value == "Weekly"){
-     totalWithDiscount =  Number((reviewData[0]?.totalWithTax - (reviewData[0]?.totalWithTax * 0.10)).toFixed(2));
-    
-      
-    }else if(reviewData[0]?.plan.value == "Every 2 Weeks"){
-      totalWithDiscount =  Number((reviewData[0]?.totalWithTax - (reviewData[0]?.totalWithTax * 0.05)).toFixed(2));
-    
-
-    }else{
-      totalWithDiscount =  reviewData[0]?.totalWithTax 
-    }
-
-
-    
-
     try {
       const jobCollectionRef = collection(db, "jobs");
-    
-      const storedEditData = localStorage.getItem("editJob");
-      const editData = storedEditData ? JSON.parse(storedEditData) : null;
-    
-      const existingDocId = editData?.id || null;
-    
-      const docRef = existingDocId
-        ? doc(jobCollectionRef, existingDocId)
-        : doc(jobCollectionRef);
-    
-      await setDoc(docRef, {
-        jobId: docRef.id,
-        repeateService: reviewData[0]?.plan.value,
-        roomSize: reviewData[0]?.roomsizes || "",
-        roomsQty: reviewData[0]?.numberofrooms || "",
-        category: reviewData[0]?.category,
-        howManyHourDoYouNeed: reviewData[0]?.hour,
-        howManyProfessionalDoYouNeed: reviewData[0]?.professional,
-        subCategory: reviewData[0]?.subcategory,
-        aditionalServices: additionalServices || [],
-        createdAt: new Date().getTime(),
-        addStatus: "pending",
-        addType: "job",
-        geoPoint: geoPoint,
-        bookingDate: new Date(reviewData[2]?.ServiceDate).getTime(),
-        bookingStart: moment(reviewData[2]?.startTime, "HH:mm").valueOf(),
-        bookingEnd: moment(reviewData[2]?.endTime, "HH:mm").valueOf(),
-        images: Array(6).fill({ imagURL: "" }),
-        totalPrice: reviewData[0]?.total,
-        totalPriceWithTax: totalWithDiscount,
-        needCleaningMaterials: formatCleaningMaterials,
-        address: reviewData[1]?.locationRequired,
-        instructions: reviewData[1]?.instructionRequired,
-        postedBy: localStorage.getItem("JobPostUserId"),
-      });
-    
-      console.log(`Document ${existingDocId ? 'updated' : 'created'} with ID:`, docRef.id);
+
+      if (editData) {
+        const existingDocRef = doc(jobCollectionRef, (editData as any).id);
+        await setDoc(existingDocRef, {
+          jobId: (editData as any).id,
+          repeateService: reviewData[0]?.plan.value,
+          roomSize: reviewData[0]?.roomsizes || "",
+          roomsQty: reviewData[0]?.numberofrooms || "",
+          category: reviewData[0]?.category,
+          howManyHourDoYouNeed: reviewData[0]?.hour,
+          howManyProfessionalDoYouNeed: reviewData[0]?.professional,
+          subCategory: reviewData[0]?.subcategory,
+          aditionalServices: additionalServices || [],
+          createdAt: new Date().getTime(),
+          addStatus: "pending",
+          addType: "job",
+          geoPoint: geoPoint,
+          bookingDate: new Date(reviewData[2]?.ServiceDate).getTime(),
+          bookingStart: moment(reviewData[2]?.startTime, "HH:mm").valueOf(),
+          bookingEnd: moment(reviewData[2]?.endTime, "HH:mm").valueOf(),
+          images: Array(6).fill({ imagURL: "" }),
+          totalPrice: Number(reviewData[0]?.total).toFixed(2),
+          totalPriceWithTax: amountAfterDiscount,
+          needCleaningMaterials: formatCleaningMaterials,
+          address: reviewData[1]?.locationRequired,
+          instructions: reviewData[1]?.instructionRequired,
+          postedBy: localStorage.getItem("JobPostUserId"),
+        });
+
+        console.log(`Document updated with ID:`, existingDocRef.id);
+      } else {
+        // Create a new document
+        const newDocRef = doc(jobCollectionRef);
+        await setDoc(newDocRef, {
+          jobId: newDocRef.id,
+          repeateService: reviewData[0]?.plan.value,
+          roomSize: reviewData[0]?.roomsizes || "",
+          roomsQty: reviewData[0]?.numberofrooms || "",
+          category: reviewData[0]?.category,
+          howManyHourDoYouNeed: reviewData[0]?.hour,
+          howManyProfessionalDoYouNeed: reviewData[0]?.professional,
+          subCategory: reviewData[0]?.subcategory,
+          aditionalServices: additionalServices || [],
+          createdAt: new Date().getTime(),
+          addStatus: "pending",
+          addType: "job",
+          geoPoint: geoPoint,
+          bookingDate: new Date(reviewData[2]?.ServiceDate).getTime(),
+          bookingStart: moment(reviewData[2]?.startTime, "HH:mm").valueOf(),
+          bookingEnd: moment(reviewData[2]?.endTime, "HH:mm").valueOf(),
+          images: Array(6).fill({ imagURL: "" }),
+          totalPrice: Number(reviewData[0]?.total).toFixed(2),
+          totalPriceWithTax: amountAfterDiscount,
+          needCleaningMaterials: formatCleaningMaterials,
+          address: reviewData[1]?.locationRequired,
+          instructions: reviewData[1]?.instructionRequired,
+          postedBy: localStorage.getItem("JobPostUserId"),
+        });
+
+        console.log(`Document created with ID:`, newDocRef.id);
+      }
+
+      // Cleanup and success handling
       localStorage.removeItem("editJob");
       setIsDisable(false);
       setIsSucessModalOpen(true);
+
       setTimeout(() => {
         router.push("/jobs");
       }, 3000);
@@ -201,10 +230,8 @@ function Page() {
       console.error("Error adding/updating document:", error);
       setIsDisable(false);
     }
-};  
+  };
   //edit data in the firebase
-
-
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#F5F7FA] to-white">
@@ -325,7 +352,7 @@ function Page() {
                   {t("total")}
                 </span>
                 <span className="text-2xl font-bold text-[#00BFFF]">
-                  €{reviewData[0]?.totalWithTax}
+                  €{amountAfterDiscount}
                 </span>
               </div>
             </div>
