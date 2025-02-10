@@ -1,112 +1,248 @@
-import React from "react";
+"use client";
+
+import React, { useEffect, useRef, useState } from "react";
 import Card from "../components/servicesComponents/ServicesCards";
-import { Button } from "@/components/ui/button";
-import {Link} from '@/i18n/routing';
-import JobCard from "../components/jobsComponent/JobsCard";
-import { useTranslations } from "next-intl";
+import {
+  getDocs,
+  collection,
+  doc,
+  updateDoc,
+  onSnapshot,
+  deleteDoc,
+  where,
+  query,
+} from "firebase/firestore";
+import { db } from "../config/Firebase/FirebaseConfig";
+import moment from "moment";
+import LoaderSpinner from "../components/Spinner";
+import { useTranslations } from "use-intl";
+import { Link, useRouter } from "@/i18n/routing";
+// import BookingModal from "../components/jobsComponent/JobDetailsCard";
+import JobTab from "../components/JobTab";
+import BookingModal from "../components/jobsComponent/JobDetailsCard";
+import { useSelector } from "react-redux";
 
-function page() {
-  const t = useTranslations('Services');
+function Page() {
+  const t = useTranslations("Jobs"); 
+  const searchData = useSelector((state: any) => state.search.search);
+  const [jobs, setJobs] = useState<any>([]);
+  const [allJobs , setAllJobs] = useState<any>([]);
+  const [editableJob, setEditableJob] = useState<null | any>(null); // Store the job being edited
+  const [isModalOpen, setIsModalOpen] = useState(false); // Modal visibility
+  const [categories, setCategories] = useState<any[]>([]);
+  const modalRef = useRef<HTMLDivElement | null>(null);
+  const [selectedJob , setSelectedJob] = useState<null | any>(null);
+  const [detailModalOpen , SetDetailModalOpen] = useState<boolean>(false);
+
+  const router = useRouter()
+
+
+  
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        modalRef.current &&
+        !modalRef.current.contains(event.target as Node)
+      ) {
+        setIsModalOpen(false);
+      }
+    };
+
+    // Add event listener for clicks
+    document.addEventListener("mousedown", handleClickOutside);
+
+    // Cleanup event listener on component unmount
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  useEffect(() => {
+    // Create a query to fetch only active jobs
+    const jobsQuery = query(
+      collection(db, "jobs"),
+      where("addStatus", "==", "active") // Filter for active jobs
+    );
+
+    // Set up real-time listener for the filtered collection
+    const unsubscribe = onSnapshot(jobsQuery, (snapshot) => {
+      const jobList = snapshot.docs.map((doc: any) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+
+     
+      
+      setJobs(jobList);
+      setAllJobs(jobList);
+    });
+
+    return () => unsubscribe(); // Clean up the listener on unmount
+  }, []);
+
+  
+
+  useEffect(() => {
+      const trimmedSearchData = searchData.trim().toLowerCase();
+    
+      if (trimmedSearchData !== "") {
+        const filterData = allJobs.filter(
+          (data:any) =>
+            data.category &&
+            data.category.toLowerCase().includes(trimmedSearchData)
+        );
+        setJobs(filterData);
+      } else {
+        setJobs(allJobs);
+      }
+    }, [searchData, allJobs]);
+  
+  
+  
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const querySnapshot = await getDocs(collection(db, "categories"));
+        const fetchedCategories = querySnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setCategories(fetchedCategories);
+        console.log(categories);
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      }
+    };
+
+    fetchCategories();
+  }, []);
+
+ 
+
+
+  const fetchJobById = async (jobId:string) => {
+    try {
+        const jobsRef = collection(db, "jobs"); // 'jobs' collection ka reference
+        const q = query(jobsRef, where("jobId", "==", jobId)); // Query jobId ke equal data ke liye
+        const querySnapshot = await getDocs(q);
+
+        const jobData = querySnapshot.docs.map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+        }));
+
+        localStorage.setItem("editJob", JSON.stringify(jobData))
+
+        if (jobData.length > 0) {
+            console.log("Job Found:", jobData[0]);
+            return jobData[0]; // Agar ek hi job return hoti ho
+        } else {
+            console.log("No job found with this ID.");
+            return null;
+        }
+    } catch (error) {
+        console.error("Error fetching job:", error);
+        throw error;
+    }
+};
+ 
+
+const handleEditClick = async (job:any) => {
+  console.log("Editing job ID:", job.jobId);
+  try {
+      const editableJob = await fetchJobById(job.jobId);
+      if (editableJob) {
+          setEditableJob(editableJob);
+          setIsModalOpen(true);
+      }
+
+      router.push("/jobs/addJob")
+
+    
+  } catch (error) {
+      console.error("Failed to fetch the job:", error);
+  }
+};
+
+
+console.log(editableJob) 
+
+
+
+
+
+  //handle click on the job
+
+  const handleJobClick = (job:any) => {
+    setSelectedJob(job);
+    SetDetailModalOpen(true);
+  };
+
+  const handleDeleteClick = async (job: any) => {
+    try {
+      // Get the document reference
+      const jobDocRef = doc(db, "jobs", job.id);
+     
+
+      // Delete the document
+      await deleteDoc(jobDocRef);
+
+      console.log(`Job with ID ${job.id} has been deleted successfully.`);
+    } catch (error) {
+      console.error("Error deleting job:", error);
+    }
+  };
+
+ 
+
   return (
-    <>
-     <div className="bg-[#F5F7FA] min-h-screen w-full">
-        <div className="flex justify-end">
-          <Link href={"/jobs/addJob"}> 
-            <Button
-              className="border-[#4BB1D3] w-[110px] h-[40px] mt-5 mr-8 text-white bg-[#00BFFF] rounded-lg outline-none hover:bg-[#00BFFF] 
-      sm:w-[120px] sm:h-[45px]"
-            >
-              {(t('add_button'))}
-            </Button>
-          </Link>
-        </div>
-
-        <div className="flex justify-between w-full px-4 sm:px-8 md:px-12 lg:px-9 space-x-4 mt-6">
-          <button className="flex-1 py-3 rounded-md text-white bg-[#00BFFF] hover:bg-[#00BFFF]">
-            {(t('active'))}
+    <div className="bg-[#F5F7FA] w-full h-full overflow-hidden overflow-y-auto max-h-screen">
+      <div className="absolute bottom-8 right-8 z-10">
+        <Link href={"/jobs/addJob"}>
+          <button className="w-14 h-14 flex items-center justify-center bg-[#00BFFF] text-white text-3xl rounded-full shadow-lg hover:bg-[#009ACD] focus:outline-none focus:ring-4 focus:ring-blue-300">
+            +
           </button>
-          <button className="flex-1 py-3 rounded-md text-white bg-[#859090] hover:bg-[#859090]">
-          {(t('moderate'))}
-          </button>
-          <button className="flex-1 py-3 rounded-md  text-white bg-[#859090] hover:bg-[#859090]">
-          {(t('Pending'))}
-          </button>
-        </div>
-
-        <div className="flex flex-wrap justify-center lg:justify-start gap-12 w-full px-4 sm:px-8 md:px-14 lg:px-10 mt-4">
-          <div className="w-[310px]">
-            <Card
-              price="€34/hr"
-              title={(t('serviceTitle'))}
-              time="8:00 pm to 22:00pm"
-              imageUrl="/assets/servicesIcons/cardImage.svg"
-              status={(t('active'))}
-              date="Sep 09 , 2024"
-              dotsIcon="/assets/categoriesIcons/dots.svg"
-              editIcon="/assets/categoriesIcons/edit.svg"
-              deleteIcon="/assets/categoriesIcons/delete.svg"
-            />
-          </div>
-
-          <div className="w-[310px]">
-            <Card
-              price="€ 34/hr"
-              title={(t('cleaningAtCompany'))}
-              time="8:00 pm to 22:00pm"
-              imageUrl="/assets/servicesIcons/company.svg"
-              status={(t('active'))}
-              date="Sep 09 , 2024"
-              dotsIcon="/assets/categoriesIcons/dots.svg"
-              editIcon="/assets/categoriesIcons/edit.svg"
-              deleteIcon="/assets/categoriesIcons/delete.svg"
-            />
-          </div>
-
-          <div className="w-[310px]">
-            <Card
-              price="€ 34/hr"
-              title={(t('cleaningAtHospital'))}
-              time="8:00 pm to 22:00pm"
-              imageUrl="/assets/servicesIcons/hospital.svg"
-              status={(t('active'))}
-              date="Sep 09 , 2024"
-              dotsIcon="/assets/categoriesIcons/dots.svg"
-              editIcon="/assets/categoriesIcons/edit.svg"
-              deleteIcon="/assets/categoriesIcons/delete.svg"
-            />
-          </div>
-
-          <div className="w-[310px]">
-            <Card
-              price="€ 30/hr"
-              title={(t('cleaningAtOffice'))}
-              time="8:00 pm to 22:00pm"
-              imageUrl="/assets/servicesIcons/office.svg"
-              status={(t('active'))}
-              date="Sep 09 , 2024"
-              dotsIcon="/assets/categoriesIcons/dots.svg"
-              editIcon="/assets/categoriesIcons/edit.svg"
-              deleteIcon="/assets/categoriesIcons/delete.svg"
-            />
-          </div>
-
-          <div className="w-[310px]">
-            <Card
-              price="€ 30/hr"
-              title={(t('cleaningAtFactory'))}  
-              time="8:00 pm to 22:00pm"
-              imageUrl="/assets/servicesIcons/factory.svg"
-              status={(t('active'))}
-              date="Sep 09 , 2024"
-              dotsIcon="/assets/categoriesIcons/dots.svg"
-              editIcon="/assets/categoriesIcons/edit.svg"
-              deleteIcon="/assets/categoriesIcons/delete.svg"
-            />
-          </div>
-        </div>
+        </Link>
       </div>
-    </>
+
+      <JobTab />
+
+      <div className="flex flex-wrap justify-center gap-12 w-full px-4 sm:px-8 sm:justify-start md:px-14 md:justify-start lg:justify-start lg:px-10 mt-4">
+  {jobs.length === 0 ? (
+    <div className="flex items-center justify-center h-[60vh] w-full text-gray-500 text-xl font-semibold">
+     {(t('no_job_available'))}
+    </div>
+  ) : (
+    jobs.map((job: any) => (
+      <div className="w-[310px] mt-[40px]" key={job.id}>
+        <Card
+          price={` € ${job.totalPriceWithTax}`}
+          title={job.category || "No Title"}
+          time={`${moment(job.bookingStart).format("hh:mm A")} - ${moment(job.bookingEnd).format("hh:mm A")}`}
+          imageUrl={job.imageUrl || "/assets/servicesIcons/cardImage.svg"}
+          status={job.addStatus || "Inactive"}
+          statusTextColor={"green-500"}
+          detailOpen={() => handleJobClick(job)}
+          date={`Date: ${moment(job.bookingDate).isValid() ? moment(job.bookingDate).format("MMM -D -YYYY") : "Invalid Date"}`}
+          createdAt={moment(job.createdAt).fromNow()}
+          dotsIcon="/assets/categoriesIcons/dots.svg"
+          onEdit={() => handleEditClick(job)}
+          onDelete={() => handleDeleteClick(job)}
+        />
+      </div>
+    ))
+  )}
+</div>
+
+
+
+      <div>
+      {detailModalOpen && <BookingModal bookingData={selectedJob} handleClose={()=>SetDetailModalOpen(false)} />}
+      </div>
+    </div>
   );
 }
 
-export default page;
+export default Page;

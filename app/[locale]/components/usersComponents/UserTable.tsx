@@ -2,25 +2,27 @@
 
 import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useTranslations } from "next-intl";
-import { collection, getDocs, addDoc } from "firebase/firestore";
-import { db } from "../../config/Firebase/FirebaseConfig"; 
-
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import {
+  faChevronDown,
+  faChevronUp,
   faEllipsisV,
   faEdit,
   faTrashAlt,
-  faChevronDown,
-  faChevronUp,
 } from "@fortawesome/free-solid-svg-icons";
+import {
+  collection,
+  getDocs,
+  updateDoc,
+  doc,
+  deleteDoc,
+} from "firebase/firestore";
+import { db } from "../../config/Firebase/FirebaseConfig";
+import { useRef } from "react";
+import { getFunctions, httpsCallable } from "firebase/functions";
+import moment from "moment";
+import { useTranslations } from "next-intl";
+import { useRouter } from "@/i18n/routing";
+import { useSelector } from "react-redux";
 
 interface Invoice {
   Name: string;
@@ -30,196 +32,470 @@ interface Invoice {
   address: string;
   gender: string;
   dateBirth: string;
+  docId: string;
 }
 
 export function TableDemo() {
   const t = useTranslations("Users");
-  const [expandedRow, setExpandedRow] = useState<number | null>(null);
-  const [openEditDelete, setOpenEditDelete] = useState<number | null>(null);
-  const [invoices, setInvoices] = useState<Invoice[]>([]); // State to hold Firestore data
+  const [invoices, setInvoices] = useState<Invoice[]>([]);
+  const [expandedRows, setExpandedRows] = useState<Set<number>>(new Set());
+  const [activeMenu, setActiveMenu] = useState<number | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [filterData, setFilterData] = useState();
+  const [selectedInvoice, setSelectedInvoice] = useState<Invoice | null>(null);
+  const [emailValue, setEmailValue] = useState("");
+  const [isSearch, setIsSearch] = useState(false);
+  const [allFetchData, setAllFetchData] = useState<any[]>([]);
+  const [formData, setFormData] = useState<Invoice>({
+    Name: "",
+    email: "",
+    PhoneNo: "",
+    role: "",
+    address: "",
+    gender: "",
+    dateBirth: "",
+    docId: "",
+  });
 
-  // Fetch invoices from Firestore
+  const searchData = useSelector((state: any) => state.search.search);
+
+  useEffect(() => {
+    setEmailValue(searchData);
+  }, [searchData]);
+
   const fetchInvoices = async () => {
     const invoicesCollection = collection(db, "users");
     const invoiceSnapshot = await getDocs(invoicesCollection);
     const invoiceList = invoiceSnapshot.docs.map((doc) => {
       const data = doc.data();
+
       return {
-        Name: data.fullName || "",  // Handle missing field
-        email: data.email || "", // Handle missing field
-        PhoneNo: data.phone || "",  // Handle missing field
+        Name: data.fullName || "",
+        email: data.email || "",
+        PhoneNo: data.phone || "",
         role: data.role || "",
         address: data.address || "",
         gender: data.gender || "",
-        dateBirth: data.dob || "",  // Handle missing field
+        dateBirth: data.dob || "",
+        docId: doc.id,
       };
     });
     setInvoices(invoiceList);
-  };
-
-  // Add new invoice to Firestore
-  const addInvoice = async (newInvoice: Invoice) => {
-    const invoicesCollection = collection(db, "users");
-    await addDoc(invoicesCollection, newInvoice);
-    fetchInvoices(); 
+    setAllFetchData(invoiceList);
   };
 
   useEffect(() => {
-    fetchInvoices(); 
-  }, []);
+    if (emailValue.trim() !== "") {
+      const filterData = allFetchData.filter(
+        (user) =>
+          user.email &&
+          user.email.toLowerCase().includes(emailValue.trim().toLowerCase())
+      );
+      setInvoices(filterData);
+    } else {
+      setInvoices(allFetchData);
+    }
+  }, [emailValue, allFetchData]);
 
-  const handleToggleMoreInfo = (index: number) => {
-    setExpandedRow(expandedRow === index ? null : index);
+  const toggleRowExpansion = (index: number) => {
+    setExpandedRows((prev) => {
+      const newExpandedRows = new Set(prev);
+      newExpandedRows.has(index)
+        ? newExpandedRows.delete(index)
+        : newExpandedRows.add(index);
+      return newExpandedRows;
+    });
   };
 
-  const handleClickOutside = (e: MouseEvent) => {
-    if (openEditDelete !== null) {
-      setOpenEditDelete(null);
+  const toggleMenu = (index: number) => {
+    setActiveMenu((prev) => (prev === index ? null : index));
+  };
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  const openEditModal = (invoice: Invoice) => {
+    setSelectedInvoice(invoice);
+    setFormData(invoice);
+    setIsModalOpen(true);
+  };
+
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const updateInvoice = async () => {
+    setIsModalOpen(true);
+    if (formData.docId) {
+      const invoiceRef = doc(db, "users", formData.docId);
+      await updateDoc(invoiceRef, {
+        fullName: formData.Name,
+        phone: formData.PhoneNo,
+        role: formData.role,
+        address: formData.address,
+        gender: formData.gender,
+        dob: new Date(formData.dateBirth).getTime(),
+      });
+      setIsModalOpen(false);
+      fetchInvoices();
     }
   };
 
+  //cloud function for delete user account from firebase
+
+  const functions = getFunctions();
+  const deleteUser = httpsCallable(functions, "deleteUser");
+
+  const deleteInvoice = async (docId: string) => {
+    setIsModalOpen(false);
+    await deleteDoc(doc(db, "users", docId));
+    fetchInvoices();
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
   useEffect(() => {
-    document.addEventListener("click", handleClickOutside);
-    return () => document.removeEventListener("click", handleClickOutside);
-  }, [openEditDelete]);
+    const handleClickOutside = (event: any) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setActiveMenu(null); // Close the menu
+      }
+    };
+
+    // Attach event listener
+    document.addEventListener("mousedown", handleClickOutside);
+
+    // Cleanup on component unmount
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [menuRef, setActiveMenu]);
+
+  useEffect(() => {
+    fetchInvoices();
+  }, []);
 
   return (
-    <div className="w-full max-h-screen px-4 sm:px-8">
-  <div className="overflow-hidden rounded-lg shadow-lg w-full mt-4">
-    <Table className="table-auto w-full divide-y divide-gray-200">
-      <TableHeader>
-        <TableRow className="bg-gray-200">
-          {[
-            "name",
-            "email",
-            "phoneNo",
-            "role",
-            "address",
-            "gender",
-            "dateOfBirth",
-            "actions",
-          ].map((header, idx) => (
-            <TableHead
-              key={idx}
-              className={`px-4 py-3 text-left text-xs sm:text-sm font-semibold text-gray-700 ${
-                header === "actions"
-                  ? "text-center"
-                  : idx > 1
-                  ? "hidden sm:table-cell"
-                  : ""
-              }`}
-            >
-              {t(header)}
-            </TableHead>
-          ))}
-        </TableRow>
-      </TableHeader>
-
-      <TableBody className="divide-y divide-gray-200">
-        {invoices.map((invoice, index) => (
-          <React.Fragment key={index}>
-            <TableRow className="hover:bg-gray-50 transition duration-300 ease-in-out">
+    <div className="w-full px-4 sm:px-6 lg:px-8">
+      {/* {isModalOpen && (
+        <div className="fixed inset-0 bg-gray-500 bg-opacity-75 flex justify-center items-center z-50">
+          <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-md sm:max-w-lg">
+            <h2 className="text-xl font-semibold mb-4">Edit User</h2>
+            <form>
               {[
-                invoice.Name,
-                invoice.email,
-                invoice.PhoneNo,
-                <span className="px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-[#00BFFF]">
-                  {invoice.role}
-                </span>,
-                invoice.address,
-                invoice.gender,
-                invoice.dateBirth,
-              ].map((value, idx) => (
-                <TableCell
-                  key={idx}
-                  className={`px-4 py-3 text-[10px] sm:text-sm text-gray-600 ${
-                    idx > 1 && idx < 7 ? "hidden sm:table-cell" : ""
-                  }`}
-                >
-                  {value}
-                </TableCell>
+                { label: "Name", name: "Name" },
+                { label: "Phone No", name: "PhoneNo" },
+                { label: "Address", name: "address" },
+              ].map((field, idx) => (
+                <div className="mb-4" key={idx}>
+                  <label className="block text-sm font-medium text-gray-700">
+                    {field.label}
+                  </label>
+                  <input
+                    type="text"
+                    
+                    name={field.name}
+                    value={formData ?[field.name] : ""}
+
+                    onChange={handleInputChange}
+                    className="w-full px-4 py-2 mt-1 border border-gray-300 rounded-md"
+                  />
+                </div>
               ))}
-              <TableCell className="px-4 py-3 text-center">
-                <div className="flex items-center justify-center space-x-2">
+
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700">
+                  Gender
+                </label>
+                <select
+                  name="gender"
+                  value={formData.gender}
+                  onChange={handleInputChange}
+                  className="w-full px-4 py-2 mt-1 border border-gray-300 rounded-md"
+                >
+                  <option value="">Select Gender</option>
+                  <option value="male">Male</option>
+                  <option value="female">Female</option>
+                </select>
+              </div>
+
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700">
+                  Role
+                </label>
+                <select
+                  name="role"
+                  value={formData.role}
+                  onChange={handleInputChange}
+                  className="w-full px-4 py-2 mt-1 border border-gray-300 rounded-md"
+                >
+                  <option value="">Select Role</option>
+                  <option value="user">User</option>
+                  <option value="provider">Provider</option>
+                </select>
+              </div>
+
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700">
+                  Date of Birth
+                </label>
+                <input
+                  type="date"
+                  name="dateBirth"
+                  value={new Date(formData.dateBirth).getTime()}
+                  onChange={handleInputChange}
+                  className="w-full px-4 py-2 mt-1 border border-gray-300 rounded-md"
+                />
+              </div>
+
+              <div className="flex justify-end space-x-4">
+                <button
+                  type="button"
+                  onClick={closeModal}
+                  className="px-4 py-2 text-white bg-gray-400 rounded-md"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  onClick={updateInvoice}
+                  className="px-4 py-2 text-white bg-[#00BFFF] rounded-md"
+                >
+                  Save Changes
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )} */}
+
+      {isModalOpen && (
+        <div className="fixed inset-0 bg-gray-500 bg-opacity-75 flex justify-center items-center z-50">
+          <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-md sm:max-w-lg">
+            <h2 className="text-xl font-semibold mb-4">{t("edit_user")}</h2>
+            <form>
+              {[
+                { label: t("name"), name: "Name" },
+                { label: t("phoneNo"), name: "PhoneNo" },
+                { label: t("address"), name: "address" },
+              ].map((field, idx) => (
+                <div className="mb-4" key={idx}>
+                  <label className="block text-sm font-medium text-gray-700">
+                    {field.label}
+                  </label>
+                  <input
+                    type="text"
+                    name={field.name}
+                    value={formData[field.name as keyof Invoice]}
+                    onChange={handleInputChange}
+                    className="w-full px-4 py-2 mt-1 border border-gray-300 rounded-md"
+                  />
+                </div>
+              ))}
+
+              {/* Gender Select */}
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700">
+                  {t("gender")}
+                </label>
+                <select
+                  name="gender"
+                  value={formData.gender}
+                  onChange={handleInputChange}
+                  className="w-full px-4 py-2 mt-1 border border-gray-300 rounded-md"
+                >
+                  <option value="">Select Gender</option>
+                  <option value="male">Male</option>
+                  <option value="female">Female</option>
+                </select>
+              </div>
+
+              {/* Role Select */}
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700">
+                  {t("role")}
+                </label>
+                <select
+                  name="role"
+                  value={formData.role}
+                  onChange={handleInputChange}
+                  className="w-full px-4 py-2 mt-1 border border-gray-300 rounded-md"
+                >
+                  <option value="">Select Role</option>
+                  <option value="user">User</option>
+                  <option value="provider">Provider</option>
+                </select>
+              </div>
+
+              {/* Date of Birth */}
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700">
+                  {t("dateOfBirth")}
+                </label>
+                <input
+                  type="date"
+                  name="dateBirth"
+                  value={formData.dateBirth}
+                  onChange={handleInputChange}
+                  className="w-full px-4 py-2 mt-1 border border-gray-300 rounded-md"
+                />
+              </div>
+
+              <div className="flex justify-end space-x-4">
+                <button
+                  type="button"
+                  onClick={closeModal}
+                  className="px-4 py-2 text-white bg-gray-400 rounded-md"
+                >
+                  {t("cancel")}
+                </button>
+                <button
+                  type="button"
+                  onClick={updateInvoice}
+                  className="px-4 py-2 text-white bg-[#00BFFF] rounded-md"
+                >
+                  {t("save_Changes")}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      <table className="table-auto w-full divide-y divide-gray-200 mt-4">
+        <thead className="bg-gray-200">
+          <tr>
+            <th className="px-4 py-3 text-left text-sm font-semibold">
+              {t("name")}
+            </th>
+            <th className="px-4 py-3 text-left text-sm font-semibold hidden sm:table-cell">
+              {t("email")}
+            </th>
+            <th className="px-4 py-3 text-left text-sm font-semibold hidden lg:table-cell">
+              {t("phoneNo")}
+            </th>
+            <th className="px-4 py-3 text-left text-sm font-semibold hidden lg:table-cell">
+              {t("address")}
+            </th>
+            <th className="px-4 py-3 text-left text-sm font-semibold hidden lg:table-cell">
+              {t("gender")}
+            </th>
+            <th className="px-4 py-3 text-left text-sm font-semibold hidden lg:table-cell">
+              DOB
+            </th>
+            <th className="px-4 py-3 text-left text-sm font-semibold hidden lg:table-cell">
+              {t("role")}
+            </th>
+            <th className="px-4 py-3 text-left text-sm font-semibold">
+              {t("actions")}
+            </th>
+          </tr>
+        </thead>
+        <tbody className="divide-y divide-gray-200">
+          {invoices.map((invoice, index) => (
+            <React.Fragment key={index}>
+              <tr className="hover:bg-gray-50 transition">
+                <td className="px-4 py-5 text-sm">
+                  <div>{invoice.Name}</div>
                   <button
-                    className="sm:hidden text-[#00BFFF] hover:text-[#00BFFF] transition flex items-center"
-                    onClick={() => handleToggleMoreInfo(index)}
+                    className="text-blue-500 mt-2 flex items-center sm:hidden"
+                    onClick={() => toggleRowExpansion(index)}
                   >
                     <FontAwesomeIcon
-                      icon={expandedRow === index ? faChevronUp : faChevronDown}
-                      className="w-5 h-5"
+                      icon={
+                        expandedRows.has(index) ? faChevronUp : faChevronDown
+                      }
+                      className="mr-2"
                     />
+                    <span>Show more</span>
                   </button>
-
-                  <button
-                    className="text-gray-400 hover:text-gray-600 transition"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setOpenEditDelete(openEditDelete === index ? null : index);
-                    }}
-                  >
-                    <FontAwesomeIcon icon={faEllipsisV} className="w-5 h-5" />
-                  </button>
-                </div>
-
-                {openEditDelete === index && (
-                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl py-1 z-10 border border-gray-100">
+                </td>
+                <td className="px-4 py-3 text-sm hidden sm:table-cell">
+                  {invoice.email}
+                </td>
+                <td className="px-4 py-3 text-sm hidden lg:table-cell">
+                  {invoice.PhoneNo}
+                </td>
+                <td className="px-4 py-3 text-sm hidden lg:table-cell">
+                  {invoice.address}
+                </td>
+                <td className="px-4 py-3 text-sm hidden lg:table-cell">
+                  {invoice.gender}
+                </td>
+                <td className="px-4 py-3 text-sm hidden lg:table-cell">
+                  {moment(invoice.dateBirth).format("D-M-YYYY")}
+                </td>
+                <td className="px-4 py-3 text-sm hidden lg:table-cell">
+                  {invoice.role}
+                </td>
+                <td className="px-4 py-3 text-sm">
+                  <div className="relative">
                     <button
-                      className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 w-full"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        console.log("Edit clicked");
-                        setOpenEditDelete(null);
-                      }}
+                      className="text-gray-500 hover:text-gray-700"
+                      onClick={() => toggleMenu(index)}
                     >
-                      <FontAwesomeIcon icon={faEdit} className="w-4 h-4 mr-2" />
-                      {t("edit")}
+                      <FontAwesomeIcon icon={faEllipsisV} />
                     </button>
-                    <button
-                      className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 w-full"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        console.log("Delete clicked");
-                        setOpenEditDelete(null);
-                      }}
-                    >
-                      <FontAwesomeIcon icon={faTrashAlt} className="w-4 h-4 mr-2" />
-                      {t("delete")}
-                    </button>
-                  </div>
-                )}
-              </TableCell>
-            </TableRow>
-
-            {expandedRow === index && (
-              <TableRow className="sm:hidden">
-                <TableCell colSpan={8} className="px-6 py-4 bg-gray-50">
-                  <div className="space-y-3 text-sm">
-                    {[
-                      ["phone", invoice.PhoneNo],
-                      ["role", invoice.role],
-                      ["address", invoice.address],
-                      ["gender", invoice.gender],
-                      ["dateOfBirth", invoice.dateBirth],
-                    ].map(([label, value], idx) => (
+                    {activeMenu === index && (
                       <div
-                        key={idx}
-                        className="flex justify-between items-center border-b border-gray-200 pb-2"
+                        className="absolute top-6 right-0 mt-2 bg-white border rounded shadow-lg z-50"
+                        ref={menuRef}
+                        style={{ minWidth: "150px" }}
                       >
-                        <span className="font-medium text-gray-600">{t(label)}:</span>
-                        <span className="text-gray-800 text-xs">{value}</span>
+                        <button
+                          onClick={() => openEditModal(invoice)}
+                          className="block w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100"
+                        >
+                          <FontAwesomeIcon icon={faEdit} className="mr-2" />
+                          {t("edit")}
+                        </button>
+                        <button
+                          onClick={() => deleteInvoice(invoice.docId)}
+                          className="block w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-red-100"
+                        >
+                          <FontAwesomeIcon icon={faTrashAlt} className="mr-2" />
+                          {t("delete")}
+                        </button>
                       </div>
-                    ))}
+                    )}
                   </div>
-                </TableCell>
-              </TableRow>
-            )}
-          </React.Fragment>
-        ))}
-      </TableBody>
-    </Table>
-  </div>
-</div>
+                </td>
+              </tr>
 
+              {expandedRows.has(index) && (
+                <tr className="bg-gray-50 text-sm sm:hidden">
+                  <td colSpan={3} className="px-4 py-2">
+                    <p>
+                      <strong>Phone No:</strong> {invoice.PhoneNo}
+                    </p>
+                    <p>
+                      <strong>Address:</strong> {invoice.address}
+                    </p>
+                    <p>
+                      <strong>Email:</strong> {invoice.email}
+                    </p>
+                    <p>
+                      <strong>Gender:</strong> {invoice.gender}
+                    </p>
+                    <p>
+                      <strong>DOB:</strong>{" "}
+                      {moment(invoice.dateBirth).format("D-M-YYYY")}
+                    </p>
+                    <p>
+                      <strong>Role:</strong> {invoice.role}
+                    </p>
+                  </td>
+                </tr>
+              )}
+            </React.Fragment>
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 }

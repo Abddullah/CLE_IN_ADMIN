@@ -1,118 +1,239 @@
+"use client";
 import Image from "next/image";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import {Link} from '@/i18n/routing';
-import {useTranslations} from 'next-intl';
+import { Link, useRouter } from "@/i18n/routing";
+import { useTranslations } from "next-intl";
+import {
+  collection,
+  doc,
+  setDoc,
+  GeoPoint,
+  serverTimestamp,
+} from "firebase/firestore";
+import { db } from "../../config/Firebase/FirebaseConfig";
+import moment from "moment";
+import SuccessModal from "../../components/sucessModal";
 
 function page() {
-  const t = useTranslations('Services');
+  const t = useTranslations("Services");
+  const router = useRouter();
+
+  const [reviewServiceData, setReviewServiceData] = useState<any>();
+  const [rateWithTax, setRateWithTax] = useState<number>(0);
+  const [paymentSummary , setPaymentSummary]= useState([])
+  const [isDisbale, setIsDisable] = useState<boolean>(false);
+  const [isSucessModalOpen, setIsSucessModalOpen] = useState(false);
+
+  useEffect(() => {
+    const data = localStorage.getItem("tax");
+
+    const tax = data ? JSON.parse(data) : 0;
+
+   setPaymentSummary(tax)
+
+     console.log(paymentSummary);
+     
+
+   
+  }, [Number(reviewServiceData?.fixRate)]);
+
+
+
+  useEffect(() => {
+    const data = localStorage.getItem("addService");
+
+    const reviewService = data ? JSON.parse(data) : null;
+
+    setReviewServiceData(reviewService);
+  }, []);
+
+  const closeModal = ()=>{
+    setIsSucessModalOpen(false);
+    router.push("/services")
+  }
+
+
+
+
+  let timeSlot = reviewServiceData?.days
+  .filter((obj: any) => obj !== null && obj !== undefined) // Null aur undefined ko filter karna
+  .map((obj: any) => {
+    // 'isChecked' ko delete karna
+    const { isChecked, openingTime, closingTime, ...rest } = obj;
+
+    // 'openingTime' aur 'closingTime' ko milliseconds mein convert karna
+    const openingTimeMs = moment(openingTime, 'hh:mm A').valueOf();
+    const closingTimeMs = moment(closingTime, 'hh:mm A').valueOf();
+
+    return {
+      ...rest, // Baaki properties ko preserve karna
+      openingTime: openingTimeMs, // Opening time ko milliseconds mein convert karna
+      closingTime: closingTimeMs // Closing time ko milliseconds mein convert karna
+    };
+  });
+
+
+  const clickNext = async () => {
+    setIsDisable(true);
+
+    const geoPoint = new GeoPoint(
+      reviewServiceData.location.lat,
+      reviewServiceData?.location.lng
+    );
+
+    try {
+      // Firebase ki `job` collection reference
+      const jobCollectionRef = collection(db, "service");
+
+      // Nayi document ID generate karna
+      const newDocRef = doc(jobCollectionRef); // Ye random ID generate karega
+
+      const timeStamp = serverTimestamp()
+
+      console.log(timeStamp);
+      
+
+      // Data save karna
+      await setDoc(newDocRef, {
+        serviceId: newDocRef.id, 
+        category: reviewServiceData?.category,
+        subCategory: reviewServiceData?.subcategory,
+        createdAt: new Date().getTime(),
+        addStatus: "pending",
+        addType: "service",
+        description: reviewServiceData?.description,
+        geoPoint: geoPoint,
+        fixRates: reviewServiceData?.fixRate,
+        postedBy: localStorage.getItem("servicePostId"),
+        totalPriceWithTax: reviewServiceData?.totalWithTax,
+        timeSlots:timeSlot,
+        images: [
+          { imagURL: "" },
+          { imagURL: "" },
+          { imagURL: "" },
+          { imagURL: "" },
+          { imagURL: "" },
+          { imagURL: "" },
+        ],
+      });
+      setIsDisable(false);
+      setIsSucessModalOpen(true);
+
+      
+      setTimeout(() => {
+        router.push("/services");
+      }, 3000);
+    } catch (error) {
+      console.error("Error adding document:", error);
+      setIsDisable(false)
+    }
+  };
+
   return (
     <>
-      <div className="bg-[#F5F7FA] min-h-screen w-full flex items-start justify-start pt-2">
-        <div className="w-full max-w-7xl px-8 lg:px-16 mt-6">
-          <div>
-            <h1 className="text-xl font-semibold">{(t('pageTitle'))}</h1>
+      <div className="min-h-screen bg-gradient-to-b from-[#F5F7FA] to-white">
+        <div className="container px-4 sm:px-6 lg:px-8 py-12">
+          <div className="max-w-4xl">
+            <h1 className="text-1xl md:text-2xl font-bold text-gray-900 mb-8 tracking-tight">
+              {t("pageTitle")}{" "}
+            </h1>
 
-            <div className="mt-6">
-              <Image src="/assets/bookingsIcon/room.svg" alt={(t('imageAlt'))} width={300} height={300} />
-            </div>
-
-            <div>
-              <p className="text-xl mt-4">{(t('title'))}</p>
-              <p className="mt-2">{(t('serviceTitle'))}</p>
-            </div>
-
-            <div>
-              <p className="text-xl mt-4">{(t('descriptionTitle'))}</p>
-              <p className="mt-2">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                Blanditiis assumenda necessitatibus expedita, dicta iure eius
-                dolorem voluptatum officia aut neque sint distinctio quia quasi
-                sed recusandae voluptatibus voluptas magni error?
-              </p>
-            </div>
-
-            <div className="max-w-sm w-full bg-white shadow-lg rounded-lg p-6 mt-4 border border-gray-200">
-              <h2 className="text-xl font-semibold text-gray-800 mb-4 text-start">
-                {" "}
-                {(t('titleJob'))}
-              </h2>
-
-              <div className="flex justify-between items-center py-2 border-b">
-                <span className="text-gray-600">{(t('priceLabel'))}</span>
-                <span className="text-gray-800 font-medium">€ 200/hr</span>
-              </div>
-
-              <div className="flex justify-between items-center py-2 border-b">
-                <span className="text-gray-600">{(t('cleanersLabel'))}</span>
-                <span className="text-gray-800 font-medium">2</span>
-              </div>
-
-              <div className="flex justify-between items-center py-2 border-b">
-                <span className="text-gray-600">{(t('workFrequencyLabel'))}</span>
-                <span className="text-gray-800 font-medium">{(t('workFrequencyValue'))}</span>
-              </div>
-
-              {/* Room Area Size */}
-              <div className="flex justify-between items-center py-2 border-b">
-                <span className="text-gray-600">{(t('roomAreaSizeLabel'))}</span>
-                <span className="text-gray-800 font-medium">{(t('roomAreaSizeValue'))}</span>
-              </div>
-
-              <div className="flex justify-between items-center py-2 border-b">
-                <span className="text-gray-600">{(t('numberOfRoomsLabel'))}</span>
-                <span className="text-gray-800 font-medium">{(t('numberOfRoomsValue'))}</span>
-              </div>
-
-              <div className="flex justify-between items-center py-2">
-                <span className="text-gray-600">{(t('cleaningMaterialsLabel'))}</span>
-                <span className="text-gray-800 font-medium">{(t('cleaningMaterialsValue'))}</span>
-              </div>
-            </div>
-
-            <div>
-              <p className="text-xl mt-8">Availablity</p>
-              <div className="mt-6">
-                <p className="text-lg">Monday</p>
-                <p className="text-md text-[#00BFFF]">8:00 AM to 22:00</p>
-              </div>
-              <div className="mt-3">
-                <p className="text-lg">Tuesday</p>
-                <p className="text-md text-[#00BFFF]">8:00 AM to 22:00</p>
-              </div>
-              <div className="mt-3">
-                <p className="text-lg">Wednesday</p>
-                <p className="text-md text-[#00BFFF]">8:00 AM to 22:00</p>
-              </div>
-            </div>   
-
-            <div className="mt-6">
-              <p className="text-xl">{(t('Location'))}</p>
-              <Image className="mt-4" src="/assets/bookingsIcon/map.svg" alt={(t('mapAlt'))} width={1000} height={800} />
-
-              <Link href={"/services/customerInfo"}>
-                <div className="flex items-center mt-6">
-                  <button
-                    className="flex items-center justify-center w-5 h-5 bg-blue-600 text-white rounded-full shadow-lg transition-all duration-300 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                    aria-label="Customer Info"
-                  >
-                    <span className="text-xl font-bold">{(t('buttonLabel'))}</span>
-                  </button>
-
-                  <p className="ml-2 text-gray-700 cursor-pointer text-sm font-medium hover:text-blue-600 transition-all duration-300">
-                    {(t("label"))}
-                  </p>
+            <div className="bg-white border-2 rounded-2xl shadow-xl p-8 mb-10 transition-all duration-300 hover:shadow-2xl">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                {/* Service Details */}
+                <div className="space-y-8">
+                  <div className="transform transition-all duration-300 hover:translate-x-2">
+                    <h2 className="text-xl font-semibold text-gray-900 mb-3">
+                      {t("category")}
+                    </h2>
+                    <p className="text-gray-700 text-lg">
+                      {reviewServiceData?.category}
+                    </p>
+                  </div>
+                  <div className="transform transition-all duration-300 hover:translate-x-2">
+                    <h2 className="text-xl font-semibold text-gray-900 mb-3">
+                      {t("description")}
+                    </h2>
+                    <p className="text-gray-700 text-lg">
+                      {reviewServiceData?.description}{" "}
+                    </p>
+                  </div>
                 </div>
-              </Link>
+
+                {/* Additional Details */}
+                <div className="space-y-8">
+                  <div className="transform transition-all duration-300 hover:translate-x-2">
+                    <h2 className="text-xl font-semibold text-gray-900 mb-3">
+                      {t("subcategory")}
+                    </h2>
+                    <p className="text-gray-700 text-lg">
+                      {reviewServiceData?.subcategory}{" "}
+                    </p>
+                  </div>
+
+                 
+                </div>
+              </div>
             </div>
 
-            <div className="mt-10 flex justify-center items-center">
-              <Link href={"/services"}>
-                <Button className="w-[280px] mb-4 h-[45px] text-white bg-[#00BFFF] rounded-lg outline-none hover:bg-[#00A0E0] transition duration-200 ease-in-out">
-                  <span>{(t('post'))}</span>
-                </Button>
-              </Link>
+            {/* Payment Summary Card */}
+            <div className="bg-white border-2 rounded-2xl shadow-xl p-8 max-w-md mb-10 transition-all duration-300 hover:shadow-2xl">
+  <h2 className="text-2xl font-bold text-gray-900 mb-8">
+    {t("Summary")}
+  </h2>
+  <div className="space-y-6">
+    <div className="flex justify-between items-center py-4 border-b border-gray-200">
+      <span className="text-lg text-gray-700">
+      Service Amount
+      </span>
+      <span className="text-xl text-gray-900 font-semibold">
+        € {reviewServiceData?.fixRate}
+      </span>
+    </div>
+    
+    {/* Map over reviewData to display name and percentage */}
+    {paymentSummary.map((item:any, index:any) => (
+      item.name && item.percentage && (
+        <div key={index} className="flex justify-between items-center py-4 border-b border-gray-200">
+          <span className="text-lg text-gray-700">
+            {item.name}
+          </span>
+          <span className="text-xl text-gray-900 font-semibold">
+            {item.percentage}%
+          </span>
+        </div>
+      )
+    ))}
+
+    <div className="flex justify-between items-center pt-6">
+      <span className="text-xl font-bold text-gray-900">
+      Total
+      </span>
+      <span className="text-2xl font-bold text-[#00BFFF]">
+        € {reviewServiceData?.totalWithTax}
+      </span>
+    </div>
+  </div>
+</div>
+            {/* Book Button */}
+            <div className="mt-8 flex justify-center items-center">
+              <Button
+                type="submit"
+                onClick={clickNext}
+                disabled={isDisbale}
+                className="w-[250px] mb-4 mt-6 h-[45px] text-white bg-[#00BFFF] rounded-lg outline-none hover:bg-[#00A0E0] transition duration-200 ease-in-out"
+              >
+                <span>{t("next")}</span>
+              </Button>
             </div>
+
+            <SuccessModal
+            text={`${(t('service_created_sucess'))}`}
+            isOpen={isSucessModalOpen}
+            onClose={closeModal}
+          />
+            
           </div>
         </div>
       </div>

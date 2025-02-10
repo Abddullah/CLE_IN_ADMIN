@@ -1,72 +1,74 @@
-'use client'
+"use client";
 
-import { useState, FormEvent } from 'react';
+import { useState, FormEvent } from "react";
 import Image from "next/image";
-import { Link } from '@/i18n/routing';
-import { useRouter } from "next/navigation";
-import { useTranslations } from 'next-intl';
-import { db  , auth} from './config/Firebase/FirebaseConfig';
-import { signInWithEmailAndPassword } from 'firebase/auth';
-import { doc, getDoc, DocumentSnapshot } from 'firebase/firestore';
+import { Link } from "@/i18n/routing";
+import { usePathname, useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
+import { db, auth } from "./config/Firebase/FirebaseConfig";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { doc, getDoc } from "firebase/firestore";
+import getFirebaseErrorMessage from "../firebaseErrorHandler";
 
 interface UserData {
-  role: string;
+  role: any;
 }
 
 const LoginScreen = () => {
-  const t = useTranslations('loginPage');
+  const t = useTranslations("loginPage");
   const router = useRouter();
-  const [email, setEmail] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
-  const [error, setError] = useState<string>('');
+  const path = usePathname();
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [error, setError] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
 
   const handleLogin = async (e: FormEvent) => {
     e.preventDefault();
+    setLoading(true);
+    setError("");
 
     try {
-      // Sign in user with Firebase Auth
-      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
       const user = userCredential.user;
-
-      // Check the user's role in Firestore
-      const userDocRef = doc(db, 'users', user.uid); // Assuming users are stored in Firestore under 'users'
+      const userDocRef = doc(db, "users", user.uid);
       const userDocSnap = await getDoc(userDocRef);
-
-if (userDocSnap.exists()) {
-  const userData = userDocSnap.data() as UserData; // Type assertion here
-  // Proceed with userData
-} else {
-  setError('User not found');
-}
-
-
+      
 
       if (userDocSnap.exists()) {
-        const userData = userDocSnap.data();
-
-        // Check if the user is an admin
-        if (userData?.role === 'admin') {
-          // Redirect to dashboard if the role is admin
+        const userData = userDocSnap.data() as UserData;
+       localStorage.setItem('currentUser' , JSON.stringify(userData))
+        
+        if (userData.role === "admin") {
           router.push("/en/dashboard");
         } else {
-          // Show error if not an admin
-          setError('Only admin can access this page');
+          setError("Only admin can access this page");
         }
-      } else {
-        setError('User not found');
       }
-    } catch (error) {
-      // Catch any errors and set error message
-      setError('Incorrect email or password');
+    } catch (error: any) {
+     
+      const errorCode = error.code;
+      const languageCode = path.replace('/', '');
+           const errorMessage = await getFirebaseErrorMessage(
+        errorCode,
+        languageCode
+      );
+
+      setError(errorMessage);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <div className="min-h-screen flex bg-[#00BFFF]">
-      {/* Left Section - Welcome Admin (Visible only on larger screens) */}
       <div className="hidden md:flex w-1/2 flex-col justify-center items-center text-white p-10">
-        <h1 className="text-5xl font-extrabold mb-4">{t('welcome_admin')}</h1>
-        <p className="text-xl font-medium mb-6">{t('manage_platform')}</p>
+        <h1 className="text-5xl font-extrabold mb-4">{t("welcome_admin")}</h1>
+        <p className="text-xl font-medium mb-6">{t("manage_platform")}</p>
         <Image
           src="/assets/security-log.gif"
           alt={t("company_logo_alt")}
@@ -76,10 +78,8 @@ if (userDocSnap.exists()) {
         />
       </div>
 
-      {/* Right Section - Login Form */}
       <div className="w-full md:w-1/2 flex justify-center items-center bg-white px-2 py-10 sm:px-10">
         <div className="w-full max-w-lg bg-white rounded-xl shadow-lg border border-gray-400 p-8 sm:p-12">
-          {/* Logo at the top of the form */}
           <div className="flex justify-center mb-6">
             <Image
               src="/assets/Logo.png"
@@ -90,45 +90,57 @@ if (userDocSnap.exists()) {
             />
           </div>
 
-          <h2 className="text-3xl font-extrabold text-center text-gray-800 mb-4">{t("admin_login")}</h2>
-          <p className="text-center text-gray-600 mb-6">{t('enter_credentials')}</p>
+          <h2 className="text-3xl font-extrabold text-center text-gray-800 mb-4">
+            {t("admin_login")}
+          </h2>
+          <p className="text-center text-gray-600 mb-6">
+            {t("enter_credentials")}
+          </p>
 
           <form className="space-y-6" onSubmit={handleLogin}>
-            {/* Email Input */}
             <div className="flex flex-col">
-              <label className="text-sm font-medium text-gray-700 mb-2">{t('email_address')}</label>
+              <label className="text-sm font-medium text-gray-700 mb-2">
+                {t("email_address")}
+              </label>
               <input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#00BFFF] transition duration-300"
-                placeholder={t('enter_email')}
+                placeholder={t("enter_email")}
                 required
               />
             </div>
 
-            {/* Password Input */}
             <div className="flex flex-col">
-              <label className="text-sm font-medium text-gray-700 mb-2">{t('password')}</label>
+              <label className="text-sm font-medium text-gray-700 mb-2">
+                {t("password")}
+              </label>
               <input
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#00BFFF] transition duration-300"
-                placeholder={t('enter_password')}
+                placeholder={t("enter_password")}
                 required
               />
             </div>
 
-            {/* Error Message */}
             {error && <p className="text-red-500 text-center">{error}</p>}
 
-            {/* Login Button */}
             <button
               type="submit"
-              className="w-full mt-3 py-3 text-white bg-[#00BFFF] rounded-lg shadow-lg hover:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200 transform hover:scale-100 font-semibold"
+              disabled={loading}
+              className="w-full mt-3 py-3 text-white bg-[#00BFFF] rounded-lg shadow-lg hover:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200 transform hover:scale-100 font-semibold flex items-center justify-center"
             >
-              {t('login_button')}
+              {loading ? (
+                <div className="flex items-center space-x-2">
+                  <div className="spinner-border animate-spin w-5 h-5 border-4 rounded-full border-t-transparent"></div>
+                  <span>{t("loading")}</span>
+                </div>
+              ) : (
+                t("login_button")
+              )}
             </button>
           </form>
         </div>

@@ -9,7 +9,8 @@
     "enter_email": "Enter your email",
     "password": "Password",
     "enter_password": "Enter your password",
-    "login_button": "Log In"
+    "login_button": "Log In", 
+    "loading":"Authenticating... Please wait."
   },
   
     "navbar": {
@@ -36,6 +37,7 @@
     "dashboard": "Dashboard",
     "categories": "Categories",
     "additional_services": "Additional Services",
+    "configurations":"Configurations",
     "users": "Users",
     "bookings": "Bookings",
     "services": "Services",
@@ -48,7 +50,10 @@
     "notification_icon_alt": "Notification Icon",
     "notification_received": "Notification Received",
     "notification_time": "Time of Notification",
-    "notification_message": "You have received a new notification."
+    "notification_message": "You have received a new notification",
+    "banner":"Banners"
+    
+
   },
   "dashboard": {
     "totalBooking": "Total Booking",
@@ -64,10 +69,10 @@
       "cleaning_at_house": "Cleaning at house",
       "cleaning_at_company": "Cleaning at Company",
       "cleaning_at_hospital": "Cleaning at hospital",
-      "cleaning_at_factory": "Cleaning at Factory"
-     
-    
-    
+      "cleaning_at_factory": "Cleaning at Factory",
+      "add_Subcategory":"Add Subcategory",
+      "update":"Update"
+ 
   },
   "AddCategory":{
     "add_category": "Add Category",
@@ -80,7 +85,8 @@
     "sub_category_Name":"Subcategory",
     "sub_category_Placeholder":"Enter Subcategory",
     "required_Sub_Category":"Subcategory is required",
-    "add_Subcategory":"Add Subcategory"
+    "add_Subcategory":"Add Subcategory",
+    "no_categories":"No categories available"
      
   },
    "Users": {
@@ -89,6 +95,7 @@
       "phoneNo": "Phone No",
       "role": "Role",
       "address": "Address",
+      
       
       "gender": "Gender",
       "dateOfBirth": "Date of Birth",
@@ -108,8 +115,8 @@
       "gender_placeholder":"Select gender",
       "gender_required_error":"gender is required",
       "dateOfBirthLabel": "Date of Birth:",
-      "male":"male",
-      "female":"female",
+      "male":"Male",
+      "female":"Female",
       "add_users": "Add User",
       "emailAdress": "Email Address",
       "email_placeholder": "Email Address",
@@ -134,7 +141,13 @@
       
       "add_user_button": "Add User",
       "user_role_user": "User",
-      "user_role_provider": "Provider"
+      "user_role_provider": "Provider",
+      "Add_hourly_rate":"Add Hourly Rate",
+      "hourly_rate_placeholder": "Hourly Rate",
+      "hourly_rate_required_error": "Hourly Rate is required",
+      "cancel":"Cancel",
+      "save_Changes":"Save Changes",
+      "edit_user":"Edit User"
      
     },
     "Bookings":{
@@ -153,11 +166,14 @@
     "chats":{
       "chats": "Chats",
       "select_a_user": "Select a user to start chatting",
-      "status_online": "Online",
-      "status_offline": "Offline",
+      "status_online": "online",
+      "status_offline": "offline",
       "send_message": "Send Message",
       "type_message": "Type your message...",
-      "message":"I'm doing great! How about you?"
+     "Selected_user_not_exist":"Selected user document does not exist.",
+     "Error sending message":"Error sending message",
+     "Error fetching sender details":"Error fetching sender details",
+     "Sender not found":"Sender not found"
 
 
     },
@@ -179,8 +195,10 @@
     "providerRequired": "Provider name is required",
     "category":"Category",
     "categories":"Categories",
-    "SubCategories":"Sub Categories",
+    "SubCategories":"Sub Categories", 
+    "subcategory":"SubCategory",
     "selectCategory": "Select Category",
+    "upload":"upload",
     "categoryRequired": "Category is required",
     "selectSubCategory": "Select Subcategory",
     "subcategoryRequired": "Subcategory is required",
@@ -196,19 +214,10 @@
       "title": "Title",
       "serviceTitle": "Cleaning at Home",
       "descriptionTitle": "Description",
-      "descriptionText": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Blanditiis assumenda necessitatibus expedita, dicta iure eius dolorem voluptatum officia aut neque sint distinctio quia quasi sed recusandae voluptatibus voluptas magni error?",
       
         "titleJob": "Job Details",
         "priceLabel": "Price",
         "cleanersLabel": "Cleaners",
-        "workFrequencyLabel": "Work Frequency",
-        "workFrequencyValue": "Weekly",
-        "roomAreaSizeLabel": "Room Area Size",
-        "roomAreaSizeValue": "51-100m2",
-        "numberOfRoomsLabel": "Number of Rooms",
-        "numberOfRoomsValue": "3 Rooms",
-        "cleaningMaterialsLabel": "Need Cleaning Materials?",
-        "cleaningMaterialsValue": "Yes Please",
         "Location": "Location",
     "mapAlt": "map",
       "label": "Customer info",
@@ -225,31 +234,35 @@
   "add_button": "ADD",
   "select_time_slots": "Select Time Slots",
   "select_one":"Please select at least one day",
+  "opening_Time":"Opening Time",
+  "closing_Time":"Closing Time",
   "select_Both":"Both open and close times are required",
   "next":"Next",
-  "officeCleaning": "Office Cleaning",
-  "roomCleaning": "Room Cleaning",
-  "pestControlService": "Pest Control Service",
   "laundryService": "Laundry Service",
-  "electrician": "Electrician",
-    "plumber": "Plumber",
-    "masonBricklayer": "Mason/Bricklayer",
-    "carpenter": "Carpenter",
-    "painter": "Painter",
-    "airConditioningInstaller": "Air Conditioning Installer",
-    "alarmSystemInstaller": "Alarm System Installer",
-    "solarPanelInstaller": "Solar Panel Installer",
-    "doorWindowInstaller": "Door and Window Installer",
-    "architect": "Architect",
-    "interiorDesigner": "Interior Designer",
-    "buildingContractor": "Building Contractor",
-    "floorLayer": "Floor Layer",
-    "cleaningHygieneServices": "Cleaning and Hygiene Services",
-    "homeMaintenanceServices": "Home Maintenance Services",
-    "installationServices": "Installation Services",
-    "renovationServices": "Renovation Services"
+    "add_fix_rate":"Add Fix Rate",
+    "fix_rate":"Fix Rate",
+    "fix_rate_required":"Add Fixed Rate Required",
+    "Enter_fixRates":"Enter Fix Rates",
+    "fix_Rate":"Fix Rate",
+    "no_fix_rate_available":"No Fix Rates Available",
+    "close_button":"Close Button",
+    "Summary": "Payment Summary",
+    "serviceAmount": "Service Amount",
+    "service_created_sucess":"Your Service has been Created Sucessfully",
+    "reviews":"Reviews",
+    "Availablity":"Availablity",
+    "customer_info":"Customer Info",
+    "edit_Service":"Edit Service",
+    "cancel":"Cancel",
+    "update":"Update",
+    "select_Job_status":"Select Job Status",
+    "editTitle":"Title",
+    "no_service_available":"No Services Available...",
+    "edit": "Edit",
+  "delete": "Delete",
+  "save_changes":"Save Changes",
+  "price":"Updated Price"
   
-      
   },
   "Jobs":{
     "AddJobs": "Add Jobs",
@@ -289,15 +302,47 @@
     "InstructionPlaceholder":"Write here...",
     "WhatWouldYouLike":"When would you like to scehedule your service?",
     "selectDate":"Select Date",
+    "selectTimeStart":"Select Time Start",
+    "selectTimeEnd":"Select Time End",
     "selectTime":"Select Time",
     "pageTitle": "Review & Confirm Booking",
+    "ServiceDateRequired":"Date is Required",
+    "serviceTimeStartRequired":"Time start is Required",
+    "serviceTimeEndRequired":"Time end is Required",
+    "invalidTime":"End time must be later than the start time. Please select a valid time range.",
+    "active":"Active",
+    "moderate":"Moderate",
+    "Pending":"Pending",
+    "add_button": "ADD",
+    "job_created_sucess":"Your Job has been Created Sucessfully",
+    "job_updated_sucess":"Your Job has been Updated Sucessfully",
+    "edit_Job": "Edit Job",
+  "titleEdit": "Title",
+  "select_Time_Start": "Select Time Start",
+  "select_Date": "Select Date",
+  "select_Time_End": "Select Time End",
+  "select_Job_Status": "Select Job Status",
+  "cancel":"Cancel",
+    "update":"Update",
+    "no_job_available":"No Jobs Available...",
+    "select_hour":"Select Hour",
+    "selected_professional":"Select Professional",
+
+   
+    
+   
+    "SelectSubcategory": "Select Subcategory",
+    "Categories": "Categories",
+
+
+
    
       "title": "Service Details",
-      "service": "Service",
+      "service": "Category",
       "serviceDescription": "Premium Cleaning Services",
-      "description": "Description",
+      "description": "Subcategory",
       "descriptionDetails": "Deep cleaning with eco-friendly products",
-      "professionalCleaners": "Professional Cleaners",
+      "professionalCleaners": "Professionals",
       "cleanersDetails": "3 Certified Experts",
       "frequency": "Service Frequency",
       "frequencyDetails": "Weekly Premium Service",
@@ -319,9 +364,15 @@
       "Summary": "Payment Summary",
       "serviceAmount": "Service Amount",
       "vat": "VAT (15%)",
-      "total": "Total"
+      "total": "Total",
+      "subcategory":"SubCategory",
+      "edit": "Edit",
+      "delete": "Delete",
+      "upload":"upload"
 
   }, 
+
+  
   "AdditionalServices":{
    "add_additional_services": "Add Additional Services",
   "title": "Title",
@@ -332,8 +383,42 @@
   "price_required": "Price is required",
   "add_button": "ADD",
   "edit": "Edit",
-      "delete": "Delete"
+  "delete": "Delete",
+  "Fix_Rate":"Fix Rate",
+      "service_added_successfully": "Additional Service Added Successfully",
+  "additional_service_added_message": "Your additional service has been added successfully to the system.",
+  "close_button": "Close",
+  "no_additional_service": "No additional services available",
+    "save_changes": "Save Changes",
+    "service_name": "Service Name",
+    "additionalService":"Additional Service",
+    "HourlyRates":"Hourly Rates",
+    "RoomAreaSize":"Room Area Size",
+    "NumberOfRoom":"Number of Room",
+    "hourly_rate_title":"e.g : Hourly Cleaning",
+    "add_hourly_rate":"Add Hourly Rates",
+    "rate_added_sucessfully":"Rates Added Sucessfully",
+    "rate_added_message":"Your Rates has been added sucessfully",
+    "no_rate_available":"No Rates Available",
+    "error_occured":"Error Occured",
+"error_message":"Only one card can be created at time",
+"room_size_title":"e.g : 20 - 70 m2",
+"add_room_size":"Add Room Size",
+"room_sucess":"Room Size Added Sucessfully",
+"room_added_message":"Your Room Size has been added sucessfully",
+"no_room_size_available":"No Room Sizes available",
+"no_no_of_rooms":"No Number of Rooms available",
+"add_no_of_rooms":"Add Number of Rooms",
+"no_of_rooms_title":"e.g : Studio",
+"add_no_of_rooms_success":"Number of Rooms Added Sucessfully",
+"sucess_message":"No.of Rooms has been added sucessfully",
+"service":"Service",
+"rooms":"Rooms",
+"area":"Area",
+"rate":"Rate"
+
   },
+  
   "logout":{
     "are_you_sure_logout": "Are you sure you want to log out?",
     "yes": "Yes",
@@ -351,7 +436,45 @@
     "name_required":"Name is required",
     "enter_name":"Enter Name",
     "add_more":"Add More",
-    "save":"SAVE"
+    "save":"SAVE",
+    "activate":"Activate",
+    "deactivate":"Deactivate",
+    "edit_service":"Edit Service",
+    "edit_payment":"Edit Payment",
+    "add_Tax_Field":"Add Tax Feild",
+    "save_changes":"Save Changes",
+    "Tax Name":"Tax Name",
+    "Tax Percentage":"Tax Percentage",
+    "no_payment_cards_available":"No Payment cards available",
+    "cancel":"Cancel",
+    "payment_card_error":"Only one card can be created at a time and you already created one card.",
+    "payment_card_success":"Your payment card has been added successfully."
+
+  },
+
+  "successModal":{
+    "category_added_sucessfully":"Category Added Successfully",
+    "category_added_message":"Your  category has been added successfully to the system",
+    "close_button":"Close"
+
+  },
+
+  "frequencyModal":{
+    "choose_frequency":"Choose Your Frequency",
+    "weekly_plan":"Weekly",
+    "same_cleaner_evey_week":"The same cleaner every week",
+    "cancel_anytime":"Cancel at any time",
+    "every_two_week":"Every 2 Weeks",
+    "one_time":"One Time",
+    "same_cleaner_every_two_week":"The same cleaner every 2 weeks",
+    "one_time_details":"When your schedule is uncertain",
+    "select":"Select",
+    "most_popular":"Most Popular"
+    
+  },
+  "banner":{
+    "upload_Banner":"Upload Banners",
+    "select_Image":"Select Images"
 
   }
   

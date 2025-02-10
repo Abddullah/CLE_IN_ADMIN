@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
@@ -17,9 +17,14 @@ import { useTranslations } from "next-intl";
 import { auth , db } from "../../config/Firebase/FirebaseConfig"; 
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { doc, serverTimestamp, setDoc } from "firebase/firestore";
+import { usePathname } from "next/navigation";
+import { useState } from "react";
+import { useRouter } from "@/i18n/routing";
 
 function AddUserPage() {
   const t = useTranslations("Users");
+  const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
+  const [isErrorModalOpen, setIsErrorModalOpen] = useState(false);
 
   enum UserRole {
     PROVIDER = "Provider",
@@ -41,6 +46,7 @@ function AddUserPage() {
     role: UserRole;
     gender: UserGender;
     dob: string;
+    hourlyRate:string
   };
 
   const {
@@ -49,8 +55,14 @@ function AddUserPage() {
     control,
     formState: { errors },
     watch,
+    reset,
     setValue,
   } = useForm<FormInputs>();
+
+const router = useRouter()
+const path = usePathname();
+
+
 
   const onSubmit: SubmitHandler<FormInputs> = async (data) => {
     try {
@@ -62,6 +74,7 @@ function AddUserPage() {
       await setDoc(doc(db, "users", user.uid), {
         fullName: data.username,
         email: data.email,
+        hourlyRate:data.hourlyRate,
         address: data.address,
         phone: data.phone,
         role: data.role,
@@ -70,11 +83,18 @@ function AddUserPage() {
         userId:user.uid,
         createdAt: serverTimestamp(), // Set the creation timestamp
       });
+      reset()
+      setIsSuccessModalOpen(true)
+
+      setTimeout(() =>{
+        router.push('/users')
+      },3000)
   
-      alert("User added successfully!");
+      
+    
     } catch (error) {
-      console.error("Error adding user: ", error);
-      alert("Error adding user");
+      
+      setIsErrorModalOpen(true)
     }
   };
   const password = watch("password");
@@ -194,6 +214,22 @@ function AddUserPage() {
           </div>
 
           <div className="grid w-full max-w-sm items-center gap-1.5 mt-3">
+            <Label htmlFor="hourlyRate" className="text-md font-semibold">
+              {t("Add_hourly_rate")}
+            </Label>
+            <Input
+              type="text"
+              placeholder={t("hourly_rate_placeholder")}
+              {...register("hourlyRate", { required: t("hourly_rate_required_error") })}
+              className="h-[50px] rounded-lg border-[#4BB1D3] focus:border-blue-500 focus:outline-none"
+              id="address"
+            />
+            {errors.hourlyRate && (
+              <span className="text-red-600 text-sm">{errors.hourlyRate.message}</span>
+            )}
+          </div>
+
+          <div className="grid w-full max-w-sm items-center gap-1.5 mt-3">
             <Label htmlFor="dob" className="text-md font-semibold">
               {t("dob_placeholder")}
             </Label>
@@ -206,13 +242,17 @@ function AddUserPage() {
                 required: t("dob_required_error"),
               }}
               render={({ field: { value, onChange } }) => (
-                <Input
+               
+                
+                
+                <input
                   type="date"
+                  name="dateBirth"
                   value={value || ""}
                   onChange={onChange}
-                  className="w-full h-[55px] rounded-lg border border-[#4BB1D3] bg-gray-50 mt-1 pr-6 outline-[#4BB1D3] focus:border-[#4BB1D3] focus:outline-none"
-                  id="dob"
-                />
+                  className="w-full px-4 py-2 mt-1 bg-gray-50 rounded-md border border-[#4BB1D3]"/>
+              
+              
               )}
             />
             {errors.dob && <p className="text-red-500 text-sm mt-1">{errors.dob.message}</p>}
@@ -258,8 +298,8 @@ function AddUserPage() {
                   </SelectTrigger>
                   <SelectContent>
                     <SelectGroup>
-                      <SelectItem value="Male">{t("male")}</SelectItem>
-                      <SelectItem value="Female">{t("female")}</SelectItem>
+                      <SelectItem value="male">{t("male")}</SelectItem>
+                      <SelectItem value="female">{t("female")}</SelectItem>
                     </SelectGroup>
                   </SelectContent>
                 </Select>
@@ -288,8 +328,8 @@ function AddUserPage() {
                   </SelectTrigger>
                   <SelectContent>
                     <SelectGroup>
-                      <SelectItem value="User">{t("user_role_user")}</SelectItem>
-                      <SelectItem value="Provider">{t("user_role_provider")}</SelectItem>
+                      <SelectItem value="user">{t("user_role_user")}</SelectItem>
+                      <SelectItem value="provider">{t("user_role_provider")}</SelectItem>
                     </SelectGroup>
                   </SelectContent>
                 </Select>
@@ -310,6 +350,44 @@ function AddUserPage() {
           </div>
         </form>
       </div>
+
+      {isSuccessModalOpen && (
+        <div className="fixed inset-0 bg-gray-500 bg-opacity-50 flex justify-center items-center z-50">
+          <div className="bg-white p-8 rounded-lg max-w-sm w-full">
+            <h2 className="text-2xl font-semibold text-green-600">Success!</h2>
+            <p className="mt-2">User has been created successfully in the system.</p>
+            <div className="mt-4 flex justify-end">
+              <Button
+                onClick={() => {
+                  setIsSuccessModalOpen(false)
+                  router.push('/users')
+                }}
+                className="bg-green-500 text-white hover:bg-green-400"
+              >
+                Close
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Error Modal */}
+      {isErrorModalOpen && (
+        <div className="fixed inset-0 bg-gray-500 bg-opacity-50 flex justify-center items-center z-50">
+          <div className="bg-white p-8 rounded-lg max-w-sm w-full">
+            <h2 className="text-2xl font-semibold text-red-600">Error Occured!</h2>
+            <p className="mt-2">This User already exist in the system.</p>
+            <div className="mt-4 flex justify-end">
+              <Button
+                onClick={() => setIsErrorModalOpen(false)}
+                className="bg-red-500 text-white hover:bg-red-600"
+              >
+                Close
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

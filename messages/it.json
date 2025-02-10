@@ -9,7 +9,8 @@
     "enter_email": "Inserisci la tua email",
     "password": "Password",
     "enter_password": "Inserisci la tua password",
-    "login_button": "Accedi"
+    "login_button": "Accedi",
+    "loading": "Accesso in corso... Attendere."
   },
   "navbar": {
     "services": "Servizi",
@@ -47,7 +48,9 @@
     "notification_icon_alt": "Icona della notifica",
     "notification_received": "Notifica ricevuta",
     "notification_time": "Tempo della notifica",
-    "notification_message": "Hai ricevuto una nuova notifica."
+    "notification_message": "Hai ricevuto una nuova notifica.","banner": "striscioni",
+    "configurations": "Configurazioni"
+
   },
   "dashboard": {
     "totalBooking": "Prenotazione Totale",
@@ -63,7 +66,8 @@
     "cleaning_at_company": "Pulizia in azienda",
     "cleaning_at_hospital": "Pulizia in ospedale",
     "cleaning_at_factory": "Pulizia in fabbrica",
-    "Choose_a_file":"Scegli un file"
+    "Choose_a_file":"Scegli un file",
+     "add_Subcategory": "Aggiungi sottocategoria"
   },
   "AddCategory": {
     "add_category": "Aggiungi Categoria",
@@ -76,7 +80,9 @@
     "sub_category_Name": "Sottocategoria",
     "required_Sub_Category": "La sottocategoria è obbligatoria",
     "add_Subcategory": "Aggiungi Sottocategoria",
-    "sub_category_Placeholder": "Inserisci Sottocategoria"
+    "sub_category_Placeholder": "Inserisci Sottocategoria",
+    "no_categories":"Nessuna categoria disponibile"
+
   },
   "Users": {
     "name": "Nome",
@@ -100,7 +106,9 @@
     "address_required_error": "L'indirizzo è obbligatorio",
      "dob_required_error": "La data di nascita è obbligatoria",
      "dob_placeholder": "Data di nascita",
-
+     "cancel": "Annulla",
+"save_Changes": "Salva le modifiche",
+"edit_user": "Modifica utente",
     "roleLabel": "Ruolo:",
     "addressLabel": "Indirizzo:",
     "genderLabel": "Genere:",
@@ -132,7 +140,10 @@
 
     "add_user_button": "Aggiungi utente",
     "user_role_user": "Utente",
-    "user_role_provider": "Fornitore"
+    "user_role_provider": "Fornitore",
+    "Add_hourly_rate": "Aggiungi Tariffa Oraria",
+"hourly_rate_placeholder": "Tariffa Oraria",
+"hourly_rate_required_error": "Tariffa Oraria è obbligatoria"
   },
   "Bookings": {
     "booking_details_header": "Dettagli della Prenotazione",
@@ -153,7 +164,11 @@
     "status_offline": "Offline",
     "send_message": "Invia Messaggio",
     "type_message": "Scrivi il tuo messaggio...",
-    "message": "Sto andando alla grande! E tu?"
+    "message": "Sto andando alla grande! E tu?",
+    "Selected_user_not_exist": "Il documento utente selezionato non esiste.",
+  "Error_sending_message": "Errore nell'invio del messaggio",
+  "Error_fetching_sender_details": "Errore nel recupero dei dettagli del mittente",
+  "Sender_not_found": "Mittente non trovato"
   },
   "Settings": {
     "privacy_policy": "Informativa sulla privacy",
@@ -166,6 +181,7 @@
 
   },
   "Services":{
+   
     "addServices": "Aggiungi Servizi",
     "selectProvider": "Seleziona Nome del Fornitore",
     "providerRequired": "Il nome del fornitore è obbligatorio",
@@ -173,8 +189,10 @@
     "categories":"Categorie",
     "SubCategories":"Sottocategoria",
     "selectCategory": "Seleziona Categoria",
+    "upload":"caricamento",
     "categoryRequired": "La categoria è obbligatoria",
     "selectSubCategory": "Seleziona Sottocategoria",
+    "subcategory": "Sottocategoria",
     "subcategoryRequired": "La sottocategoria è obbligatoria",
     "adFixedRate": "Tariffa Fissa Annuncio",
     "fixRateRequired": "La tariffa fissa è obbligatoria",
@@ -186,11 +204,15 @@
   "imageAlt": "immagine",
   "title": "Titolo",
   "serviceTitle": "Pulizia a Casa",
+  "save_changes":"Salva Modifiche",
   "descriptionTitle": "Descrizione",
   "descriptionText": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Blanditiis assumenda necessitatibus expedita, dicta iure eius dolorem voluptatum officia aut neque sint distinctio quia quasi sed recusandae voluptatibus voluptas magni error?",
+
  
   
     "titleJob": "Dettagli del Lavoro",
+
+"price":"Prezzo Aggiornato",
     "priceLabel": "Prezzo",
     "cleanersLabel": "Pulitori",
     "workFrequencyLabel": "Frequenza del Lavoro",
@@ -216,11 +238,44 @@
   "Pending":"Sospeso",
   "add_button": "AGGIUNGERE",
   "select_time_slots": "Seleziona gli orari disponibili",
+  "opening_Time": "Orario di apertura",
+  "closing_Time": "Orario di chiusura",
   "select_one":"Seleziona almeno un giorno",
   "select_Both":"Sono richiesti sia l'orario di apertura che quello di chiusura",
-  "next":"prossimo"
+  "next":"prossimo",
+  "add_fix_rate": "Aggiungi Tariffa Fissa",
+"fix_rate": "Tariffa Fissa",
+"fix_rate_required": "Aggiunta Tariffa Fissa Necessaria",
+"Enter_fixRates": "Inserisci Tariffe Fisse",
+"fix_Rate": "Tariffa Fissa",
+"no_fix_rate_available": "Nessuna Tariffa Fissa Disponibile",
+"close_button": "Pulsante Chiudi",
+"Summary": "Riepilogo Pagamento",
+"serviceAmount": "Importo del Servizio",
+"service_created_sucess": "Il tuo servizio è stato creato con successo",
+"reviews": "Recensioni",
+"Availablity": "Disponibilità",
+"customer_info": "Informazioni Cliente",
+"edit_Service": "Modifica Servizio",
+"cancel": "Annulla",
+"update": "Aggiorna",
+"select_Job_status": "Seleziona Stato Lavoro",
+"editTitle": "Titolo",
+"no_service_available":"Nessun servizio disponibile...",
+"edit": "Modifica",
+"delete": "Elimina"
+
+
+
+
+
+
+
+
   },
   "Jobs":{
+    "select_hour": "Seleziona Ora",
+    "selected_professional": "Seleziona Professionista",
     "AddJobs": "Aggiungi lavori",
     "Provider": "Seleziona nome del provider",
     "HowManyHours": "Quante ore ti servono?",
@@ -259,14 +314,28 @@
   "WhatWouldYouLike": "Quando desideri programmare il tuo servizio?",
   "selectDate": "Seleziona la data",
   "selectTime": "Seleziona l'ora",
+   "selectTimeStart": "Seleziona Ora Inizio",
+    "selectTimeEnd": "Seleziona Ora Fine",
   "pageTitle": "Rivedi e Conferma Prenotazione",
+  "invalidTime":"L'orario di fine deve essere successivo all'orario di inizio. Seleziona un intervallo di tempo valido.",
+  "active":"Attivo",
+  "moderate":"Moderato",
+  "Pending":"Sospeso",
+  "job_created_sucess": "Il tuo lavoro è stato creato con successo",
+  "job_updated_sucess": "Il tuo lavoro è stato aggiornato con successo",
+  
+  "SelectSubcategory": "Seleziona sottocategoria",
+  "Categories": "Categorie",
+  "upload":"caricare",
+
+
     
       "title": "Dettagli del Servizio",
       "service": "Servizio",
       "serviceDescription": "Servizi di Pulizia Premium",
-      "description": "Descrizione",
+      "description": "sottocategoria",
       "descriptionDetails": "Pulizia profonda con prodotti ecologici",
-      "professionalCleaners": "Pulitori Professionali",
+      "professionalCleaners": " Professionali",
       "cleanersDetails": "3 Esperti Certificati",
       "frequency": "Frequenza del Servizio",
       "frequencyDetails": "Servizio Premium Settimanale",
@@ -288,10 +357,25 @@
       "Summary": "Riepilogo Pagamento",
       "serviceAmount": "Importo del Servizio",
       "vat": "IVA (15%)",
-      "total": "Totale"
+      "total": "Totale",
+      "edit": "Modifica",
+"delete": "Elimina",
+"edit_Job": "Modifica Lavoro",
+"titleEdit": "Titolo",
+"select_Time_Start": "Seleziona Ora Inizio",
+"select_Date": "Seleziona Data",
+"select_Time_End": "Seleziona Ora Fine",
+"select_Job_Status": "Seleziona Stato Lavoro",
+"cancel": "Annulla",
+"update": "Aggiorna",
+"no_job_available":"Nessun lavoro disponibile..."
+
+
 
   
   },
+
+ 
   "AdditionalServices":{
     "add_additional_services": "Aggiungi Servizi Aggiuntivi",
     "title": "Titolo",
@@ -301,9 +385,42 @@
     "price_placeholder": "Inserisci il prezzo",
     "price_required": "Il prezzo è obbligatorio",
     "add_button": "AGGIUNGI",
+    "Fix_Rate":"Tasso Fisso",
      "edit": "Modifica",
-  "delete": "Elimina"
+  "delete": "Elimina",
+  "no_additional_service": "Nessun servizio aggiuntivo disponibile",
+  "service_added_successfully": "Servizio aggiuntivo aggiunto con successo",
+  "additional_service_added_message": "Il tuo servizio aggiuntivo è stato aggiunto con successo al sistema.",
+  "close_button": "Chiudi",
+  "save_changes": "Salva modifiche",
+  "service_name": "Nome del servizio",
+  "additionalService": "Servizio Aggiuntivo",
+    "HourlyRates": "Tariffe Orarie",
+    "RoomAreaSize": "Dimensione dell'Area della Stanza",
+    "NumberOfRoom": "Numero di Stanze",
+    "hourly_rate_title": "ad esempio: Pulizia oraria",
+"add_hourly_rate": "Aggiungi tariffe orarie",
+"no_rate_available": "Nessuna tariffa disponibile",
+"error_occured": "Si è verificato un errore",
+"error_message": "È possibile creare solo una scheda alla volta",
+"room_size_title": "ad es. : 20 - 70 m2",
+"add_room_size": "Aggiungi dimensione stanza",
+"room_sucess": "Dimensione stanza aggiunta con successo",
+"room_added_message": "La dimensione della tua stanza è stata aggiunta con successo",
+"no_room_size_available": "Nessuna dimensione stanza disponibile",
+"no_no_of_rooms": "Nessun numero di stanze disponibile",
+"add_no_of_rooms": "Aggiungi numero di stanze",
+"no_of_rooms_title": "es: Studio",
+"add_no_of_rooms_success": "Numero di stanze aggiunto con successo",
+"success_message": "Il numero di stanze è stato aggiunto con successo",
+"service": "Servizio",
+  "rooms": "Camere",
+  "area": "Area",
+  "rate": "Tariffa",
+  "Fix Rate": "Tariffa Fissa"
   },
+  
+
   "logout":{
     "are_you_sure_logout": "Sei sicuro di voler uscire?",
     "yes": "Sì",
@@ -321,8 +438,49 @@
     "name_required": "Il nome è obbligatorio",
     "enter_name": "Inserisci Nome",
     "add_more":"Aggiungi altro",
-    "save": "SALVA"
+    "edit_payment": "Modifica Pagamento",
+"add_Tax_Field": "Aggiungi Campo Tassa",
+"save_changes": "Salva Modifiche",
+"Tax Name": "Nome Tassa",
+"Tax Percentage": "Percentuale Tassa",
+
+    "save": "SALVA",
+     "activate": "Attiva",
+  "deactivate": "Disattiva",
+  "edit_service":"Modifica Servizio",
+  "no_payment_cards_available":"Nessuna carta di pagamento disponibile",
+  "cancel": "Annulla",
+  "payment_card_error":"Può essere creata solo una carta alla volta e hai già creato una carta.",
+  "payment_card_success":"La tua carta di pagamento è stata aggiunta con successo."
+
+
+
+},
+
+"successModal": {
+    "category_added_sucessfully": "Categoria aggiunta con successo",
+    "category_added_message": "La tua categoria è stata aggiunta con successo al sistema",
+    "close_button": "Chiudi"
+},
+
+"frequencyModal": {
+    "choose_frequency": "Scegli la frequenza",
+    "weekly_plan": "Settimanale",
+    "same_cleaner_evey_week": "Lo stesso addetto ogni settimana",
+    "cancel_anytime": "Annulla in qualsiasi momento",
+    "every_two_week": "Ogni 2 settimane",
+    "one_time": "Una volta",
+    "same_cleaner_every_two_week": "Lo stesso addetto ogni 2 settimane",
+    "one_time_details": "Quando il tuo programma è incerto",
+    "select": "Seleziona",
+    "most_popular": "Più Popolare"
+},
+"banner": {
+  "upload_Banner": "Carica Banner",
+  "select_Image": "Seleziona Immagini"
 }
+
+
 
 
 
