@@ -14,14 +14,8 @@ const LoginPage = () => {
 
   return (
     <>
-<<<<<<< HEAD
-    
-     <div className="p-1 flex flex-wrap justify-center sm:justify-start sm:ml-5 gap-10 mt-6 my-2 ">
-        <div className="mt-1 w-full  sm:w-[48%] lg:w-[28%] xl:w-[20%] ">
-=======
       <div className="bg-white m-4 p-1 flex flex-wrap justify-start gap-10 mt-6 my-2 ">
         <div className="mt-1 w-full sm:w-[48%] lg:w-[28%] xl:w-[20%] ">
->>>>>>> d2f3a0e4b699e29ab369b3afbeafb390874a6d0e
           <BookingCard
             title={t("totalBooking")}
             totalBookings={10}
