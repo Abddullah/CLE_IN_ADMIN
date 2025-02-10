@@ -17,7 +17,7 @@ import { db } from "../../config/Firebase/FirebaseConfig";
 import moment from "moment";
 import LoaderSpinner from "../../components/Spinner";
 import { useTranslations } from "use-intl";
-import { Link } from "@/i18n/routing";
+import { Link, useRouter } from "@/i18n/routing";
 // import BookingModal from "../components/jobsComponent/JobDetailsCard";
 import JobTab from "../../components/JobTab";
 import BookingModal from "../../components/jobsComponent/JobDetailsCard";
@@ -34,6 +34,8 @@ function Page() {
   const modalRef = useRef<HTMLDivElement | null>(null);
   const [selectedJob , setSelectedJob]=useState<null | any>(null);
     const [detailModalOpen , SetDetailModalOpen] = useState<boolean>(false)
+
+    const router = useRouter();
 
   
 
@@ -113,6 +115,34 @@ function Page() {
     fetchCategories();
   }, []);
 
+  //fetch job by id
+
+    const fetchJobById = async (jobId:string) => {
+      try {
+          const jobsRef = collection(db, "jobs"); // 'jobs' collection ka reference
+          const q = query(jobsRef, where("jobId", "==", jobId)); // Query jobId ke equal data ke liye
+          const querySnapshot = await getDocs(q);
+  
+          const jobData = querySnapshot.docs.map((doc) => ({
+              id: doc.id,
+              ...doc.data(),
+          }));
+  
+          localStorage.setItem("editJob", JSON.stringify(jobData))
+  
+          if (jobData.length > 0) {
+              console.log("Job Found:", jobData[0]);
+              return jobData[0]; // Agar ek hi job return hoti ho
+          } else {
+              console.log("No job found with this ID.");
+              return null;
+          }
+      } catch (error) {
+          console.error("Error fetching job:", error);
+          throw error;
+      }
+  };
+
 
   const handleJobClick = (job:any) => {
     setSelectedJob(job);
@@ -120,10 +150,25 @@ function Page() {
   };
 
 
-  const handleEditClick = (job: any) => {
-    setEditableJob(job);
-    setIsModalOpen(true);
+  
+
+  const handleEditClick = async (job:any) => {
+    console.log("Editing job ID:", job.jobId);
+    try {
+        const editableJob = await fetchJobById(job.jobId);
+        if (editableJob) {
+            setEditableJob(editableJob);
+            setIsModalOpen(true);
+        }
+  
+        router.push("/jobs/addJob")
+  
+      
+    } catch (error) {
+        console.error("Failed to fetch the job:", error);
+    }
   };
+  
 
   const handleDeleteClick = async (job: any) => {
     try {
@@ -139,26 +184,7 @@ function Page() {
     }
   };
 
-  const handleSave = async () => {
-    if (!editableJob) return;
-
-    try {
-      // Update the job in Firebase
-      const jobDocRef = doc(db, "jobs", editableJob.id);
-      await updateDoc(jobDocRef, {
-        category: editableJob?.category,
-        addStatus: editableJob?.addStatus,
-        bookingStart: editableJob?.bookingStart,
-        bookingEnd: editableJob?.bookingEnd,
-        bookingDate: editableJob?.bookingDate,
-
-      });
-
-      setIsModalOpen(false);
-    } catch (error) {
-      console.error("Error updating job:", error);
-    }
-  };
+  
 
 
 
@@ -203,194 +229,6 @@ function Page() {
     ))
   )}
 </div>
- {isModalOpen && (
-        <div
-          ref={modalRef}
-          className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 "
-        >
-          <div className="bg-white w-[450px] rounded-lg p-6 shadow-lg mx-3">
-            <h2 className="text-xl font-semibold mb-4">{(t('edit_Job'))}</h2>
-            <form>
-              {/* Title (Select Field) */}
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700">
-                  {(t('titleEdit'))}
-                </label>
-
-                <div className="mb-4 mt-2">
-                  <div className="relative">
-                    <select
-                      id="professional-select"
-                      className="block w-full px-4 py-3 text-sm border border-gray-300 rounded-lg shadow-sm appearance-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                      value={editableJob?.category || ""}
-                      onChange={(e) =>
-                        setEditableJob({
-                          ...editableJob,
-                          category: e.target.value,
-                        })
-                      }
-                    >
-                      <option value="" disabled>
-                        Choose an option
-                      </option>
-                      {categories.map((category: any) => (
-                        <option key={category.id} value={category.categoryName}>
-                          {category.categoryName}
-                        </option>
-                      ))}
-                    </select>
-                    <span className="absolute inset-y-0 right-3 flex items-center pointer-events-none">
-                      <svg
-                        className="w-5 h-5 text-gray-400"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                          d="M19 9l-7 7-7-7"
-                        />
-                      </svg>
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700">
-                  {(t('select_Date'))}
-                </label>
-                <div className="mt-1">
-                  <input
-                    type="date"
-                    name="ServiceDate"
-                                        onChange={(e) => {
-                      setEditableJob({
-                        ...editableJob,
-                        bookingDate: new Date(e.target.value).getTime(),
-                      });
-                    }}
-                    // Register field with validation
-                    className="w-full px-4 py-2 mt-1 bg-gray-50 rounded-md border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
-                  />
-                </div>
-              </div>
-
-              {/* Select Time Start */}
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700">
-                  {(t('select_Time_Start'))}
-                </label>
-                <input
-                  type="time"
-                  onChange={(e) =>
-                    setEditableJob({
-                      ...editableJob,
-                      bookingStart: moment(e.target.value, "HH:mm").valueOf(),
-                    })
-                  }
-                  value={
-                    editableJob?.bookingStart
-                      ? moment(editableJob.bookingStart).format("HH:mm")
-                      : ""
-                  }
-                  className="w-full px-4 py-2 mt-1 bg-gray-50 rounded-md border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
-                />
-              </div>
-
-              {/* Select Time End */}
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700">
-                  {(t('select_Time_End'))}
-                </label>
-                <input
-                  type="time"
-                  onChange={(e) =>
-                    setEditableJob({
-                      ...editableJob,
-                      bookingEnd: moment(e.target.value, "HH:mm").valueOf(),
-                    })
-                  }
-                  value={
-                    editableJob?.bookingEnd
-                      ? moment(editableJob.bookingEnd).format("HH:mm")
-                      : ""
-                  }
-                  className="w-full px-4 py-2 mt-1 bg-gray-50 rounded-md border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
-                />
-              </div>
-
-              {/* Status */}
-
-              <div className="mb-4">
-                <label
-                  htmlFor="professional-select"
-                  className="block text-sm font-medium text-gray-700 mb-2"
-                >
-                  {(t('select_Job_Status'))}
-                </label>
-                <div className="relative">
-                  <select
-                    value={editableJob?.addStatus || ""}
-                    onChange={(e) =>
-                      setEditableJob({
-                        ...editableJob,
-                        addStatus: e.target.value,
-                      })
-                    }
-                    id="professional-select"
-                    className="block w-full px-4 py-3 text-sm border border-gray-300 rounded-lg shadow-sm appearance-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                  >
-                    <option value="" disabled>
-                      Choose an option
-                    </option>
-                    <option value="active">Active</option>
-                    <option value="moderate">Moderate</option>
-                    <option value="pending">Pending</option>
-                  </select>
-                  <span className="absolute inset-y-0 right-3 flex items-center pointer-events-none">
-                    <svg
-                      className="w-5 h-5 text-gray-400"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M19 9l-7 7-7-7"
-                      />
-                    </svg>
-                  </span>
-                </div>
-              </div>
-
-              {/* Buttons */}
-              <div className="flex justify-end space-x-4">
-                <button
-                  type="button"
-                  onClick={() => setIsModalOpen(false)}
-                  className="py-2 px-4 bg-gray-500 text-white rounded-md shadow-sm hover:bg-gray-600"
-                >
-                  {(t('cancel'))}
-                </button>
-                <button
-                  type="button"
-                  onClick={handleSave}
-                  className="py-2 px-4 bg-[#00BFFF] text-white rounded-md shadow-sm hover:bg-[#00BFFF]"
-                >
-                  {(t('update'))}
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
       <div>
       {detailModalOpen && <BookingModal bookingData={selectedJob} handleClose={()=>SetDetailModalOpen(false)} />}
       </div>

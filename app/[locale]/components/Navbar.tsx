@@ -102,9 +102,12 @@ const Navbar = () => {
 
   //empty the serach bar when route changes
 
-  useEffect(() => {
-    setSearchTerm("");
-  }, [pathname]);
+ 
+    if (searchTerm) {
+      setSearchTerm("");
+    }
+  
+  
 
   return (
     <aside>

@@ -215,6 +215,7 @@ function page() {
   const [fixRate, setFixRate] = useState<null | any[]>(null);
   const [descriptionValue, setDescriptionValue] = useState("");
   let [formData, setFormData] = useState<Props | any>("");
+  const [editData , setEditData]= useState()
 
   useEffect(() => {
     const fetchProviders = async () => {
@@ -224,7 +225,7 @@ function page() {
           where("role", "==", "provider")
         );
         const querySnapshot = await getDocs(q);
-        const providersList = querySnapshot.docs.map((doc) => doc.data()); // assuming 'name' is a field in your Firestore document
+        const providersList = querySnapshot.docs.map((doc) => doc.data()); 
 
         setProviders(providersList);
       } catch (error) {
@@ -279,6 +280,45 @@ function page() {
 const selectedRateValue = selectedRate ? selectedRate : 0;
 
 
+
+
+//get edit data from local storage in the state
+
+  useEffect(() => {
+    const data = localStorage.getItem("editService");
+    if (data) {
+      try {
+        const parsedData = JSON.parse(data);
+        setEditData(parsedData[0]);
+        console.log(editData  , 'checks the edited data state')
+      } catch (error) {
+        console.error("Invalid JSON data:", error);
+      }
+    }
+  }, [setEditData]);
+ 
+
+
+useEffect(()=>{
+    if(editData){
+    //   setSelectedCategory((editData as any).
+    // category
+    // )
+    // setDescriptionValue(  (editData as any).description)
+
+    console.log((editData as any).
+    category)
+    setSelectedCategory((editData as any).
+    category
+    )
+
+
+    }
+   
+
+} , [setEditData])
+
+
   useEffect(() => {
       const data = localStorage.getItem("tax");
   
@@ -293,7 +333,7 @@ const selectedRateValue = selectedRate ? selectedRate : 0;
           .reduce((sum, percentage) => sum + percentage, 0);
         const totalWithTaxRate = Number(
           (
-            selectedRateValue *
+            Number(selectedRateValue) *
             (1 + totalPercentage / 100)
           ).toFixed(1)
         );
@@ -313,7 +353,7 @@ const selectedRateValue = selectedRate ? selectedRate : 0;
 
   
 
-  console.log(providers);
+  
 
   return (
     <>

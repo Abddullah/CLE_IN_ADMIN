@@ -14,7 +14,7 @@ import {
   GeoPoint,
   doc,
   setDoc,
-  getDocs
+  getDocs,
 } from "firebase/firestore";
 import SuccessModal from "@/app/[locale]/components/sucessModal";
 
@@ -31,10 +31,23 @@ function Page() {
   const [errorText, setErrorText] = useState<any>();
   const [reviewData, setReviewData] = useState<any[]>([]);
   const [reviewJob, setReviewJob] = useState<any[]>([]);
-  const [paymentSummary , setPaymentSummary] = useState([]);
+  const [paymentSummary, setPaymentSummary] = useState([]);
+  const [editData , setEditData] = useState();
+
 
   useEffect(() => {
+    const data = localStorage.getItem("editJob");
+    if (data) {
+      try {
+        const parsedData = JSON.parse(data);
+        setEditData(parsedData[0]);
+      } catch (error) {
+        console.error("Invalid JSON data:", error);
+      }
+    }
+  }, []);
 
+  useEffect(() => {
     //get all the pages data from the local storage
 
     const job = localStorage.getItem("addJob");
@@ -49,6 +62,8 @@ function Page() {
     const tax = localStorage.getItem("tax");
     const taxData = tax ? JSON.parse(tax) : null;
 
+   
+  
     //push the get data from local storage to the state array
 
     reviewData.push(jobData, addressData, serviceData);
@@ -58,47 +73,42 @@ function Page() {
     //push the payemet data in the payment summary state
 
     setPaymentSummary(taxData);
-
-    
-    
-
   }, []);
 
-  const timeStart = moment(reviewData[2]?.startTime, "HH:mm").format("hh:mm A")
-  const timeEnd = moment(reviewData[2]?.endTime, "HH:mm").format("hh:mm A")
+  const timeStart = moment(reviewData[2]?.startTime, "HH:mm").format("hh:mm A");
+  const timeEnd = moment(reviewData[2]?.endTime, "HH:mm").format("hh:mm A");
 
   //fetch additional Service
 
-  const [additionalService , setAdditionalService]= useState([]);
+  const [additionalService, setAdditionalService] = useState([]);
 
-  
+  const fetchAdditionalServices = async (titlesToMatch: any) => {
+    // Initialize Firestore
+    const servicesCollection = collection(db, "additionalServices"); // Reference to your collection
 
-  const fetchAdditionalServices = async (titlesToMatch:any) => {
-     // Initialize Firestore
-    const servicesCollection = collection(db, "additionalServices");  // Reference to your collection
-    
     try {
-      const querySnapshot = await getDocs(servicesCollection);  // Fetch the data from the collection
-      const servicesList = querySnapshot.docs.map(doc => doc.data());  // Extract the data from each document
-      
+      const querySnapshot = await getDocs(servicesCollection); // Fetch the data from the collection
+      const servicesList = querySnapshot.docs.map((doc) => doc.data()); // Extract the data from each document
+
       // Filter the services based on matching titles
-      const filteredServices = servicesList.filter(service => titlesToMatch?.includes(service.title));
-    setAdditionalService(filteredServices)
-      
-      console.log(filteredServices);  // Log the filtered services
+      const filteredServices = servicesList.filter((service) =>
+        titlesToMatch?.includes(service.title)
+      );
+      setAdditionalService((filteredServices as any));
+
+      console.log(filteredServices); // Log the filtered services
     } catch (error) {
       console.error("Error fetching additional services: ", error);
     }
   };
 
-  fetchAdditionalServices(reviewData[0]?.Additionalservices)
-  
+  fetchAdditionalServices(reviewData[0]?.Additionalservices);
 
-  
+  //function to covert in english for store in db
 
   const closeModal = () => {
     setIsSucessModalOpen(false);
-    router.push('/jobs')
+    router.push("/jobs");
   };
 
   const clickNext = async () => {
@@ -109,16 +119,53 @@ function Page() {
       reviewData[0]?.location.lng
     );
 
+    let formatCleaningMaterials = "";
+
+    if (reviewData[0]?.needmaterial === t("No")) {
+      formatCleaningMaterials = "No, I have them";
+    }
+    if (reviewData[0]?.needmaterial === t("yes")) {
+      formatCleaningMaterials = "Yes, Please";
+    }
+
+    const additionalServices = additionalService.map((service: any) => ({
+      ...service,
+      isSelect: true,
+    }));
+
+    //calculate discount in total according to the selected frequency
+
+    let totalWithDiscount = 0;
+
+    if(reviewData[0]?.plan.value == "Weekly"){
+     totalWithDiscount =  Number((reviewData[0]?.totalWithTax - (reviewData[0]?.totalWithTax * 0.10)).toFixed(2));
+    
+      
+    }else if(reviewData[0]?.plan.value == "Every 2 Weeks"){
+      totalWithDiscount =  Number((reviewData[0]?.totalWithTax - (reviewData[0]?.totalWithTax * 0.05)).toFixed(2));
+    
+
+    }else{
+      totalWithDiscount =  reviewData[0]?.totalWithTax 
+    }
+
+
+    
+
     try {
-      // Firebase ki `job` collection reference
       const jobCollectionRef = collection(db, "jobs");
     
-      // Nayi document ID generate karna
-      const newDocRef = doc(jobCollectionRef); // Ye random ID generate karega
+      const storedEditData = localStorage.getItem("editJob");
+      const editData = storedEditData ? JSON.parse(storedEditData) : null;
     
-      // Data save karna
-      await setDoc(newDocRef, {
-        jobId: newDocRef.id, // Random ID ko data mein shamil karna
+      const existingDocId = editData?.id || null;
+    
+      const docRef = existingDocId
+        ? doc(jobCollectionRef, existingDocId)
+        : doc(jobCollectionRef);
+    
+      await setDoc(docRef, {
+        jobId: docRef.id,
         repeateService: reviewData[0]?.plan.value,
         roomSize: reviewData[0]?.roomsizes || "",
         roomsQty: reviewData[0]?.numberofrooms || "",
@@ -126,7 +173,7 @@ function Page() {
         howManyHourDoYouNeed: reviewData[0]?.hour,
         howManyProfessionalDoYouNeed: reviewData[0]?.professional,
         subCategory: reviewData[0]?.subcategory,
-        aditionalServices: additionalService || [],
+        aditionalServices: additionalServices || [],
         createdAt: new Date().getTime(),
         addStatus: "pending",
         addType: "job",
@@ -134,34 +181,30 @@ function Page() {
         bookingDate: new Date(reviewData[2]?.ServiceDate).getTime(),
         bookingStart: moment(reviewData[2]?.startTime, "HH:mm").valueOf(),
         bookingEnd: moment(reviewData[2]?.endTime, "HH:mm").valueOf(),
-        images: [
-          { imagURL: "" },
-          { imagURL: "" },
-          { imagURL: "" },
-          { imagURL: "" },
-          { imagURL: "" },
-          { imagURL: "" },
-        ],
+        images: Array(6).fill({ imagURL: "" }),
         totalPrice: reviewData[0]?.total,
-        totalPriceWithTax: reviewData[0]?.totalWithTax,
-        needCleaningMaterials: reviewData[0]?.needmaterial || "",
+        totalPriceWithTax: totalWithDiscount,
+        needCleaningMaterials: formatCleaningMaterials,
         address: reviewData[1]?.locationRequired,
         instructions: reviewData[1]?.instructionRequired,
-        postedBy:localStorage.getItem('JobPostUserId'),
+        postedBy: localStorage.getItem("JobPostUserId"),
       });
     
-      console.log("Document written with ID:", newDocRef.id);
+      console.log(`Document ${existingDocId ? 'updated' : 'created'} with ID:`, docRef.id);
+      localStorage.removeItem("editJob");
       setIsDisable(false);
       setIsSucessModalOpen(true);
       setTimeout(() => {
-        router.push('/jobs');
+        router.push("/jobs");
       }, 3000);
     } catch (error) {
-      console.error("Error adding document:", error);
+      console.error("Error adding/updating document:", error);
       setIsDisable(false);
     }
-    
-  };
+};  
+  //edit data in the firebase
+
+
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#F5F7FA] to-white">
@@ -207,12 +250,10 @@ function Page() {
                     {reviewData[0]?.plan.value}
                   </p>
                 </div>
-                
               </div>
 
               {/* Additional Details */}
               <div className="space-y-8">
-                
                 <div className="transform transition-all duration-300 hover:translate-x-2">
                   <h2 className="text-xl font-semibold text-gray-900 mb-3">
                     {t("rate")}
@@ -249,44 +290,46 @@ function Page() {
 
           {/* Payment Summary Card */}
           <div className="bg-white border-2 rounded-2xl shadow-xl p-8 max-w-md mb-10 transition-all duration-300 hover:shadow-2xl">
-  <h2 className="text-2xl font-bold text-gray-900 mb-8">
-    {t("Summary")}
-  </h2>
-  <div className="space-y-6">
-    <div className="flex justify-between items-center py-4 border-b border-gray-200">
-      <span className="text-lg text-gray-700">
-        {t("serviceAmount")}
-      </span>
-      <span className="text-xl text-gray-900 font-semibold">
-        €{reviewData[0]?.total}
-      </span>
-    </div>
-    
-    {/* Map over reviewData to display name and percentage */}
-    {paymentSummary.map((item:any, index:any) => (
-      item.name && item.percentage && (
-        <div key={index} className="flex justify-between items-center py-4 border-b border-gray-200">
-          <span className="text-lg text-gray-700">
-            {item.name}
-          </span>
-          <span className="text-xl text-gray-900 font-semibold">
-            {item.percentage}%
-          </span>
-        </div>
-      )
-    ))}
+            <h2 className="text-2xl font-bold text-gray-900 mb-8">
+              {t("Summary")}
+            </h2>
+            <div className="space-y-6">
+              <div className="flex justify-between items-center py-4 border-b border-gray-200">
+                <span className="text-lg text-gray-700">
+                  {t("serviceAmount")}
+                </span>
+                <span className="text-xl text-gray-900 font-semibold">
+                  €{reviewData[0]?.total}
+                </span>
+              </div>
 
-    <div className="flex justify-between items-center pt-6">
-      <span className="text-xl font-bold text-gray-900">
-        {t("total")}
-      </span>
-      <span className="text-2xl font-bold text-[#00BFFF]">
-        €{reviewData[0]?.totalWithTax}
-      </span>
-    </div>
-  </div>
-</div>
+              {/* Map over reviewData to display name and percentage */}
+              {paymentSummary.map(
+                (item: any, index: any) =>
+                  item.name &&
+                  item.percentage && (
+                    <div
+                      key={index}
+                      className="flex justify-between items-center py-4 border-b border-gray-200"
+                    >
+                      <span className="text-lg text-gray-700">{item.name}</span>
+                      <span className="text-xl text-gray-900 font-semibold">
+                        {item.percentage}%
+                      </span>
+                    </div>
+                  )
+              )}
 
+              <div className="flex justify-between items-center pt-6">
+                <span className="text-xl font-bold text-gray-900">
+                  {t("total")}
+                </span>
+                <span className="text-2xl font-bold text-[#00BFFF]">
+                  €{reviewData[0]?.totalWithTax}
+                </span>
+              </div>
+            </div>
+          </div>
 
           {/* Book Button */}
           <div className="mt-8 flex justify-center items-center">
@@ -302,7 +345,7 @@ function Page() {
             {/* </Link> */}
           </div>
           <SuccessModal
-            text={`${(t('job_created_sucess'))}`}
+            text={editData ? t("job_updated_sucess") : t("job_created_sucess")}
             isOpen={isSucessModalOpen}
             onClose={closeModal}
           />

@@ -147,7 +147,7 @@ function Page() {
         throw error;
     }
 };
-
+ 
 
 const handleEditClick = async (job:any) => {
   console.log("Editing job ID:", job.jobId);
@@ -167,7 +167,7 @@ const handleEditClick = async (job:any) => {
 };
 
 
-console.log(editableJob)
+console.log(editableJob) 
 
 
 

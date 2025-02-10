@@ -322,6 +322,7 @@
   "moderate":"Moderato",
   "Pending":"Sospeso",
   "job_created_sucess": "Il tuo lavoro è stato creato con successo",
+  "job_updated_sucess": "Il tuo lavoro è stato aggiornato con successo",
   
   "SelectSubcategory": "Seleziona sottocategoria",
   "Categories": "Categorie",
@@ -437,6 +438,12 @@
     "name_required": "Il nome è obbligatorio",
     "enter_name": "Inserisci Nome",
     "add_more":"Aggiungi altro",
+    "edit_payment": "Modifica Pagamento",
+"add_Tax_Field": "Aggiungi Campo Tassa",
+"save_changes": "Salva Modifiche",
+"Tax Name": "Nome Tassa",
+"Tax Percentage": "Percentuale Tassa",
+
     "save": "SALVA",
      "activate": "Attiva",
   "deactivate": "Disattiva",

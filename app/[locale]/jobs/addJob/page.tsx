@@ -103,7 +103,7 @@ function page() {
   const onSubmit: SubmitHandler<FormInputs> = (data: any) => {
     dispatch(setJobSlice(data)); // Dispatch form data to Redux store
     localStorage.setItem("addJob", JSON.stringify(data));
-    console.log(data);
+    // console.log(data);
     router.push("/jobs/addJob/location");
   };
 
@@ -117,7 +117,10 @@ function page() {
   const [hourPrice, setHourPrice] = useState<number>(0);
 
   const [selectedHour, setSelectedHour] = useState<number>(1);
+  // const [previousHourPrice, setPreviouHourPrice] = useState(0);
+
   const [selectedProfessional, setSelectedProfessional] = useState<number>(1);
+  // const [previousProfessionalPrice, setPreviousProfessionalPrice] = useState(0);
 
   const [categories, setCategories] = useState<any[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string>("");
@@ -133,7 +136,8 @@ function page() {
   const [selectedNoOfRooms, setSelectedNoOfRooms] = useState("");
   // const [previousNoOfRoomsPrice, setPreviousNoOfRoomsPrice] = useState(0);
 
-  const [matererialSelectedOption, setMaterialSelectedOption] = useState<string>(t("No"));
+  const [matererialSelectedOption, setMaterialSelectedOption] =
+    useState<string>(t("No"));
   // const [previousNeedMaterialPrice, setPreviousNeedMaterialPrice] = useState(0);
 
   const [additionalServices, setAdditionalServices] = useState<string[]>([]);
@@ -151,46 +155,58 @@ function page() {
 
   //get edit data from local storage in the state
 
-  // useEffect(() => {
-  //   const data = localStorage.getItem("editJob");
-  //   if (data) {
-  //     try {
-  //       const parsedData = JSON.parse(data);
-  //       setEditData(parsedData[0]);
-  //     } catch (error) {
-  //       console.error("Invalid JSON data:", error);
-  //     }
-  //   }
-  // }, []);
+  useEffect(() => {
+    const data = localStorage.getItem("editJob");
+    if (data) {
+      try {
+        const parsedData = JSON.parse(data);
+        setEditData(parsedData[0]);
+      } catch (error) {
+        console.error("Invalid JSON data:", error);
+      }
+    }
+  }, []);
 
   //for edit the job
 
-  // useEffect(() => {
-  //   if (!editData) return;
+  useEffect(() => {
+    if (!editData) return;
+    const user = users.find(({ id }) => id === (editData as any).postedBy);
+    const userName = user?.userId;
+    const userNameHourlyRate = user?.hourlyRate;
 
-  //   const user = users.find(({ id }) => id === (editData as any).postedBy);
-  //   const userName = user?.fullName;
+    // Update the state only if the name has changed to avoid redundant renders
+    if (userName && userName !== selectedName) {
+      setSelectedName(userName);
+      setHourPrice(Number(userNameHourlyRate));
+      setTotalPrice(
+        selectedHour * Number(userNameHourlyRate) * selectedProfessional
+      );
+    }
 
-  //   // Update the state only if the name has changed to avoid redundant renders
-  //   if (userName && userName !== selectedName) {
-  //     setSelectedName(userName);
-  //     handleProviderChange(userName);
-  //   }
+    // Type assertion to treat editData as an object
+    handleHourChange(Number((editData as any).howManyHourDoYouNeed));
+    handleSelectProfessional(
+      Number((editData as any).howManyProfessionalDoYouNeed)
+    );
 
-  //   // Type assertion to treat editData as an object
-  //   handleHourChange(Number((editData as any).howManyHourDoYouNeed));
-  //   handleSelectProfessional(
-  //     Number((editData as any).howManyProfessionalDoYouNeed)
-  //   );
-  //   setSelectedCategory((editData as any).category);
-  //   setSelectedSubCategory((editData as any).subCategory);
-  //   setSelectedRoomAreaSize((editData as any).roomSize);
-  //   setSelectedNoOfRooms((editData as any).roomsQty);
-  //   const additionalService = (editData as any).aditionalServices.map(
-  //     (item: any) => item.title
-  //   );
-  //   setSelectedServices(additionalService);
-  // }, [editData, users, selectedName, setSelectedName]);
+    setSelectedCategory((editData as any).category);
+    setSelectedSubCategory((editData as any).subCategory);
+
+    handleRoomSizeChange((editData as any).roomSize);
+    handleNoOfRoomsChange((editData as any).roomsQty);
+
+    const additionalService = (editData as any).aditionalServices.map(
+      (item: any) => item.title
+    );
+    setSelectedServices(additionalService);
+
+    if ((editData as any).needCleaningMaterials === "Yes,Please") {
+      setMaterialSelectedOption(t("yes"));
+      return;
+    }
+    setMaterialSelectedOption(t("No"));
+  }, [editData, users, selectedName, setSelectedName]);
 
   //get tax data from local storage and add the tax amount to the tax state
 
@@ -242,9 +258,6 @@ function page() {
         ...doc.data(),
       }));
       setUsers(fetchedUsers);
-
-
-
     } catch (error) {
       console.error("Error fetching users:", error);
     }
@@ -325,8 +338,11 @@ function page() {
     );
     if (selectedUser) {
       localStorage.setItem("JobPostUserId", selectedProvider);
+      console.log(selectedUser, "selectedUser");
       setHourPrice(Number(selectedUser.hourlyRate));
-      setTotalPrice(selectedHour * Number(selectedUser.hourlyRate) * selectedProfessional);
+      setTotalPrice(
+        selectedHour * Number(selectedUser.hourlyRate) * selectedProfessional
+      );
     }
   };
 
@@ -363,7 +379,7 @@ function page() {
       const roomSizePrice = Number(findRoomSize.rate);
       totalAmount(roomSizePrice, "roomSize");
     } else {
-      console.warn(`No matching room size found for value: "${value}"`);
+      console.warn("No matching room size found for value");
     }
   };
 
@@ -376,7 +392,7 @@ function page() {
       const noOfRoomsPrice = Number(findNoOfRooms.price);
       totalAmount(noOfRoomsPrice, "NoOfRooms");
     } else {
-      console.warn(`No matching room found for value: "${value}"`);
+      console.warn("No matching room found for value");
     }
   };
 
@@ -398,11 +414,10 @@ function page() {
   //handle the check box of additional services
 
   const handleCheckboxChange = (service: string): void => {
-    console.log(service, 'service');
-
     setSelectedServices((prevSelectedServices) => {
-      const updatedServices = prevSelectedServices.includes(service) ? prevSelectedServices.filter((item) => item !== service) : [...prevSelectedServices, service];
-      console.log(updatedServices, 'updatedServices');
+      const updatedServices = prevSelectedServices.includes(service)
+        ? prevSelectedServices.filter((item) => item !== service)
+        : [...prevSelectedServices, service];
       setValue("Additionalservices", updatedServices);
       return updatedServices;
     });
@@ -419,43 +434,113 @@ function page() {
   const totalAmount = (value: any, type: any) => {
     let total = 0;
 
-
     if (type === "hour") {
-      total = value * hourPrice;
+      if (selectedRoomAreaSize != "" || selectedNoOfRooms != "") {
+        const findRoomSize = roomSizes.find(
+          (data) => data.title === selectedRoomAreaSize
+        );
+        const findNoOfRooms = noOfRooms.find(
+          (data) => data.title === selectedNoOfRooms
+        );
+        if (findRoomSize && findNoOfRooms) {
+          let needCleaningMaterial =
+            matererialSelectedOption === t("yes") ? 6 : 0;
+          let totalPriceAdditionalService = selectedServices.reduce(
+            (total, service) => {
+              return total + (additionalServicePrice[service] || 0);
+            },
+            0
+          );
+          total =
+            value * hourPrice * selectedProfessional +
+            Number(findNoOfRooms?.price) +
+            Number(findRoomSize?.rate) +
+            needCleaningMaterial +
+            totalPriceAdditionalService;
+        }
+      } else {
+        total = value * hourPrice * selectedProfessional;
+      }
     }
 
     if (type === "professional") {
-      total = value * selectedHour * hourPrice;
+      if (selectedRoomAreaSize != "" || selectedNoOfRooms != "") {
+        const findRoomSize = roomSizes.find(
+          (data) => data.title === selectedRoomAreaSize
+        );
+        const findNoOfRooms = noOfRooms.find(
+          (data) => data.title === selectedNoOfRooms
+        );
+        let needCleaningMaterial =
+          matererialSelectedOption === t("yes") ? 6 : 0;
+        let totalPriceAdditionalService = selectedServices.reduce(
+          (total, service) => {
+            return total + (additionalServicePrice[service] || 0);
+          },
+          0
+        );
+        total =
+          value * selectedHour * hourPrice +
+          Number(findNoOfRooms.price) +
+          Number(findRoomSize.rate) +
+          needCleaningMaterial +
+          totalPriceAdditionalService;
+      } else {
+        total = value * selectedHour * hourPrice;
+      }
     }
 
     if (type === "roomSize") {
-      if (selectedNoOfRooms != '') {
-        const findNoOfRooms = noOfRooms.find((data) => data.title === selectedNoOfRooms);
-        let needCleaningMaterial = matererialSelectedOption === t('yes') ? 6 : 0;
-        let totalPriceAdditionalService = selectedServices.reduce((total, service) => { return total + (additionalServicePrice[service] || 0); }, 0);
-        total = total + value + hourPrice * selectedProfessional * selectedHour + Number(findNoOfRooms.price) + needCleaningMaterial + totalPriceAdditionalService;
-      }
-      else {
+      if (selectedNoOfRooms != "") {
+        const findNoOfRooms = noOfRooms.find(
+          (data) => data.title === selectedNoOfRooms
+        );
+        let needCleaningMaterial =
+          matererialSelectedOption === t("yes") ? 6 : 0;
+        let totalPriceAdditionalService = selectedServices.reduce(
+          (total, service) => {
+            return total + (additionalServicePrice[service] || 0);
+          },
+          0
+        );
+        total =
+          total +
+          value +
+          hourPrice * selectedProfessional * selectedHour +
+          Number(findNoOfRooms.price) +
+          needCleaningMaterial +
+          totalPriceAdditionalService;
+      } else {
         total = total + value + hourPrice * selectedProfessional * selectedHour;
       }
     }
 
     if (type === "NoOfRooms") {
-      if (selectedRoomAreaSize != '') {
-        const findRoomSize = roomSizes.find((data) => data.title === selectedRoomAreaSize);
-        let needCleaningMaterial = matererialSelectedOption === t('yes') ? 6 : 0;
-        let totalPriceAdditionalService = selectedServices.reduce((total, service) => { return total + (additionalServicePrice[service] || 0); }, 0);
-        total = total + value + hourPrice * selectedProfessional * selectedHour + Number(findRoomSize.rate) + needCleaningMaterial + totalPriceAdditionalService;
-      }
-      else {
+      if (selectedRoomAreaSize != "") {
+        const findRoomSize = roomSizes.find(
+          (data) => data.title === selectedRoomAreaSize
+        );
+        let needCleaningMaterial =
+          matererialSelectedOption === t("yes") ? 6 : 0;
+        let totalPriceAdditionalService = selectedServices.reduce(
+          (total, service) => {
+            return total + (additionalServicePrice[service] || 0);
+          },
+          0
+        );
+        total =
+          total +
+          value +
+          hourPrice * selectedProfessional * selectedHour +
+          Number(findRoomSize.rate) +
+          needCleaningMaterial +
+          totalPriceAdditionalService;
+      } else {
         total = total + value + hourPrice * selectedProfessional * selectedHour;
       }
     }
-
-    console.log(total, "total");
     setTotalPrice(total);
   };
-
 
   //handle the image upload
 
@@ -501,9 +586,9 @@ function page() {
   return (
     <>
       <div className="bg-[#F5F7FA] min-h-screen w-full flex items-start justify-start relative">
-        {/* <div className="flex items-center justify-center h-screen">
+        <div className="flex items-center justify-center h-screen">
           <FrequencyModal />
-        </div> */}
+        </div>
 
         <div className="w-full mx-auto p-4 sm:p-6 lg:px-8">
           <form
@@ -516,10 +601,10 @@ function page() {
               <Controller
                 name="provider"
                 control={control}
-                rules={{ required: t("ProviderRequired") }}
+                // rules={{ required: t("ProviderRequired") }}
                 render={({ field: { value, onChange } }) => (
                   <Select
-                    value={value || selectedName}
+                    value={selectedName}
                     onValueChange={(newValue) => {
                       setSelectedName(newValue);
                       onChange(newValue);
@@ -546,11 +631,11 @@ function page() {
                 )}
               />
 
-              {errors.provider && (
+              {/* {errors.provider && (
                 <p className="text-red-500 text-sm mt-1">
                   {errors.provider.message}
                 </p>
-              )}
+              )} */}
             </div>
             {selectedName && (
               <>
@@ -564,10 +649,11 @@ function page() {
                         key={hour}
                         type="button"
                         onClick={() => handleHourChange(hour)}
-                        className={`w-8 h-8 text-lg font-bold rounded-full border transition duration-300 ${selectedHour === hour
-                          ? "bg-[#4BB1D3] text-white"
-                          : "text-[#4BB1D3] border-[#4BB1D3] hover:bg-[#4BB1D3] hover:text-white"
-                          }`}
+                        className={`w-8 h-8 text-lg font-bold rounded-full border transition duration-300 ${
+                          selectedHour === hour
+                            ? "bg-[#4BB1D3] text-white"
+                            : "text-[#4BB1D3] border-[#4BB1D3] hover:bg-[#4BB1D3] hover:text-white"
+                        }`}
                       >
                         {hour}
                       </button>
@@ -595,10 +681,11 @@ function page() {
                         <button
                           type="button"
                           onClick={() => handleSelectProfessional(professional)}
-                          className={`w-8 h-8 text-lg font-bold rounded-full border transition duration-300 ${selectedProfessional === professional
-                            ? "bg-[#4BB1D3] text-white"
-                            : "text-[#4BB1D3] border-[#4BB1D3] hover:bg-[#4BB1D3] hover:text-white"
-                            }`}
+                          className={`w-8 h-8 text-lg font-bold rounded-full border transition duration-300 ${
+                            selectedProfessional === professional
+                              ? "bg-[#4BB1D3] text-white"
+                              : "text-[#4BB1D3] border-[#4BB1D3] hover:bg-[#4BB1D3] hover:text-white"
+                          }`}
                         >
                           {professional}
                         </button>
@@ -841,10 +928,11 @@ function page() {
                                     onChange(option);
                                     handleMaterialSelectedOption(option);
                                   }}
-                                  className={`px-4 py-2 rounded-full text-md font-medium transition duration-300 ${matererialSelectedOption === option
-                                    ? "bg-[#00A0E0] text-white"
-                                    : "bg-[#d5dce4] text-black "
-                                    }`}
+                                  className={`px-4 py-2 rounded-full text-md font-medium transition duration-300 ${
+                                    matererialSelectedOption === option
+                                      ? "bg-[#00A0E0] text-white"
+                                      : "bg-[#d5dce4] text-black "
+                                  }`}
                                 >
                                   {option}
                                 </button>

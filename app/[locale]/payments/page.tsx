@@ -238,7 +238,7 @@ const Payments = () => {
                             Name: {taxItem.name}
                           </h5>
                           <p className="text-lg font-medium text-gray-700 mt-1">
-                            Percentage: {taxItem.percentage}%
+                          {t("percentage")}: {taxItem.percentage}%
                           </p>
                         </div>
                       ))}
@@ -299,7 +299,7 @@ const Payments = () => {
           <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
             <div className="bg-white rounded-lg shadow-lg max-w-lg w-full p-6 space-y-4">
               <h3 className="text-2xl font-semibold text-gray-800">
-                Edit Payment
+                {(t('edit_payment'))}
               </h3>
 
               {/* Edit Tax Fields */}
@@ -309,7 +309,7 @@ const Payments = () => {
                     <div className="flex items-center justify-between space-x-4">
                       <div className="flex-1">
                         <label className="block text-sm font-medium text-gray-600">
-                          Tax Name:
+                          {(t('Tax Name'))}:
                         </label>
                         <input
                           type="text"
@@ -322,7 +322,7 @@ const Payments = () => {
                       </div>
                       <div className="flex-1">
                         <label className="block text-sm font-medium text-gray-600">
-                          Tax Percentage:
+                          {(t('Tax Percentage'))}:
                         </label>
                         <input
                           type="number"
@@ -353,7 +353,7 @@ const Payments = () => {
                 onClick={handleAddTaxField}
                 className="w-full mt-4 py-2 bg-[#00BFFF] text-white rounded-lg hover:bg-[#00BFFF] focus:outline-none"
               >
-                Add Tax Field
+                {(t('add_Tax_Field'))}
               </button>
 
               {/* Save Button */}
@@ -362,13 +362,13 @@ const Payments = () => {
                   onClick={() => setEditingService(null)}
                   className="w-full py-2 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-100"
                 >
-                  Cancel
+                  {(t('cancel'))}
                 </button>
                 <button
                   onClick={handleSaveEdit}
                   className="w-full py-2 bg-[#00BFFF] text-white rounded-lg hover:bg-[#00BFFF] focus:outline-none"
                 >
-                  Save Changes
+                  {(t('save_changes'))}
                 </button>
               </div>
             </div>
