@@ -3,6 +3,9 @@
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import {useTranslations} from 'next-intl';
+import { signOut } from "firebase/auth";
+import { auth } from "../config/Firebase/FirebaseConfig";
+
 
 function page() {
   const t = useTranslations('logout');
@@ -10,10 +13,14 @@ function page() {
   
   const [confirmLogout, setConfirmLogout] = useState(false);
 
-  const handleLogout = () => {
-    router.push("/")
-    
-  }
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      router.push("/");
+    } catch (error) {
+      console.error("Error logging out: ", error);
+    }
+  };
 
 
 
