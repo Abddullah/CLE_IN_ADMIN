@@ -167,7 +167,7 @@ const handleEditClick = async (job:any) => {
 };
 
 
-console.log(editableJob) 
+console.log(editableJob)    
 
 
 
