@@ -6,7 +6,7 @@ import Dropdown from "./SearchResultsModal";
 import ModalMap from "./ModalMap";
 import { useSelector } from "react-redux";
 
-mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAP_ACCESS_TOKEN as string;
+mapboxgl.accessToken = "pk.eyJ1Ijoicm9sbiIsImEiOiJjbHUydnB1Y3EwYnFzMmlxZWc2NWFscDJvIn0.9TwHwnZcT6qB2OO6Q4OnFQ";
 
 interface Location {
   lng: number;
