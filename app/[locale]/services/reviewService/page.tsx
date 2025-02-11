@@ -10,6 +10,8 @@ import {
   setDoc,
   GeoPoint,
   serverTimestamp,
+  updateDoc,
+  getDoc,
 } from "firebase/firestore";
 import { db } from "../../config/Firebase/FirebaseConfig";
 import moment from "moment";
@@ -21,24 +23,31 @@ function page() {
 
   const [reviewServiceData, setReviewServiceData] = useState<any>();
   const [rateWithTax, setRateWithTax] = useState<number>(0);
-  const [paymentSummary , setPaymentSummary]= useState([])
+  const [paymentSummary, setPaymentSummary] = useState([]);
   const [isDisbale, setIsDisable] = useState<boolean>(false);
   const [isSucessModalOpen, setIsSucessModalOpen] = useState(false);
+  const [editData, setEditData] = useState();
+
+  useEffect(() => {
+    const data = localStorage.getItem("editService");
+    if (data) {
+      try {
+        const parsedData = JSON.parse(data);
+        setEditData(parsedData[0]);
+      } catch (error) {
+        console.error("Invalid JSON data:", error);
+      }
+    }
+  }, []);
+  console.log(editData, "edit wala data state my set hogya");
 
   useEffect(() => {
     const data = localStorage.getItem("tax");
 
     const tax = data ? JSON.parse(data) : 0;
 
-   setPaymentSummary(tax)
-
-     console.log(paymentSummary);
-     
-
-   
+    setPaymentSummary(tax);
   }, [Number(reviewServiceData?.fixRate)]);
-
-
 
   useEffect(() => {
     const data = localStorage.getItem("addService");
@@ -48,31 +57,27 @@ function page() {
     setReviewServiceData(reviewService);
   }, []);
 
-  const closeModal = ()=>{
+  const closeModal = () => {
     setIsSucessModalOpen(false);
-    router.push("/services")
-  }
-
-
-
+    router.push("/services");
+  };
 
   let timeSlot = reviewServiceData?.days
-  .filter((obj: any) => obj !== null && obj !== undefined) // Null aur undefined ko filter karna
-  .map((obj: any) => {
-    // 'isChecked' ko delete karna
-    const { isChecked, openingTime, closingTime, ...rest } = obj;
+    .filter((obj: any) => obj !== null && obj !== undefined) // Null aur undefined ko filter karna
+    .map((obj: any) => {
+      // 'isChecked' ko delete karna
+      const { isChecked, openingTime, closingTime, ...rest } = obj;
 
-    // 'openingTime' aur 'closingTime' ko milliseconds mein convert karna
-    const openingTimeMs = moment(openingTime, 'hh:mm A').valueOf();
-    const closingTimeMs = moment(closingTime, 'hh:mm A').valueOf();
+      // 'openingTime' aur 'closingTime' ko milliseconds mein convert karna
+      const openingTimeMs = moment(openingTime, "hh:mm A").valueOf();
+      const closingTimeMs = moment(closingTime, "hh:mm A").valueOf();
 
-    return {
-      ...rest, // Baaki properties ko preserve karna
-      openingTime: openingTimeMs, // Opening time ko milliseconds mein convert karna
-      closingTime: closingTimeMs // Closing time ko milliseconds mein convert karna
-    };
-  });
-
+      return {
+        ...rest, // Baaki properties ko preserve karna
+        openingTime: openingTimeMs, // Opening time ko milliseconds mein convert karna
+        closingTime: closingTimeMs, // Closing time ko milliseconds mein convert karna
+      };
+    });
 
   const clickNext = async () => {
     setIsDisable(true);
@@ -83,50 +88,74 @@ function page() {
     );
 
     try {
-      // Firebase ki `job` collection reference
-      const jobCollectionRef = collection(db, "service");
+      const serviceCollectionRef = collection(db, "service");
 
-      // Nayi document ID generate karna
-      const newDocRef = doc(jobCollectionRef); // Ye random ID generate karega
+      if (editData) {
+        console.log("edit wala data hy !");
+        const existingDocRef = doc(
+          serviceCollectionRef,
+          (editData as any).serviceId
+        );
 
-      const timeStamp = serverTimestamp()
+        await setDoc(existingDocRef, {
+          serviceId: (editData as any).serviceId,
+          category: reviewServiceData?.category || "Default Category",
+          subCategory: reviewServiceData?.subcategory || "Default Subcategory",
+          description: reviewServiceData?.description || "",
+          createdAt: new Date().getTime(),
+          addStatus: (editData as any).addStatus,
+          addType: "service",
+          geoPoint: geoPoint || null,
+          fixRates: reviewServiceData?.fixRate || 0,
+          totalPriceWithTax: reviewServiceData?.totalWithTax || 0,
+          timeSlots: Array.isArray(timeSlot) ? timeSlot : [],
+          images:
+            Array.isArray(reviewServiceData?.images) &&
+            reviewServiceData.images.length
+              ? reviewServiceData.images
+              : Array(6).fill({ imagURL: "" }),
+          postedBy: localStorage.getItem("servicePostId") || "Anonymous",
+        });
 
-      console.log(timeStamp);
-      
+        console.log(`Document updated with ID:`, existingDocRef.id);
+      } else {
+        // Create a new document if editData is missing or invalid
+        const newDocRef = doc(serviceCollectionRef);
 
-      // Data save karna
-      await setDoc(newDocRef, {
-        serviceId: newDocRef.id, 
-        category: reviewServiceData?.category,
-        subCategory: reviewServiceData?.subcategory,
-        createdAt: new Date().getTime(),
-        addStatus: "pending",
-        addType: "service",
-        description: reviewServiceData?.description,
-        geoPoint: geoPoint,
-        fixRates: reviewServiceData?.fixRate,
-        postedBy: localStorage.getItem("servicePostId"),
-        totalPriceWithTax: reviewServiceData?.totalWithTax,
-        timeSlots:timeSlot,
-        images: [
-          { imagURL: "" },
-          { imagURL: "" },
-          { imagURL: "" },
-          { imagURL: "" },
-          { imagURL: "" },
-          { imagURL: "" },
-        ],
-      });
+        await setDoc(newDocRef, {
+          serviceId: newDocRef.id,
+          category: reviewServiceData?.category || "Default Category",
+          subCategory: reviewServiceData?.subcategory || "Default Subcategory",
+          description: reviewServiceData?.description || "",
+          createdAt: new Date().getTime(),
+          addStatus: "pending",
+          addType: "service",
+          geoPoint: geoPoint || null,
+          fixRates: reviewServiceData?.fixRate || 0,
+          totalPriceWithTax: reviewServiceData?.totalWithTax || 0,
+          timeSlots: Array.isArray(timeSlot) ? timeSlot : [],
+          images:
+            Array.isArray(reviewServiceData?.images) &&
+            reviewServiceData.images.length
+              ? reviewServiceData.images
+              : Array(6).fill({ imagURL: "" }),
+          postedBy: localStorage.getItem("servicePostId") || "Anonymous",
+        });
+
+        console.log(`Document created with ID:`, newDocRef.id);
+      }
+
+      // Cleanup and success handling
+      localStorage.removeItem("editService");
       setIsDisable(false);
       setIsSucessModalOpen(true);
 
-      
       setTimeout(() => {
         router.push("/services");
       }, 3000);
     } catch (error) {
-      console.error("Error adding document:", error);
-      setIsDisable(false)
+      console.error("Error adding/updating document:", error);
+      setIsDisable(false);
     }
   };
 
@@ -171,51 +200,50 @@ function page() {
                       {reviewServiceData?.subcategory}{" "}
                     </p>
                   </div>
-
-                 
                 </div>
               </div>
             </div>
 
             {/* Payment Summary Card */}
             <div className="bg-white border-2 rounded-2xl shadow-xl p-8 max-w-md mb-10 transition-all duration-300 hover:shadow-2xl">
-  <h2 className="text-2xl font-bold text-gray-900 mb-8">
-    {t("Summary")}
-  </h2>
-  <div className="space-y-6">
-    <div className="flex justify-between items-center py-4 border-b border-gray-200">
-      <span className="text-lg text-gray-700">
-      Service Amount
-      </span>
-      <span className="text-xl text-gray-900 font-semibold">
-        € {reviewServiceData?.fixRate}
-      </span>
-    </div>
-    
-    {/* Map over reviewData to display name and percentage */}
-    {paymentSummary.map((item:any, index:any) => (
-      item.name && item.percentage && (
-        <div key={index} className="flex justify-between items-center py-4 border-b border-gray-200">
-          <span className="text-lg text-gray-700">
-            {item.name}
-          </span>
-          <span className="text-xl text-gray-900 font-semibold">
-            {item.percentage}%
-          </span>
-        </div>
-      )
-    ))}
+              <h2 className="text-2xl font-bold text-gray-900 mb-8">
+                {t("Summary")}
+              </h2>
+              <div className="space-y-6">
+                <div className="flex justify-between items-center py-4 border-b border-gray-200">
+                  <span className="text-lg text-gray-700">Service Amount</span>
+                  <span className="text-xl text-gray-900 font-semibold">
+                    € {reviewServiceData?.fixRate}
+                  </span>
+                </div>
 
-    <div className="flex justify-between items-center pt-6">
-      <span className="text-xl font-bold text-gray-900">
-      Total
-      </span>
-      <span className="text-2xl font-bold text-[#00BFFF]">
-        € {reviewServiceData?.totalWithTax}
-      </span>
-    </div>
-  </div>
-</div>
+                {/* Map over reviewData to display name and percentage */}
+                {paymentSummary.map(
+                  (item: any, index: any) =>
+                    item.name &&
+                    item.percentage && (
+                      <div
+                        key={index}
+                        className="flex justify-between items-center py-4 border-b border-gray-200"
+                      >
+                        <span className="text-lg text-gray-700">
+                          {item.name}
+                        </span>
+                        <span className="text-xl text-gray-900 font-semibold">
+                          {item.percentage}%
+                        </span>
+                      </div>
+                    )
+                )}
+
+                <div className="flex justify-between items-center pt-6">
+                  <span className="text-xl font-bold text-gray-900">Total</span>
+                  <span className="text-2xl font-bold text-[#00BFFF]">
+                    € {reviewServiceData?.totalWithTax}
+                  </span>
+                </div>
+              </div>
+            </div>
             {/* Book Button */}
             <div className="mt-8 flex justify-center items-center">
               <Button
@@ -229,11 +257,14 @@ function page() {
             </div>
 
             <SuccessModal
-            text={`${(t('service_created_sucess'))}`}
-            isOpen={isSucessModalOpen}
-            onClose={closeModal}
-          />
-            
+              text={
+                editData
+                  ? t("service_updated_sucess")
+                  : t("service_created_sucess")
+              }
+              isOpen={isSucessModalOpen}
+              onClose={closeModal}
+            />
           </div>
         </div>
       </div>

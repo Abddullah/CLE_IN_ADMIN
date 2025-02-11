@@ -170,7 +170,7 @@ function Page() {
           subCategory: reviewData[0]?.subcategory,
           aditionalServices: additionalServices || [],
           createdAt: new Date().getTime(),
-          addStatus: "pending",
+          addStatus: (editData as any).addStatus,
           addType: "job",
           geoPoint: geoPoint,
           bookingDate: new Date(reviewData[2]?.ServiceDate).getTime(),
@@ -360,7 +360,6 @@ function Page() {
 
           {/* Book Button */}
           <div className="mt-8 flex justify-center items-center">
-            {/* <Link href={"/jobs/"}> */}
             <Button
               type="submit"
               onClick={clickNext}
@@ -369,7 +368,6 @@ function Page() {
             >
               <span>{t("next")}</span>
             </Button>
-            {/* </Link> */}
           </div>
           <SuccessModal
             text={editData ? t("job_updated_sucess") : t("job_created_sucess")}

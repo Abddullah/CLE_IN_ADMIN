@@ -390,6 +390,7 @@
   "delete": "Elimina",
   "no_additional_service": "Nessun servizio aggiuntivo disponibile",
   "service_added_successfully": "Servizio aggiuntivo aggiunto con successo",
+  "service_updated_success": "Il tuo servizio è stato aggiornato con successo",
   "additional_service_added_message": "Il tuo servizio aggiuntivo è stato aggiunto con successo al sistema.",
   "close_button": "Chiudi",
   "save_changes": "Salva modifiche",

@@ -26,9 +26,21 @@ import { db } from "../../config/Firebase/FirebaseConfig";
 
 function page() {
   const t = useTranslations("Services");
-  const location = useSelector((state: any) => state.location); 
+  const location = useSelector((state: any) => state.location);
   const router = useRouter();
   const [images, setImages] = useState<(string | null)[]>(Array(6).fill(null));
+  const [selectedProvider, setSelectedProvider] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState<string>("");
+  const [subCategories, setSubCategories] = useState<string[]>([]);
+  const [selectedSubCategory, setSelectedSubCategory] = useState<string>("");
+  const [selectedFixRate, setSelectedFixRate] = useState("");
+  const [providers, setProviders] = useState<any[]>([]);
+  const [categories, setCategories] = useState<any[]>([]);
+  const [subCategory, setSubCategory] = useState("");
+  const [fixRate, setFixRate] = useState<null | any[]>(null);
+  const [descriptionValue, setDescriptionValue] = useState("");
+  let [formData, setFormData] = useState<Props | any>("");
+  const [editData, setEditData] = useState();
 
   const handleImageUpload = (index: number) => {
     const input = document.createElement("input");
@@ -49,42 +61,21 @@ function page() {
     input.click();
   };
 
+  const handleProviderChange = (selectedProvider: string) => {
+    const selectedUser = providers.find(
+      (user: any) => user.userId === selectedProvider
+    );
 
-  const [selectedUserId, setSelectedUserId] = useState(null); 
-
-
-
-
-  // const handleProviderChange = (selectedProvider: string) => {
-  //   // Find the selected user by userId (which is the value of the SelectItem)
-  //   const selectedUser = providers.find(
-  //     (user: any) => user.userId === selectedProvider
-  //   );
-
-  //   if (selectedUser) {
-  //     localStorage.setItem("servicePostId", selectedProvider);
-  //   }
-  //   console.log(selectedProvider);
-    
-  // };
-
-  const handleProviderChange = (value:any) => {
-    const selectedProvider = providers.find((user:any) => user.fullName === value);
-    if (selectedProvider) {
-      setSelectedUserId(selectedProvider.userId); // Set the userId in state
-      
+    if (selectedUser) {
+      localStorage.setItem("servicePostId", selectedProvider);
     }
-    localStorage.setItem("servicePostId", selectedUserId);
   };
-  
-  console.log(selectedUserId);
+
   const handleRemoveImage = (index: number) => {
     const updatedImages = [...images];
     updatedImages[index] = null; // Remove the selected image
     setImages(updatedImages); // Update the state
   };
-
-  
 
   interface Props {
     provider: string;
@@ -93,7 +84,7 @@ function page() {
     fixRate: string;
     descriptionValue: string;
     totalWithTax: number;
-    days:any[];
+    days: any[];
   }
 
   type FormInputs = {
@@ -106,7 +97,6 @@ function page() {
     totalWithTax: number;
     days: any[];
   };
-
 
   type Day = {
     day: string;
@@ -126,14 +116,13 @@ function page() {
     setError,
   } = useForm<FormInputs>({
     defaultValues: {
-      location: { lat: 0, lng: 0 },
+      location: { lat: 0, lng: 0 }, 
       days: [],
     },
     mode: "onChange",
   });
 
-  const days = watch("days"); 
-  
+  const days = watch("days");
 
   const allDays = [
     { day: "Monday", openingTime: "", closingTime: "" },
@@ -149,8 +138,7 @@ function page() {
   const selectedDays = watch("days");
 
   // Handle form submission
-  
-  
+
   useEffect(() => {
     if (location) {
       setValue("location", { lng: location.lng, lat: location.lat });
@@ -159,16 +147,7 @@ function page() {
 
   //testing the checkbox functionality
 
-
-
-  
- 
- 
-
-  
-
   const onSubmit: SubmitHandler<FormInputs> = (data) => {
-
     clearErrors();
 
     // Check if at least one day is checked
@@ -176,7 +155,7 @@ function page() {
     if (!hasCheckedDay) {
       setError("days", {
         type: "manual",
-        message: (t('select_one')),
+        message: t("select_one"),
       });
       return;
     }
@@ -185,7 +164,8 @@ function page() {
     const invalidDay = data.days.find(
       (d) =>
         d.isChecked &&
-        new Date(`1970-01-01T${d.closingTime}:00`) <= new Date(`1970-01-01T${d.openingTime}:00`)
+        new Date(`1970-01-01T${d.closingTime}:00`) <=
+          new Date(`1970-01-01T${d.openingTime}:00`)
     );
 
     if (invalidDay) {
@@ -196,26 +176,10 @@ function page() {
       return;
     }
 
-    
-    console.log("Selected Days:", data.days.filter((d) => d.isChecked));
-    
-
-
-   
     console.log("data", data);
     localStorage.setItem("addService", JSON.stringify(data));
     router.push("reviewService");
   };
-
-  const [selectedCategory, setSelectedCategory] = useState<string>("");
-  const [subCategories, setSubCategories] = useState<string[]>([]);
-  const [providers, setProviders] = useState<string[] | any>([]);
-  const [categories, setCategories] = useState<{ [key: string]: string[] }>({});
-  const [subCategory, setSubCategory] = useState("");
-  const [fixRate, setFixRate] = useState<null | any[]>(null);
-  const [descriptionValue, setDescriptionValue] = useState("");
-  let [formData, setFormData] = useState<Props | any>("");
-  const [editData , setEditData]= useState()
 
   useEffect(() => {
     const fetchProviders = async () => {
@@ -225,7 +189,7 @@ function page() {
           where("role", "==", "provider")
         );
         const querySnapshot = await getDocs(q);
-        const providersList = querySnapshot.docs.map((doc) => doc.data()); 
+        const providersList = querySnapshot.docs.map((doc) => doc.data());
 
         setProviders(providersList);
       } catch (error) {
@@ -237,35 +201,41 @@ function page() {
   }, []);
 
   useEffect(() => {
-    const fetchCategories = async () => {
+    const fetchCategories = () => {
+      const data = localStorage.getItem("editJob");
       const categoriesCollection = collection(db, "categories");
-      const categorySnapshot = await getDocs(categoriesCollection);
-      const categoriesData: { [key: string]: string[] } = {};
-
-      categorySnapshot.forEach((doc) => {
-        const data = doc.data();
-        const categoryName = data.categoryName;
-        const subCategories: string[] = data.subCategories || [];
-        categoriesData[categoryName] = subCategories;
-      });
-
-      setCategories(categoriesData);
+      getDocs(categoriesCollection)
+        .then((snapshot) => {
+          const categories = snapshot.docs.map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+          }));
+          setCategories(categories);
+          if (data) {
+            const parsedData: { category: string }[] = JSON.parse(data);
+            if (Array.isArray(parsedData) && parsedData.length > 0) {
+              const subCat = (categories as any).find(
+                (category: any) =>
+                  category?.categoryName === parsedData[0]?.category
+              );
+              setSubCategories(subCat?.subCategories ?? []);
+            }
+          }
+        })
+        .catch((error) => {
+          console.error("Error fetching categories:", error);
+        });
     };
 
     fetchCategories();
   }, []);
 
-  useEffect(() => {
-    // Update subCategories based on selectedCategory
-    if (selectedCategory && categories[selectedCategory]) {
-      setSubCategories(categories[selectedCategory]);
-    } else {
-      setSubCategories([]);
-    }
-  }, [selectedCategory, categories]);
-
-  const handleCategoryChange = (value: string) => {
-    setSelectedCategory(value);
+  const categoryHandler = (categoryName: any) => {
+    setSelectedCategory(categoryName);
+    let subCat = categories.find(
+      (category: any) => category.categoryName === categoryName
+    );
+    setSubCategories(subCat?.subCategories);
   };
 
   useEffect(() => {
@@ -277,12 +247,9 @@ function page() {
   const description = useRef<HTMLTextAreaElement>(null);
 
   const selectedRate = watch("fixRate");
-const selectedRateValue = selectedRate ? selectedRate : 0;
+  const selectedRateValue = selectedRate ? selectedRate : 0;
 
-
-
-
-//get edit data from local storage in the state
+  //get edit data from local storage in the state
 
   useEffect(() => {
     const data = localStorage.getItem("editService");
@@ -290,70 +257,104 @@ const selectedRateValue = selectedRate ? selectedRate : 0;
       try {
         const parsedData = JSON.parse(data);
         setEditData(parsedData[0]);
-        console.log(editData  , 'checks the edited data state')
       } catch (error) {
         console.error("Invalid JSON data:", error);
       }
     }
   }, [setEditData]);
- 
 
+  const handleFixRateChange = (value: string) => {
+    if (!fixRate) return;
 
-useEffect(()=>{
-    if(editData){
-    //   setSelectedCategory((editData as any).
-    // category
-    // )
-    // setDescriptionValue(  (editData as any).description)
+    const selectedData = fixRate.find((item) => item.rate === value);
+    
 
-    console.log((editData as any).
-    category)
-    setSelectedCategory((editData as any).
-    category
-    )
-
-
+    if (selectedData) {
+      setSelectedFixRate(selectedData.rate);
+    } else {
+      console.warn(`Rate ${value} not found in the list.`);
     }
-   
-
-} , [setEditData])
-
+  };
 
   useEffect(() => {
-      const data = localStorage.getItem("tax");
-  
-      const tax = data ? JSON.parse(data) : 0;
-  
-  
-  
-      // Check if tax is an array
-      if (Array.isArray(tax)) {
-        const totalPercentage = tax
-          .map((item) => Number(item.percentage))
-          .reduce((sum, percentage) => sum + percentage, 0);
-        const totalWithTaxRate = Number(
-          (
-            Number(selectedRateValue) *
-            (1 + totalPercentage / 100)
-          ).toFixed(1)
-        );
-        setValue("totalWithTax" , totalWithTaxRate);
-        console.log(totalWithTaxRate);
-        
-       
-      } else {
-        console.log("No valid tax data found.");
-        setValue('totalWithTax' , Number(selectedRateValue))
-      }
-    }, [Number(selectedRateValue)]);
+    const data = localStorage.getItem("tax");
+
+    const tax = data ? JSON.parse(data) : 0;
+
+    // Check if tax is an array
+    if (Array.isArray(tax)) {
+      const totalPercentage = tax
+        .map((item) => Number(item.percentage))
+        .reduce((sum, percentage) => sum + percentage, 0);
+      const totalWithTaxRate = Number(
+        (Number(selectedRateValue) * (1 + totalPercentage / 100)).toFixed(1)
+      );
+      setValue("totalWithTax", totalWithTaxRate);
+    } else {
+      console.log("No valid tax data found.");
+      setValue("totalWithTax", Number(selectedRateValue));
+    }
+  }, [Number(selectedRateValue)]);
+
+  function formatTime(timestamp: any) {
+    const date = new Date(timestamp);
+    return `${String(date.getHours()).padStart(2, "0")}:${String(
+      date.getMinutes()
+    ).padStart(2, "0")}`;
+  }
+
+  useEffect(() => {
+    if (!editData) return;
+
+    const {
+      postedBy,
+      category,
+      subCategory,
+      fixRates,
+      description,
+      timeSlots,
+      geoPoint,
+    } = editData as any;
 
     
 
-  
+    const user = providers.find((data) => data.userId === postedBy);
+    const userName = user?.userId;
 
-  
+    // Update the state only if the name has changed to avoid redundant renders
+    if (userName && userName !== selectedProvider) {
+      setSelectedProvider(userName);
+    }
 
-  
+    if (selectedProvider) {
+      setValue("provider", selectedProvider);
+    }
+
+    //day data for edit
+
+    const dayData = timeSlots.map((item: string) => item);
+
+    setSelectedCategory(category);
+    setValue("category", category, { shouldValidate: true });
+    setSelectedSubCategory(subCategory);
+    setValue("subcategory", subCategory, { shouldValidate: true });
+    setSelectedFixRate(fixRates);
+    setValue("fixRate", fixRates, { shouldValidate: true });
+    setValue("description", description);
+    setValue("location", { lng: geoPoint.longitude, lat: geoPoint.latitude });
+
+    const initialDaysData = timeSlots.map((item: any) => item);
+
+    // Populate the form fields with converted time
+    const formattedDays = initialDaysData.map((d: any) => ({
+      ...d,
+      isChecked: true,
+      openingTime: formatTime(d.openingTime),
+      closingTime: formatTime(d.closingTime),
+    }));
+
+    setValue("days", formattedDays);
+  }, [editData, providers, selectedProvider, setSelectedProvider]);
 
   return (
     <>
@@ -366,73 +367,91 @@ useEffect(()=>{
             <h1 className="text-2xl font-bold mt-2">{t("addServices")}</h1>
 
             <div className="grid w-full items-center gap-1.5 mt-6">
-      <Controller
-        name="provider"
-        control={control}
-        rules={{
-          required: t("providerRequired"),
-        }}
-        render={({ field: { value, onChange } }) => (
-          <Select
-            onValueChange={(value) => {
-              onChange(value);
-              handleProviderChange(value); // Set the userId when provider changes
-            }}
-            value={value}
-          >
-            <SelectTrigger className="w-full h-[55px] rounded-lg border border-[#4BB1D3] bg-gray-50 mt-1 pr-6 outline-[#4BB1D3] focus:border-[#4BB1D3] focus:outline-none focus:border-none">
-              <SelectValue placeholder={t("selectProvider")} />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                <SelectLabel>{t("selectProvider")}</SelectLabel>
-                {providers.map((user: any) => (
-                  <SelectItem key={user.userId} value={user.fullName}>
-                    {user.fullName}
-                  </SelectItem>
-                ))}
-              </SelectGroup>
-            </SelectContent>
-          </Select>
-        )}
-      />
-      {errors.provider && (
-        <p className="text-red-500 text-sm mt-1">
-          {errors.provider.message}
-        </p>
-      )}
-   
-    </div>
+              <Controller
+                name="provider"
+                control={control}
+                rules={{ required: t("providerRequired") }}
+                defaultValue={selectedProvider}
+                render={({ field: { value, onChange, ref } }) => (
+                  <Select
+                    value={selectedProvider}
+                    onValueChange={(newValue) => {
+                      setSelectedProvider(newValue);
+                      onChange(newValue); // Important for updating form state
+                      handleProviderChange(newValue);
+                    }}
+                  >
+                    <SelectTrigger
+                      ref={ref}
+                      className="w-full h-[55px] rounded-lg border border-[#4BB1D3] bg-gray-50 mt-1 pr-6 outline-[#4BB1D3] focus:border-[#4BB1D3] focus:outline-none"
+                    >
+                      <SelectValue
+                        placeholder={selectedProvider || t("selectProvider")}
+                      />
+                    </SelectTrigger>
+
+                    <SelectContent>
+                      <SelectGroup>
+                        <SelectLabel>{t("selectProvider")}</SelectLabel>
+                        {providers.map((user: any) => (
+                          <SelectItem key={user.userId} value={user.userId}>
+                            {user.fullName}
+                          </SelectItem>
+                        ))}
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                )}
+              />
+
+              {errors.provider && (
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.provider.message}
+                </p>
+              )}
+            </div>
             <div className="grid w-full items-center gap-1.5 mt-3">
-              <p className="text-xl font-semibold mt-6 mb-4">{(t('selectCategory'))}</p>
+              <p className="text-xl font-semibold mt-6 mb-4">
+                {t("selectCategory")}
+              </p>
               <label className="text-md font-semibold" htmlFor="category">
-                {(t('category'))}
+                {t("category")}
               </label>
+
               <Controller
                 name="category"
                 control={control}
                 rules={{
-                  required: (t('categoryRequired')),
+                  required: t("categoryRequired"),
                 }}
+                defaultValue={selectedCategory}
                 render={({ field }) => (
                   <Select
                     value={selectedCategory}
                     onValueChange={(value) => {
                       field.onChange(value);
-                      handleCategoryChange(value);
+                      categoryHandler(value);
                     }}
                   >
                     <SelectTrigger className="w-full h-[55px] rounded-lg border p-4 pr-6 border-[#4BB1D3] bg-gray-50 outline-[#4BB1D3] focus:border-blue-500 focus:outline-none">
-                      <SelectValue placeholder={(t('selectCategory'))} />
+                      <SelectValue
+                        placeholder={
+                          field.value || selectedCategory || t("selectCategory")
+                        }
+                      />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectGroup>
-                        <SelectLabel>{t('categories')}</SelectLabel>
-                        {Object.keys(categories).map((category) => (
-                          <SelectItem key={category} value={category}>
-                            {category}
-                          </SelectItem>
-                        ))}
+                        <SelectLabel>{t("categories")}</SelectLabel>
+                        {categories &&
+                          categories.map((category, index) => (
+                            <SelectItem
+                              key={index}
+                              value={category.categoryName}
+                            >
+                              {category.categoryName}
+                            </SelectItem>
+                          ))}
                       </SelectGroup>
                     </SelectContent>
                   </Select>
@@ -445,38 +464,49 @@ useEffect(()=>{
               )}
 
               {/* Render subcategories if available */}
-              {subCategories.length > 0 && (
+              {subCategories?.length != 0 && (
                 <div className="grid w-full items-center gap-1.5 mt-4">
                   <label
                     className="text-md font-semibold"
                     htmlFor="subcategory"
                   >
-                    {(t('SubCategories'))}
+                    {t("SubCategories")}
                   </label>
                   <Controller
                     name="subcategory"
                     control={control}
-                    rules={{
-                      required: (t('subcategoryRequired')),
-                    }}
+                    rules={{ required: t("subcategoryRequired") }}
+                    defaultValue={selectedSubCategory}
                     render={({ field: { value, onChange } }) => (
-                      <Select value={value} onValueChange={onChange}>
+                      <Select
+                        value={value || selectedSubCategory}
+                        onValueChange={(newValue: any) => {
+                          setSelectedSubCategory(newValue);
+                          onChange(newValue);
+                        }}
+                      >
                         <SelectTrigger className="w-full h-[55px] rounded-lg border p-4 pr-6 border-[#4BB1D3] bg-gray-50 outline-[#4BB1D3] focus:border-blue-500 focus:outline-none">
-                          <SelectValue placeholder={(t('selectSubCategory'))} />
+                          <SelectValue>
+                            {value ||
+                              selectedSubCategory ||
+                              t("selectSubCategory")}
+                          </SelectValue>
                         </SelectTrigger>
                         <SelectContent>
                           <SelectGroup>
-                            <SelectLabel>{(t('SubCategories'))}</SelectLabel>
-                            {subCategories.map((subCategory) => (
-                              <SelectItem key={subCategory} value={subCategory}>
-                                {subCategory}
-                              </SelectItem>
-                            ))}
+                            <SelectLabel>{t("SubCategories")}</SelectLabel>
+                            {subCategories?.length > 0 &&
+                              subCategories.map((subCategory, index) => (
+                                <SelectItem key={index} value={subCategory}>
+                                  {subCategory}
+                                </SelectItem>
+                              ))}
                           </SelectGroup>
                         </SelectContent>
                       </Select>
                     )}
                   />
+
                   {errors.subcategory && (
                     <p className="text-red-500 mt-2 text-sm">
                       {errors.subcategory.message}
@@ -490,16 +520,25 @@ useEffect(()=>{
                 <label className="text-md font-semibold" htmlFor="AdFixedRate">
                   {t("adFixedRate")}
                 </label>
+
                 <Controller
                   name="fixRate"
                   control={control}
                   rules={{
                     required: t("fixRateRequired"),
                   }}
+                  defaultValue={selectedFixRate}
                   render={({ field: { value, onChange } }) => (
-                    <Select value={value} onValueChange={onChange}>
+                    <Select
+                      value={value}
+                      onValueChange={(newValue: any) => {
+                        onChange(newValue);
+                        setSelectedFixRate(newValue);
+                        handleFixRateChange(newValue);
+                      }}
+                    >
                       <SelectTrigger className="w-full h-[55px] rounded-lg border border-[#4BB1D3] bg-gray-50 mt-1 pr-6 outline-[#4BB1D3] focus:border-[#4BB1D3] focus:outline-none focus:border-none">
-                        <SelectValue placeholder={t("adFixedRate")} />
+                        <SelectValue placeholder={value || t("adFixedRate")} />
                       </SelectTrigger>
                       <SelectContent>
                         <SelectGroup>
@@ -514,6 +553,7 @@ useEffect(()=>{
                     </Select>
                   )}
                 />
+
                 {errors.fixRate && (
                   <p className="text-red-500 mt-2 text-sm">
                     {errors.fixRate.message}
@@ -537,7 +577,7 @@ useEffect(()=>{
             </div>
 
             <div className="grid w-full items-center gap-2 mt-3">
-              <p className="font-semibold text-lg">{(t('photos'))}</p>
+              <p className="font-semibold text-lg">{t("photos")}</p>
               <div className="flex flex-wrap gap-10">
                 {images.map((image, index) => (
                   <div
@@ -564,7 +604,7 @@ useEffect(()=>{
                       </>
                     ) : (
                       <span className="text-gray-500 text-sm font-medium">
-                        + {(t('upload'))}
+                        + {t("upload")}
                       </span>
                     )}
                   </div>
@@ -581,128 +621,111 @@ useEffect(()=>{
             {/* <div className="grid w-full items-center gap-1.5 mt-3">
   
 </div> */}
-<div className="max-w-4xl mx-auto p-6 bg-white shadow rounded-lg mt-6">
+            <div className="max-w-4xl mx-auto p-6 bg-white shadow rounded-lg mt-6">
+              <h1 className="text-2xl font-bold text-gray-800 mb-6">
+                {t("select_time_slots")}
+              </h1>
 
-<h1 className="text-2xl font-bold text-gray-800 mb-6">{(t('select_time_slots'))}</h1>
+              {allDays.map((day) => {
+                const existingDay = selectedDays.find((d) => d.day === day.day);
 
-{allDays.map((day) => {
-  const existingDay = selectedDays.find((d) => d.day === day.day);
+                return (
+                  <Controller
+                    key={day.day}
+                    name={`days.${Number(day.day)}`}
+                    control={control}
+                    render={() => (
+                      <div className="flex flex-col md:flex-row justify-between items-center border-b py-4">
+                        <div className="flex items-center space-x-3">
+                          <input
+                            type="checkbox"
+                            checked={!!existingDay?.isChecked}
+                            onChange={() => {
+                              const updatedDays = existingDay?.isChecked
+                                ? selectedDays.filter((d) => d.day !== day.day)
+                                : [
+                                    ...selectedDays,
+                                    { ...day, isChecked: true },
+                                  ];
+                              setValue("days", updatedDays);
+                            }}
+                            className="w-5 h-5 text-[#00BFFF] border-gray-300 rounded"
+                          />
+                          <span className="text-gray-800 font-medium">
+                            {day.day}
+                          </span>
+                        </div>
 
-  return (
-    <Controller
-      key={day.day}
-      name={`days.${day.day}`}
-      control={control}
-      render={() => (
-        <div className="flex flex-col md:flex-row justify-between items-center border-b py-4">
-          {/* Checkbox */}
-          <div className="flex items-center space-x-3">
-            <input
-              type="checkbox"
-              checked={!!existingDay?.isChecked}
-              onChange={() => {
-                const updatedDays = existingDay
-                  ? selectedDays.map((d) =>
-                      d.day === day.day
-                        ? { ...d, isChecked: !d.isChecked }
-                        : d
-                    )
-                  : [...selectedDays, { ...day, isChecked: true }];
-                setValue("days", updatedDays);
-                clearErrors("days");
-              }}
-              className="w-5 h-5 text-[#00BFFF] border-gray-300 rounded"
-            />
-            <span className="text-gray-800 font-medium">{day.day}</span>
-          </div>
+                        {existingDay?.isChecked && (
+                          <div className="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-6 mt-4 md:mt-0">
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 mb-1">
+                                Opening Time
+                              </label>
+                              <input
+                                type="time"
+                                value={existingDay.openingTime || ""}
+                                onChange={(e) =>
+                                  setValue(
+                                    "days",
+                                    selectedDays.map((d) =>
+                                      d.day === day.day
+                                        ? { ...d, openingTime: e.target.value }
+                                        : d
+                                    )
+                                  )
+                                }
+                                className="w-36 px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              />
+                            </div>
 
-          {/* Time Fields */}
-          {existingDay?.isChecked && (
-            <div className="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-6 mt-4 md:mt-0">
-              {/* Opening Time */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  {(t('opening_Time'))}
-                </label>
-                <input
-                  type="time"
-                  value={existingDay.openingTime}
-                  onChange={(e) =>
-                    setValue(
-                      "days",
-                      selectedDays.map((d) =>
-                        d.day === day.day
-                          ? { ...d, openingTime: e.target.value }
-                          : d
-                      )
-                    )
-                  }
-                  required
-                  className={`w-28 px-3 py-2 border ${
-                    errors.days?.message && "border-red-500"
-                  } rounded focus:outline-none focus:ring-2 focus:ring-blue-500`}
-                />
-              </div>
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 mb-1">
+                                Closing Time
+                              </label>
+                              <input
+                                type="time"
+                                value={existingDay.closingTime || ""}
+                                onChange={(e) =>
+                                  setValue(
+                                    "days",
+                                    selectedDays.map((d) =>
+                                      d.day === day.day
+                                        ? { ...d, closingTime: e.target.value }
+                                        : d
+                                    )
+                                  )
+                                }
+                                className="w-36 px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              />
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  />
+                );
+              })}
 
-              {/* Closing Time */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                {(t('closing_Time'))}
-                </label>
-                <input
-                  type="time"
-                  value={existingDay.closingTime}
-                  onChange={(e) =>
-                    setValue(
-                      "days",
-                      selectedDays.map((d) =>
-                        d.day === day.day
-                          ? { ...d, closingTime: e.target.value }
-                          : d
-                      )
-                    )
-                  }
-                  required
-                  className={`w-28 px-3 py-2 border ${
-                    errors.days?.message && "border-red-500"
-                  } rounded focus:outline-none focus:ring-2 focus:ring-blue-500`}
-                />
-              </div>
+              {/* Display Error Messages */}
+              {errors.days && (
+                <div className="text-red-500 text-sm mt-4">
+                  {errors.days.message}
+                </div>
+              )}
+
+              {/* Submit Button */}
+
+              {/* Submit Button */}
             </div>
-          )}
-        </div>
-      )}
-    />
-  );
-})}
-
-
-      {/* Display Error Messages */}
-      {errors.days && (
-        <div className="text-red-500 text-sm mt-4">
-          {errors.days.message}
-        </div>
-      )}
-
-      {/* Submit Button */}
-    
-
-{/* Submit Button */}
-
-
-       
-      </div>
-
 
             <div className="mt-6 flex justify-center items-center">
-              {/* <Link href={"/services/reviewService"}> */}
               <Button
                 type="submit"
                 className="w-[200px] h-[45px] mb-6 mt-2 text-white bg-[#00BFFF] rounded-lg outline-none hover:bg-[#00A0E0] transition duration-200 ease-in-out"
               >
                 <span>{t("next")}</span>
               </Button>
-              {/* </Link> */}
             </div>
           </form>
         </div>

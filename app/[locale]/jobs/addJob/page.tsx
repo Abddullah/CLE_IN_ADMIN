@@ -335,6 +335,7 @@ setSelectedServices(additionalService);
     const selectedUser = users.find(
       (user: any) => user.userId === selectedProvider
     );
+  
     if (selectedUser) {
       localStorage.setItem("JobPostUserId", selectedProvider);
       setHourPrice(Number(selectedUser.hourlyRate));
@@ -581,6 +582,7 @@ setSelectedServices(additionalService);
   setValue("total", totalPrice);
   setValue("totalWithTax", totalPriceWithTax);
 
+
   return (
     <>
       <div className="bg-[#F5F7FA] min-h-screen w-full flex items-start justify-start relative">
@@ -599,7 +601,6 @@ setSelectedServices(additionalService);
               <Controller
                 name="provider"
                 control={control}
-                // rules={{ required: t("ProviderRequired") }}
                 defaultValue={selectedName}
                 render={({ field: { value, onChange } }) => (
                   <Select
@@ -623,18 +624,14 @@ setSelectedServices(additionalService);
                           <SelectItem key={user.userId} value={user.userId}>
                             {user.fullName}
                           </SelectItem>
-                        ))}
+                        ))} 
                       </SelectGroup>
                     </SelectContent>
                   </Select>
                 )}
               />
 
-               {/* {errors.provider && (
-                <p className="text-red-500 text-sm mt-1">
-                  {errors.provider.message}
-                </p>
-              )}  */}
+               
             </div>
             {selectedName && (
               <>

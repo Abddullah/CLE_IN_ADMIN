@@ -249,6 +249,7 @@
     "Summary": "Payment Summary",
     "serviceAmount": "Service Amount",
     "service_created_sucess":"Your Service has been Created Sucessfully",
+    "service_updated_sucess":"Your Service has been Updated Sucessfully",
     "reviews":"Reviews",
     "Availablity":"Availablity",
     "customer_info":"Customer Info",
