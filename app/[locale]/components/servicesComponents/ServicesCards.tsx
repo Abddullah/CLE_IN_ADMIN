@@ -7,6 +7,7 @@ import {
   faEllipsisV,
   faEdit,
   faTrashAlt,
+  faChartSimple,
 } from "@fortawesome/free-solid-svg-icons";
 import { useTranslations } from "next-intl";
 
@@ -18,16 +19,16 @@ interface CardProps {
   status: string;
   date?: any;
   dotsIcon: string;
-  statusTextColor:any;
-  createdAt:string;
-  detailOpen:any;
+  statusTextColor: any;
+  createdAt: string;
+  detailOpen: any;
   onEdit: (updatedData: {
     title: string;
     price: string;
     status: string;
   }) => void;
-  onDelete: () => void; // Add onDelete callback
-
+  onDelete: () => void;
+  onStatus?: (updatedData: { status: string }) => void; // Made it optional with a default function
 }
 
 const Card: React.FC<CardProps> = ({
@@ -42,33 +43,39 @@ const Card: React.FC<CardProps> = ({
   createdAt,
   detailOpen,
   onEdit,
-  onDelete, // Add onDelete callback
+  onDelete,
+  onStatus = () => {}, // Default function to prevent TypeError
 }) => {
-
-  const t = useTranslations('Jobs')
+  const t = useTranslations("Jobs");
   const [showOptions, setShowOptions] = useState(false);
   const [editableData, setEditableData] = useState({ title, price, status });
-
+  const [statusData, setStatusData] = useState({ status });
 
   const handleEdit = () => {
-   
     onEdit(editableData);
-    setShowOptions(false); // Close the options menu
+    setShowOptions(false);
   };
 
   const handleDelete = () => {
-   
     onDelete();
-    setShowOptions(false); // Close the options menu
+    setShowOptions(false);
   };
 
-  const [image , setImage]=useState(false);
+  const handleStatus = () => {
+    if (typeof onStatus === "function") {
+      onStatus(statusData);
+      setShowOptions(false);
+      console.log("status open");
+    } else {
+      console.error("onStatus is not a function", onStatus);
+    }
+  };
 
   return (
     <div className="cursor-pointer flex">
-      <div className="bg-white rounded-lg shadow-md border p-4 w-80 ">
+      <div className="bg-white rounded-lg shadow-md border p-4 w-80">
         <Image
-        onClick={detailOpen}
+          onClick={detailOpen}
           src={imageUrl}
           alt={title}
           width={200}
@@ -95,21 +102,30 @@ const Card: React.FC<CardProps> = ({
                 className="block w-full px-4 py-2 text-left text-sm text-gray-700"
               >
                 <FontAwesomeIcon icon={faEdit} className="mr-2" />
-                {(t('edit'))}
+                {t("edit")}
               </button>
               <button
                 onClick={handleDelete}
                 className="block w-full px-4 py-2 text-left text-sm text-red-600"
               >
                 <FontAwesomeIcon icon={faTrashAlt} className="mr-2" />
-                {(t('delete'))}
+                {t("delete")}
+              </button>
+              <button
+                onClick={handleStatus}
+                className="block w-full px-4 py-2 text-left text-sm text-blue-600"
+              >
+                <FontAwesomeIcon icon={faChartSimple} className="mr-2" />
+                {t("Status")}
               </button>
             </div>
           )}
 
           <h2 className="text-md font-semibold text-gray-800">{title}</h2>
           <h2 className="text-sm text-gray-600">{time}</h2>
-          <h2 className="text-sm text-gray-600">Status: <span className={`text-${statusTextColor}`}>{status}</span></h2>
+          <h2 className="text-sm text-gray-600">
+            Status: <span className={`text-${statusTextColor}`}>{status}</span>
+          </h2>
           <h2 className="text-sm text-gray-600"> {date}</h2>
           <h2 className="text-xs text-gray-600"> {createdAt}</h2>
         </div>

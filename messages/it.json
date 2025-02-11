@@ -263,7 +263,14 @@
 "editTitle": "Titolo",
 "no_service_available":"Nessun servizio disponibile...",
 "edit": "Modifica",
-"delete": "Elimina"
+"delete": "Elimina",
+"modalTitle": "Aggiorna Stato",
+  "selectStatusLabel": "Seleziona Stato:",
+
+  "pending": "In attesa",
+  
+  "save": "Salva",
+  "Status":"Stato"
 
 
 
@@ -327,6 +334,20 @@
   "SelectSubcategory": "Seleziona sottocategoria",
   "Categories": "Categorie",
   "upload":"caricare",
+  "status":"Stato",
+  "modalTitle": "Aggiorna Stato",
+  "selectStatusLabel": "Seleziona Stato:",
+ 
+  "save": "Salva",
+   "Status":"Stato",
+
+
+
+
+
+
+
+
 
 
     

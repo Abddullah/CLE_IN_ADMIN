@@ -33,6 +33,8 @@ function Page() {
   const [detailModalOpen , SetDetailModalOpen]=useState<boolean>(false)
   const [selectedJob , setSelectedJob]=useState<null | any>(null);
   const [editedJob , setEditedJob]= useState();
+  const [StatusJob , setStatusJob ] = useState();
+  const [status , setStatus]= useState()
 
   const router = useRouter();
 
@@ -178,6 +180,36 @@ function Page() {
     }
   };
 
+
+   const handleStatusChange = (e:any) => {
+      setStatus(e.target.value);
+      console.log(status , 'modal ki value')
+      
+    };
+  
+    
+  
+    const closeModal = ()=>{
+      setIsModalOpen(false)
+    }
+  
+    const handleStatusClick = async(job:any)=>{
+      setIsModalOpen(true)
+      setStatusJob(job);
+    }
+  
+  
+    const updateJobStatus = async () => {
+      if ((StatusJob as any)?.jobId) {
+        const jobRef = doc(db, "jobs", (StatusJob as any).jobId);
+        await updateDoc(jobRef, {
+          addStatus: status,
+        });
+        closeModal();
+      }
+    };
+  
+
   
 
   return (
@@ -213,11 +245,65 @@ function Page() {
           dotsIcon="/assets/categoriesIcons/dots.svg"
           onEdit={() => handleEditClick(job)}
           onDelete={() => handleDeleteClick(job)}
+          onStatus={()=> handleStatusClick(job)}
         />
       </div>
-    ))
+    )) 
   )}
 </div>
+{
+   isModalOpen && (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 h-full">
+      <div className="bg-white w-[400px] p-6 rounded-lg shadow-lg relative">
+        {/* Close Button */}
+        <button
+          className="absolute top-2 right-4 text-2xl text-gray-500 hover:text-gray-800"
+          onClick={closeModal}
+        >
+          &times;
+        </button>
+
+        {/* Modal Title */}
+        <h2 className="text-2xl font-semibold text-center mb-4">
+          {(t('modalTitle'))}
+        </h2>
+
+        {/* Select Field */}
+        <div className="mt-4">
+          <label htmlFor="status-select" className="block text-lg font-medium mb-2">
+           {(t('selectStatusLabel'))}
+          </label>
+          <select
+            id="status-select"
+            value={status}
+            onChange={handleStatusChange}
+            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            <option value="active">Active</option>
+            <option value="pending">Pending</option>
+            <option value="moderate">Moderate</option>
+          </select>
+        </div>
+
+        {/* Action Buttons */}
+        <div className="flex justify-end space-x-4 mt-6">
+          <button
+            onClick={closeModal}
+            className="bg-gray-300 hover:bg-gray-400 text-gray-800 py-2 px-4 rounded-lg"
+          >
+            {(t('cancel'))}
+          </button>
+          <button
+            onClick={updateJobStatus}
+            className="bg-[#00BFFF] hover:bg-[#00BFFF] text-white py-2 px-4 rounded-lg"
+          >
+            {(t('save'))}
+          </button>
+        </div>
+      </div>
+    </div>
+   )
+}
         <div>
       {detailModalOpen && <BookingModal bookingData={selectedJob} handleClose={()=>SetDetailModalOpen(false)} />}
       </div>

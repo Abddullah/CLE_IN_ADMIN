@@ -262,7 +262,14 @@
     "edit": "Edit",
   "delete": "Delete",
   "save_changes":"Save Changes",
-  "price":"Updated Price"
+  "price":"Updated Price",
+  "modalTitle": "Update Status",
+  "selectStatusLabel": "Select Status:",
+  
+  "pending": "Pending",
+ 
+  "save": "Save",
+  "Status":"Status"
   
   },
   "Jobs":{
@@ -328,6 +335,10 @@
     "no_job_available":"No Jobs Available...",
     "select_hour":"Select Hour",
     "selected_professional":"Select Professional",
+    "Status":"Status",
+    "modalTitle": "Update Status",
+  "selectStatusLabel": "Select Status:",
+  "save": "Save",
 
    
     

@@ -38,21 +38,21 @@ function page() {
   const [detailModalOpen, SetDetailModalOpen] = useState<boolean>(false);
   const [noService, setNoService] = useState<boolean>(false);
   const [allServices, setAllServices] = useState<any[]>([]);
+  const [StatusJob, setStatusJob] = useState();
+  const [status, setStatus] = useState();
 
   const daysOfWeek = [
     "Monday",
     "Tuesday",
     "Wednesday",
     "Thursday",
-    "Friday", 
+    "Friday",
     "Saturday",
     "Sunday",
   ];
 
   const searchData = useSelector((state: any) => state.search.search);
-  const router = useRouter()
-
- 
+  const router = useRouter();
 
   useEffect(() => {
     if (editableService) {
@@ -102,23 +102,20 @@ function page() {
 
   console.log(services);
 
-  
+  useEffect(() => {
+    const trimmedSearchData = searchData.trim().toLowerCase();
 
-
-   useEffect(() => {
-        const trimmedSearchData = searchData.trim().toLowerCase();
-      
-        if (trimmedSearchData !== "") {
-          const filterData = allServices.filter(
-            (data:any) =>
-              data.category &&
-              data.category.toLowerCase().includes(trimmedSearchData)
-          );
-          setServices(filterData);
-        } else {
-          setServices(allServices);
-        }
-      }, [searchData, allServices]);
+    if (trimmedSearchData !== "") {
+      const filterData = allServices.filter(
+        (data: any) =>
+          data.category &&
+          data.category.toLowerCase().includes(trimmedSearchData)
+      );
+      setServices(filterData);
+    } else {
+      setServices(allServices);
+    }
+  }, [searchData, allServices]);
 
   //handle Click job
 
@@ -145,56 +142,47 @@ function page() {
 
   //handle service edit
 
-    const fetchServiceById = async (jobId:string) => {
-      try {
-          const jobsRef = collection(db, "service"); // 'jobs' collection ka reference
-          const q = query(jobsRef, where("serviceId", "==", jobId)); // Query jobId ke equal data ke liye
-          const querySnapshot = await getDocs(q);
-  
-          const jobData = querySnapshot.docs.map((doc) => ({
-              id: doc.id,
-              ...doc.data(),
-          }));
-  
-          localStorage.setItem("editService", JSON.stringify(jobData))
-  
-          if (jobData.length > 0) {
-              console.log("Job Found:", jobData[0]);
-              return jobData[0]; // Agar ek hi job return hoti ho
-          } else {
-              console.log("No job found with this ID.");
-              return null;
-          }
-      } catch (error) {
-          console.error("Error fetching job:", error);
-          throw error;
-      }
-  };
-
-  const handleEditClick = async (job:any) => {
-    console.log("Editing job ID:", job.serviceId);
+  const fetchServiceById = async (jobId: string) => {
     try {
-        const editableJob = await fetchServiceById(job.serviceId);
-        if (editableJob) {
-            setEditableService(editableJob);
-            setIsModalOpen(true);
-        }
-  
-        router.push("/services/addService")
-  
-      
+      const jobsRef = collection(db, "service"); // 'jobs' collection ka reference
+      const q = query(jobsRef, where("serviceId", "==", jobId)); // Query jobId ke equal data ke liye
+      const querySnapshot = await getDocs(q);
+
+      const jobData = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+
+      localStorage.setItem("editService", JSON.stringify(jobData));
+
+      if (jobData.length > 0) {
+        console.log("Job Found:", jobData[0]);
+        return jobData[0]; // Agar ek hi job return hoti ho
+      } else {
+        console.log("No job found with this ID.");
+        return null;
+      }
     } catch (error) {
-        console.error("Failed to fetch the job:", error);
+      console.error("Error fetching job:", error);
+      throw error;
     }
   };
 
-  
-  
+  const handleEditClick = async (job: any) => {
+    console.log("Editing job ID:", job.serviceId);
+    try {
+      const editableJob = await fetchServiceById(job.serviceId);
+      if (editableJob) {
+        setEditableService(editableJob);
+        setIsModalOpen(true);
+      }
 
-  
-  
-  
- 
+      router.push("/services/addService");
+    } catch (error) {
+      console.error("Failed to fetch the job:", error);
+    }
+  };
+
   const handleDayChange = (index: number, day: string) => {
     setTimeSlots((prevSlots: any) =>
       prevSlots.map((slot: any, i: any) =>
@@ -231,37 +219,36 @@ function page() {
     setEditableService({ ...editableService, category: value });
   };
 
-  const handleStatusChange = (value: string) => {
-    setAddStatus(value);
-  };
-
   const { openingTime, closingTime } = timeSlots;
 
   console.log(openingTime, closingTime);
 
   // console.log("time slots", timeSlots)
 
-  const handleSubmit = async () => {
-    try {
-      const docRef = doc(db, "service", editableService?.id);
-      await updateDoc(docRef, {
-        timeSlots: timeSlots,
-        addStatus: addStatus,
-        category: editableService?.category,
-      });
-      alert("Service updated successfully!");
-      setIsModalOpen(false);
-    } catch (error) {
-      console.error("Error updating document: ", error);
-    }
-  };
-
   const closeModal = () => {
     setIsModalOpen(false);
     setEditableService(null);
   };
 
-  console.log(services);
+  const handleStatusChange = (e: any) => {
+    setStatus(e.target.value);
+    console.log(status, "modal ki value");
+  };
+
+  const handleStatusClick = async (job: any) => {
+    setIsModalOpen(true);
+    setStatusJob(job);
+  };
+
+  const updateJobStatus = async () => {
+    if ((StatusJob as any)?.serviceId) {
+      const jobRef = doc(db, "service", (StatusJob as any).serviceId);
+      await updateDoc(jobRef, {
+        addStatus: status,
+      });
+      closeModal();
+    }
+  };
 
   return (
     <>
@@ -297,6 +284,9 @@ function page() {
                   onDelete={() => {
                     handleDeleteClick(job);
                   }}
+                  onStatus={() => {
+                    handleStatusClick(job);
+                  }}
                 />
               </div>
             ))
@@ -306,6 +296,60 @@ function page() {
             </p>
           )}
         </div>
+        {isModalOpen && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 h-full">
+            <div className="bg-white w-[400px] p-6 rounded-lg shadow-lg relative">
+              {/* Close Button */}
+              <button
+                className="absolute top-2 right-4 text-2xl text-gray-500 hover:text-gray-800"
+                onClick={closeModal}
+              >
+                &times;
+              </button>
+
+              {/* Modal Title */}
+              <h2 className="text-2xl font-semibold text-center mb-4">
+                {t("modalTitle")}
+              </h2>
+
+              {/* Select Field */}
+              <div className="mt-4">
+                <label
+                  htmlFor="status-select"
+                  className="block text-lg font-medium mb-2"
+                >
+                  {t("selectStatusLabel")}
+                </label>
+                <select
+                  id="status-select"
+                  value={status}
+                  onChange={handleStatusChange}
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="active">Active</option>
+                  <option value="pending">Pending</option>
+                  <option value="moderate">Moderate</option>
+                </select>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex justify-end space-x-4 mt-6">
+                <button
+                  onClick={closeModal}
+                  className="bg-gray-300 hover:bg-gray-400 text-gray-800 py-2 px-4 rounded-lg"
+                >
+                  {t("cancel")}
+                </button>
+                <button
+                  onClick={updateJobStatus}
+                  className="bg-[#00BFFF] hover:bg-[#00BFFF] text-white py-2 px-4 rounded-lg"
+                >
+                  {t("save")}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
 
         <div>
           {detailModalOpen && (
