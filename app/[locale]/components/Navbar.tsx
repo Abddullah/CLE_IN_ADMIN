@@ -111,7 +111,7 @@ const Navbar = () => {
 
   return (
     <aside>
-      <div className="w-full flex items-center justify-between bg-white p-5 sm:p-4 md:px-6 md:py-3 rounded-lg relative">
+      <div className="w-full flex items-center justify-end ml-auto bg-white p-5 sm:p-4 md:px-6 md:py-3 rounded-lg relative md:justify-between lg:justify-between">
         <div className="hidden md:block text-2xl font-bold text-[#343C6A] mt-2">
           {pathName}
         </div>
@@ -126,6 +126,7 @@ const Navbar = () => {
           !pathname.includes(`/${languageCode}/services/reviewService`) &&
           (
             <div className="flex-1 gap-3 mt-2 max-w-[75%] sm:max-w-[50%] md:max-w-[40%] lg:max-w-[30%] relative ml-auto sm:mr-4 md:mr-9 px-2">
+            {/* // <div className={`flex-1 ${SearchHiddenRoutes.includes(pathname) ? "hidden" : "flex"} gap-3 mt-2 max-w-[75%] sm:max-w-[50%] md:max-w-[40%] lg:max-w-[30%] relative ml-auto sm:mr-4 md:mr-9 px-2`}> */}
               <input
                 type="text"
                 value={searchTerm}

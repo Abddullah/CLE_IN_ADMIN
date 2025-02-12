@@ -9,7 +9,8 @@
 // import { notFound } from "next/navigation";
 // import { routing } from "@/i18n/routing";
 // import ReduxProvider from "./ReduxProvider";
-// import ScrollReset from "./components/scroll-reset";
+// import ClientLayout from "./components/client-layout";
+// import LayoutWrapper from "./components/LayoutWrapper";
 
 // const latoBlack = localFont({
 //   src: "./fonts/Lato-Black.ttf",
@@ -44,25 +45,26 @@
 //       <head>
 //         <FontAwesomeConfig />
 //       </head>
-
 //       <body
 //         className={`${latoBlack.variable} ${latoRegular.variable} antialiased`}
 //       >
-//         {
-//           <NextIntlClientProvider messages={messages}>
-//             <ReduxProvider>
-//               <div className="flex h-screen">
-//                 <ScrollReset />
-//                 <Sidebar />
-
-//                 <div className="flex-1 flex flex-col">
-//                   <Navbar />
-//                   <div className="flex-1 overflow-auto">{children}</div>
+//         <NextIntlClientProvider messages={messages}>
+//           <ReduxProvider>
+//             <ClientLayout>
+//               <LayoutWrapper>
+//                 <div className="flex h-screen">
+//                   <Sidebar />
+//                   <div className="flex-1 flex flex-col">
+//                     <Navbar />
+//                     <div className="flex-1 overflow-auto" id="main-content">
+//                       {children}
+//                     </div>
+//                   </div>
 //                 </div>
-//               </div>
-//             </ReduxProvider>
-//           </NextIntlClientProvider>
-//         }
+//               </LayoutWrapper>
+//             </ClientLayout>
+//           </ReduxProvider>
+//         </NextIntlClientProvider>
 //       </body>
 //     </html>
 //   );
@@ -87,7 +89,8 @@ import { getMessages } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { routing } from "@/i18n/routing";
 import ReduxProvider from "./ReduxProvider";
-import ClientLayout from "./components/client-layout"; // Import ClientLayout
+import ClientLayout from "./components/client-layout";
+import LayoutWrapper from "./components/LayoutWrapper"; // ✅ New Wrapper
 
 const latoBlack = localFont({
   src: "./fonts/Lato-Black.ttf",
@@ -125,14 +128,18 @@ export default async function RootLayout({
       <body className={`${latoBlack.variable} ${latoRegular.variable} antialiased`}>
         <NextIntlClientProvider messages={messages}>
           <ReduxProvider>
-            <ClientLayout> {/* Wrap everything inside ClientLayout */}
-              <div className="flex h-screen">
-                <Sidebar />
-                <div className="flex-1 flex flex-col">
-                  <Navbar />
-                  <div className="flex-1 overflow-auto" id="main-content">{children}</div>
+            <ClientLayout> 
+              <LayoutWrapper> 
+                <div className="flex h-screen">
+                  <Sidebar />
+                  <div className="flex-1 flex flex-col">
+                    <Navbar />
+                    <div className="flex-1 overflow-auto" id="main-content">
+                      {children}
+                    </div>
+                  </div>
                 </div>
-              </div>
+              </LayoutWrapper>
             </ClientLayout>
           </ReduxProvider>
         </NextIntlClientProvider>
