@@ -19,18 +19,22 @@ const ModalMap: React.FC<ModalMapProps> = ({
 }) => {
   const [marker, setMarker] = useState<mapboxgl.Marker | null>(null);
 
+  const mapAcessToken = "pk.eyJ1Ijoicm9sbiIsImEiOiJjbHUydnB1Y3EwYnFzMmlxZWc2NWFscDJvIn0.9TwHwnZcT6qB2OO6Q4OnFQ"
+
   const selector = useSelector((state: any) => state.location);
 
   const {lng , lat}= selector;
 
+
+
  
 
   useEffect(() => {
-    if (!process.env.NEXT_PUBLIC_MAP_ACCESS_TOKEN) {
+    if (!mapAcessToken) {
       console.error("Mapbox access token is missing.");
       return;
     }
-    mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAP_ACCESS_TOKEN;
+    mapboxgl.accessToken = "pk.eyJ1Ijoicm9sbiIsImEiOiJjbHUydnB1Y3EwYnFzMmlxZWc2NWFscDJvIn0.9TwHwnZcT6qB2OO6Q4OnFQ";
 
     const mapInstance = new mapboxgl.Map({
       container: "map", // Container ID
