@@ -218,23 +218,23 @@ function page() {
                 </div>
 
                 {/* Map over reviewData to display name and percentage */}
-                {paymentSummary.map(
-                  (item: any, index: any) =>
-                    item.name &&
-                    item.percentage && (
-                      <div
-                        key={index}
-                        className="flex justify-between items-center py-4 border-b border-gray-200"
-                      >
-                        <span className="text-lg text-gray-700">
-                          {item.name}
-                        </span>
-                        <span className="text-xl text-gray-900 font-semibold">
-                          {item.percentage}%
-                        </span>
-                      </div>
-                    )
-                )}
+                {paymentSummary.length > 0 &&
+  paymentSummary.map(
+    (item: any, index: any) =>
+      item.name &&
+      item.percentage && (
+        <div
+          key={index}
+          className="flex justify-between items-center py-4 border-b border-gray-200"
+        >
+          <span className="text-lg text-gray-700">{item.name}</span>
+          <span className="text-xl text-gray-900 font-semibold">
+            {item.percentage}%
+          </span>
+        </div>
+      )
+  )}
+
 
                 <div className="flex justify-between items-center pt-6">
                   <span className="text-xl font-bold text-gray-900">Total</span>
