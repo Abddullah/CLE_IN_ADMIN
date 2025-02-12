@@ -209,18 +209,29 @@ function page() {
   useEffect(() => {
     if (typeof window !== "undefined") {
       const taxData = localStorage.getItem("tax");
+  
       if (taxData) {
-        const taxArray = JSON.parse(taxData);
-        const totalTax = taxArray.reduce(
-          (sum: number, item: { percentage: number }) => {
-            return sum + (Number(item.percentage) || 0);
-          },
-          0
-        );
-        setTax(totalTax);
+        try {
+          const taxArray = JSON.parse(taxData);
+          if (Array.isArray(taxArray)) {
+            const totalTax = taxArray.reduce(
+              (sum: number, item: { percentage: number }) => {
+                return sum + (Number(item.percentage) || 0);
+              },
+              0
+            );
+            setTax(totalTax);
+            return;
+          }
+        } catch (error) {
+          console.error("Invalid tax data in localStorage", error);
+        }
       }
+  
+      setTax(0); // Default value agar data nahi mila ya invalid hai
     }
   }, []);
+  
 
   useEffect(() => {
     if (location) {
