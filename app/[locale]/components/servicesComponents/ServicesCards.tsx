@@ -28,7 +28,7 @@ interface CardProps {
     status: string;
   }) => void;
   onDelete: () => void;
-  onStatus?: (updatedData: { status: string }) => void; // Made it optional with a default function
+  onStatus?: (Data: { status: string }) => void; // Made it optional with a default function
 }
 
 const Card: React.FC<CardProps> = ({
@@ -44,7 +44,7 @@ const Card: React.FC<CardProps> = ({
   detailOpen,
   onEdit,
   onDelete,
-  onStatus = () => {}, // Default function to prevent TypeError
+  onStatus = () => {}, 
 }) => {
   const t = useTranslations("Jobs");
   const [showOptions, setShowOptions] = useState(false);
@@ -65,7 +65,6 @@ const Card: React.FC<CardProps> = ({
     if (typeof onStatus === "function") {
       onStatus(statusData);
       setShowOptions(false);
-      console.log("status open");
     } else {
       console.error("onStatus is not a function", onStatus);
     }

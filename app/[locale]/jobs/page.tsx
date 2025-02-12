@@ -157,7 +157,7 @@ const handleEditClick = async (job:any) => {
       const editableJob = await fetchJobById(job.jobId);
       if (editableJob) {
           setEditableJob(editableJob);
-          setIsModalOpen(true);
+          
       }
 
       router.push("/jobs/addJob")
@@ -169,7 +169,7 @@ const handleEditClick = async (job:any) => {
 };
 
 
-console.log(editableJob)    
+   
 
 
 
@@ -212,6 +212,7 @@ console.log(editableJob)
   const handleStatusClick = async(job:any)=>{
     setIsModalOpen(true)
     setStatusJob(job);
+    setStatus(job.addStatus)
   }
 
 
@@ -291,20 +292,28 @@ console.log(editableJob)
 
         {/* Select Field */}
         <div className="mt-4">
-          <label htmlFor="status-select" className="block text-lg font-medium mb-2">
-           {(t('selectStatusLabel'))}
-          </label>
-          <select
-            id="status-select"
-            value={status}
-            onChange={handleStatusChange}
-            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-          >
-            <option value="active">Active</option>
-            <option value="pending">Pending</option>
-            <option value="moderate">Moderate</option>
-          </select>
-        </div>
+  <label
+    htmlFor="status-select"
+    className="block text-lg font-medium mb-2"
+  >
+    {t("selectStatusLabel")}
+  </label>
+  <div className="relative">
+    <select
+      id="status-select"
+      value={status}
+      onChange={handleStatusChange}
+      className="w-full p-3 pr-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 appearance-none"
+    >
+      <option value="active">Active</option>
+      <option value="pending">Pending</option>
+      <option value="moderate">Moderate</option>
+    </select>
+    <span className="absolute inset-y-0 right-3 flex items-center pointer-events-none text-xl">
+    ▾
+    </span>
+  </div>
+</div>
 
         {/* Action Buttons */}
         <div className="flex justify-end space-x-4 mt-6">

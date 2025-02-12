@@ -170,7 +170,7 @@ function page() {
       const editableJob = await fetchServiceById(job.serviceId);
       if (editableJob) {
         setEditableService(editableJob);
-        setIsModalOpen(true);
+        
       }
 
       router.push("/services/addService");
@@ -179,36 +179,11 @@ function page() {
     }
   };
 
-  const handleTimeChange = (index: number, key: string, value: string) => {
-    const updatedSlots = [...timeSlots];
-    updatedSlots[index][key] = value;
-    setTimeSlots(updatedSlots);
-  };
+  
 
-  const handleDayChange = (index: number, value: string) => {
-    const updatedSlots = [...timeSlots];
-    updatedSlots[index]["day"] = value;
-    setTimeSlots(updatedSlots);
-  };
+  
 
-  const handleCategoryChange = (value: string) => {
-    setEditableService({ ...editableService, category: value });
-  };
-
-  const handleSubmit = async () => {
-    try {
-      const docRef = doc(db, "service", editableService?.id);
-      await updateDoc(docRef, {
-        timeSlots: timeSlots,
-        addStatus: addStatus,
-        category: editableService?.category,
-      });
-      alert("Service updated successfully!");
-      setIsModalOpen(false);
-    } catch (error) {
-      console.error("Error updating document: ", error);
-    }
-  };
+  
 
   const closeModal = () => {
     setIsModalOpen(false);
@@ -217,12 +192,13 @@ function page() {
 
   const handleStatusChange = (e: any) => {
     setStatus(e.target.value);
-    console.log(status, "modal ki value");
+    
   };
 
   const handleStatusClick = async (job: any) => {
     setIsModalOpen(true);
     setStatusJob(job);
+    setStatus(job.addStatus)
   };
 
   const updateJobStatus = async () => {
@@ -299,23 +275,28 @@ function page() {
 
               {/* Select Field */}
               <div className="mt-4">
-                <label
-                  htmlFor="status-select"
-                  className="block text-lg font-medium mb-2"
-                >
-                  {t("selectStatusLabel")}
-                </label>
-                <select
-                  id="status-select"
-                  value={status}
-                  onChange={handleStatusChange}
-                  className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                  <option value="active">Active</option>
-                  <option value="pending">Pending</option>
-                  <option value="moderate">Moderate</option>
-                </select>
-              </div>
+  <label
+    htmlFor="status-select"
+    className="block text-lg font-medium mb-2"
+  >
+    {t("selectStatusLabel")}
+  </label>
+  <div className="relative">
+    <select
+      id="status-select"
+      value={status}
+      onChange={handleStatusChange}
+      className="w-full p-3 pr-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 appearance-none"
+    >
+      <option value="active">Active</option>
+      <option value="pending">Pending</option>
+      <option value="moderate">Moderate</option>
+    </select>
+    <span className="absolute inset-y-0 right-3 flex items-center pointer-events-none text-xl">
+    ▾
+    </span>
+  </div>
+</div>
 
               {/* Action Buttons */}
               <div className="flex justify-end space-x-4 mt-6">
