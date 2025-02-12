@@ -117,10 +117,8 @@ function page() {
   const [hourPrice, setHourPrice] = useState<number>(0);
 
   const [selectedHour, setSelectedHour] = useState<number>(1);
-  // const [previousHourPrice, setPreviouHourPrice] = useState(0);
 
   const [selectedProfessional, setSelectedProfessional] = useState<number>(1);
-  // const [previousProfessionalPrice, setPreviousProfessionalPrice] = useState(0);
 
   const [categories, setCategories] = useState<any[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string>("");
@@ -130,15 +128,12 @@ function page() {
 
   const [roomSizes, setRoomSizes] = useState<any[]>([]);
   const [selectedRoomAreaSize, setSelectedRoomAreaSize] = useState("");
-  // const [previousRoomSizePrice, setPreviousRoomSizePrice] = useState(0);
 
   const [noOfRooms, setNoOfRooms] = useState<any[]>([]);
   const [selectedNoOfRooms, setSelectedNoOfRooms] = useState("");
-  // const [previousNoOfRoomsPrice, setPreviousNoOfRoomsPrice] = useState(0);
 
   const [matererialSelectedOption, setMaterialSelectedOption] =
     useState<string>(t("No"));
-  // const [previousNeedMaterialPrice, setPreviousNeedMaterialPrice] = useState(0);
 
   const [additionalServices, setAdditionalServices] = useState<string[]>([]);
   const [additionalServicePrice, setAdditionalServicesPrice] = useState<any>();
@@ -200,7 +195,9 @@ function page() {
 // setSelectedServices(additionalService);
 
 const additionalService = ((editData as any)?.aditionalServices || []).map((item: any) => item.title);
-setSelectedServices(additionalService);
+if(additionalService){
+  setSelectedServices(additionalService);
+}
 
 
 
