@@ -44,7 +44,6 @@ function page() {
     try {
       // Check if a card already exists
       const querySnapshot = await getDocs(collection(db, "fixRates"));
-     
 
       // Add data to Firebase Firestore
       const docRef = doc(collection(db, "fixRates"));
@@ -57,12 +56,10 @@ function page() {
       await setDoc(docRef, fixRates);
       reset();
 
-
       setShowModal(true);
       setTimeout(() => {
-        router.push('/configuration/fixRates')
-
-      },3000)
+        router.push("/configuration");
+      }, 3000);
     } catch (e: any) {
       const errorCode = e.code;
       const errorMessage = await getFirebaseErrorMessage(errorCode, lang);
@@ -74,20 +71,17 @@ function page() {
   const closeModal = () => {
     setShowModal(false);
     setErrorModal(false);
-    router.push('/configuration')
-
+    router.push("/configuration");
   };
 
   return (
     <>
-     <div className="bg-[#F5F7FA] min-h-screen w-full flex items-start justify-start pt-8">
+      <div className="bg-[#F5F7FA] min-h-screen w-full flex items-start justify-start pt-8">
         <form
           onSubmit={handleSubmit(onSubmit)}
           className="w-full max-w-md overflow-hidden px-4 sm:px-8 md:px-12 lg:px-16"
         >
           <h1 className="text-2xl font-bold mb-4">{t("add_fix_rate")}</h1>
-
-        
 
           <div className="grid w-full max-w-sm items-center gap-1.5 mt-4">
             <Label htmlFor="text" className="font-semibold text-md">
@@ -118,8 +112,6 @@ function page() {
           </div>
         </form>
       </div>
-
-    
     </>
   );
 }

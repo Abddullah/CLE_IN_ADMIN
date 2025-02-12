@@ -206,16 +206,10 @@ function Page() {
      
 
 
-       {/* <div className="absolute bottom-8 right-8">
-              <Link href={"/configuration/addFixRate"}>
-                <button className="w-14 h-14 flex items-center justify-center bg-[#00BFFF] text-white text-3xl rounded-full shadow-lg hover:bg-[#009ACD] focus:outline-none focus:ring-4 focus:ring-blue-300">
-                  +
-                </button>
-              </Link>
-            </div> */}
+      
 
               <div className="absolute bottom-8 right-8">
-                    <Link href={"/configuration/additionalService/addAdditionalService"}>
+                    <Link href={"/configuration/addFixRate"}>
                       <button className="w-14 h-14 flex items-center justify-center bg-[#00BFFF] text-white text-3xl rounded-full shadow-lg hover:bg-[#009ACD] focus:outline-none focus:ring-4 focus:ring-blue-300">
                         +
                       </button>
