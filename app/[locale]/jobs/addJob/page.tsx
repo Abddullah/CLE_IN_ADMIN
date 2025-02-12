@@ -196,8 +196,12 @@ function page() {
     handleRoomSizeChange((editData as any).roomSize);
     handleNoOfRoomsChange((editData as any).roomsQty);
 
-    const additionalService = (editData as any)?.aditionalServices.map((item: any) => item.title) || [];
+//     const additionalService = (editData as any)?.aditionalServices.map((item: any) => item.title) || [];
+// setSelectedServices(additionalService);
+
+const additionalService = ((editData as any)?.aditionalServices || []).map((item: any) => item.title);
 setSelectedServices(additionalService);
+
 
 
     if ((editData as any).needCleaningMaterials === "Yes,Please") {
