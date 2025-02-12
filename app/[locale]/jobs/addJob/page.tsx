@@ -191,15 +191,11 @@ function page() {
     handleRoomSizeChange((editData as any).roomSize);
     handleNoOfRoomsChange((editData as any).roomsQty);
 
-//     const additionalService = (editData as any)?.aditionalServices.map((item: any) => item.title) || [];
-// setSelectedServices(additionalService);
-
-const editAdditionalServices = (editData as any)?.aditionalServices;
-const additionalService = editAdditionalServices.map((item: any) => item.title);
-console.log(additionalService , 'edit wala additional service ka data')
-setSelectedServices(additionalService);
-
-
+    const editAdditionalServices = (editData as any)?.aditionalServices;
+    const additionalService = editAdditionalServices.map(
+      (item: any) => item.title
+    );
+    setSelectedServices(additionalService);
 
     if ((editData as any).needCleaningMaterials === "Yes,Please") {
       setMaterialSelectedOption(t("yes"));
@@ -336,7 +332,7 @@ setSelectedServices(additionalService);
     const selectedUser = users.find(
       (user: any) => user.userId === selectedProvider
     );
-  
+
     if (selectedUser) {
       localStorage.setItem("JobPostUserId", selectedProvider);
       setHourPrice(Number(selectedUser.hourlyRate));
@@ -583,7 +579,6 @@ setSelectedServices(additionalService);
   setValue("total", totalPrice);
   setValue("totalWithTax", totalPriceWithTax);
 
-
   return (
     <>
       <div className="bg-[#F5F7FA] min-h-screen w-full flex items-start justify-start relative">
@@ -625,14 +620,12 @@ setSelectedServices(additionalService);
                           <SelectItem key={user.userId} value={user.userId}>
                             {user.fullName}
                           </SelectItem>
-                        ))} 
+                        ))}
                       </SelectGroup>
                     </SelectContent>
                   </Select>
                 )}
               />
-
-               
             </div>
             {selectedName && (
               <>
@@ -876,7 +869,6 @@ setSelectedServices(additionalService);
                                 onChange(newValue);
                                 handleNoOfRoomsChange(newValue);
                               }}
-                             
                             >
                               <SelectTrigger className="w-full h-[55px] rounded-lg border border-[#4BB1D3] bg-gray-50 mt-1 pr-6 outline-[#4BB1D3] focus:border-[#4BB1D3] focus:outline-none focus:border-none">
                                 <SelectValue
@@ -904,9 +896,6 @@ setSelectedServices(additionalService);
                           </p>
                         )}
                       </div>
-
-
-                      
                     </div>
 
                     {/* Cleaning Material started */}
