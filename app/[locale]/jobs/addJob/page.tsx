@@ -194,10 +194,10 @@ function page() {
 //     const additionalService = (editData as any)?.aditionalServices.map((item: any) => item.title) || [];
 // setSelectedServices(additionalService);
 
-const additionalService = ((editData as any)?.aditionalServices || []).map((item: any) => item.title);
-if(additionalService){
-  setSelectedServices(additionalService);
-}
+const editAdditionalServices = (editData as any)?.aditionalServices;
+const additionalService = editAdditionalServices.map((item: any) => item.title);
+console.log(additionalService , 'edit wala additional service ka data')
+setSelectedServices(additionalService);
 
 
 
