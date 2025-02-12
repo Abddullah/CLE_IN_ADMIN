@@ -80,24 +80,49 @@ function Page() {
 
   const [additionalService, setAdditionalService] = useState([]);
 
+  // const fetchAdditionalServices = async (titlesToMatch: any) => {
+  //   // Initialize Firestore
+  //   const servicesCollection = collection(db, "additionalServices");
+
+  //   try {
+  //     const querySnapshot = await getDocs(servicesCollection); // Fetch the data from the collection
+  //     const servicesList = querySnapshot.docs.map((doc) => doc.data()); // Extract the data from each document
+    
+
+  //     // Filter the services based on matching titles
+  //     const filteredServices = servicesList.filter((service) =>
+  //       titlesToMatch?.includes(service.title)
+  //     );
+  //     setAdditionalService(filteredServices as any);
+  //   } catch (error) {
+  //     console.error("Error fetching additional services: ", error);
+  //   }
+  // };
   const fetchAdditionalServices = async (titlesToMatch: any) => {
-    // Initialize Firestore
+    let isMounted = true; // ✅ Track mount status
+  
     const servicesCollection = collection(db, "additionalServices");
-
+  
     try {
-      const querySnapshot = await getDocs(servicesCollection); // Fetch the data from the collection
-      const servicesList = querySnapshot.docs.map((doc) => doc.data()); // Extract the data from each document
-
-      // Filter the services based on matching titles
+      const querySnapshot = await getDocs(servicesCollection);
+      const servicesList = querySnapshot.docs.map((doc) => doc.data());
+  
       const filteredServices = servicesList.filter((service) =>
         titlesToMatch?.includes(service.title)
       );
-      setAdditionalService(filteredServices as any);
+  
+      if (isMounted) {
+        setAdditionalService(filteredServices as any);
+      }
     } catch (error) {
       console.error("Error fetching additional services: ", error);
     }
+  
+    return () => {
+      isMounted = false; 
+    };
   };
-
+  
   fetchAdditionalServices(reviewData[0]?.Additionalservices);
 
   //function to covert in english for store in db
@@ -139,6 +164,7 @@ function Page() {
       reviewData[0]?.location.lat,
       reviewData[0]?.location.lng
     );
+
 
     let formatCleaningMaterials = "";
 
@@ -281,12 +307,6 @@ function Page() {
 
               {/* Additional Details */}
               <div className="space-y-8">
-                <div className="transform transition-all duration-300 hover:translate-x-2">
-                  <h2 className="text-xl font-semibold text-gray-900 mb-3">
-                    {t("rate")}
-                  </h2>
-                  <p className="text-gray-700 text-lg">5</p>
-                </div>
                 <div className="transform transition-all duration-300 hover:translate-x-2">
                   <h2 className="text-xl font-semibold text-gray-900 mb-3">
                     {t("appointmentDate")}
