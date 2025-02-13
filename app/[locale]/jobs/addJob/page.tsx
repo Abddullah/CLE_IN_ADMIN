@@ -27,6 +27,7 @@ import { setCategory } from "../../config/Redux/reducers/categorySlice";
 import FrequencyModal from "../../components/ChooseFrequencyModal";
 import { doc, getDoc } from "firebase/firestore";
 import { isFloat32Array } from "util/types";
+import { setUserId } from "../../config/Redux/reducers/jobPostSlice";
 
 function page() {
   const t = useTranslations("Jobs");
@@ -352,16 +353,18 @@ function page() {
     const selectedUser = users.find(
       (user: any) => user.userId === selectedProvider
     );
-
+  
     if (selectedUser) {
-      localStorage.setItem("JobPostUserId", selectedProvider);
+      dispatch(setUserId(selectedProvider)); // Redux aur Local Storage update karega
+      localStorage.setItem("JobPostUserId", selectedProvider); // Yeh zaroori nahi agr slice me hy
+  
       setHourPrice(Number(selectedUser.hourlyRate));
       setTotalPrice(
         selectedHour * Number(selectedUser.hourlyRate) * selectedProfessional
       );
     }
   };
-
+  
   //handle the hour change
 
   const handleHourChange = (value: any) => {

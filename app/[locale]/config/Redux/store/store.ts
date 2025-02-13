@@ -6,6 +6,7 @@ import jobReducer from "../reducers/jobSlice";
 import formReducer from "../reducers/addressSlice";
 import serviceReducer from '../reducers/ServiceTimeSlice'
 import searchReducer from "../reducers/searchSlice"
+import jobPostReducer from "../reducers/jobPostSlice";
 
 const store = configureStore({
   reducer: {
@@ -16,6 +17,7 @@ const store = configureStore({
     address: formReducer,
     service: serviceReducer,
     search: searchReducer,
+    jobPost: jobPostReducer
   },
 });
 
