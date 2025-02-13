@@ -54,6 +54,7 @@ const Navbar = () => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [languageCode, setLanguageCode] = useState("");
 
+
   useEffect(() => {
     if (pathname.includes("/en")) {
       setLanguageCode("en");
@@ -102,11 +103,9 @@ const Navbar = () => {
 
   //empty the serach bar when route changes
 
- 
-    if (searchTerm) {
-      setSearchTerm("");
-    }
-  
+    useEffect(() => {
+      setSearchTerm(""); 
+    }, [pathname]);
   
 
   return (

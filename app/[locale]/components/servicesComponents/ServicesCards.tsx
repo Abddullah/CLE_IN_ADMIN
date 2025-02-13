@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -28,7 +28,7 @@ interface CardProps {
     status: string;
   }) => void;
   onDelete: () => void;
-  onStatus?: (Data: { status: string }) => void; // Made it optional with a default function
+  onStatus?: (Data: { status: string }) => void;
 }
 
 const Card: React.FC<CardProps> = ({
@@ -44,12 +44,13 @@ const Card: React.FC<CardProps> = ({
   detailOpen,
   onEdit,
   onDelete,
-  onStatus = () => {}, 
+  onStatus = () => {},
 }) => {
   const t = useTranslations("Jobs");
   const [showOptions, setShowOptions] = useState(false);
   const [editableData, setEditableData] = useState({ title, price, status });
   const [statusData, setStatusData] = useState({ status });
+  const menuRef = useRef<HTMLDivElement | null>(null);
 
   const handleEdit = () => {
     onEdit(editableData);
@@ -69,6 +70,22 @@ const Card: React.FC<CardProps> = ({
       console.error("onStatus is not a function", onStatus);
     }
   };
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setShowOptions(false);
+      }
+    };
+
+    if (showOptions) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [showOptions]);
 
   return (
     <div className="cursor-pointer flex">
@@ -95,7 +112,10 @@ const Card: React.FC<CardProps> = ({
           </div>
 
           {showOptions && (
-            <div className="absolute top-0 right-0 mt-2 bg-white border rounded shadow-lg z-50">
+            <div
+              ref={menuRef}
+              className="absolute top-0 right-0 mt-2 bg-white border rounded shadow-lg z-50"
+            >
               <button
                 onClick={handleEdit}
                 className="block w-full px-4 py-2 text-left text-sm text-gray-700"

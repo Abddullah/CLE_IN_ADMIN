@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import Card from "../components/servicesComponents/ServicesCards";
 import { Button } from "@/components/ui/button";
 import { Link, useRouter } from "@/i18n/routing";
@@ -40,6 +40,8 @@ function page() {
   const [allServices, setAllServices] = useState<any[]>([]);
   const [StatusJob, setStatusJob] = useState();
   const [status, setStatus] = useState();
+  
+  
 
   const daysOfWeek = [
     "Monday",
@@ -253,6 +255,9 @@ function page() {
       closeModal();
     }
   };
+
+
+  
 
   return (
     <>
