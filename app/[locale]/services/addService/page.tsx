@@ -560,7 +560,9 @@ function page() {
                         }}
                       >
                         <SelectTrigger className="w-full h-[55px] rounded-lg border p-4 pr-6 border-[#4BB1D3] bg-gray-50 outline-[#4BB1D3] focus:border-blue-500 focus:outline-none">
-                          <SelectValue>
+                          <SelectValue placeholder={value ||
+                              selectedSubCategory ||
+                              t("selectSubCategory")}>
                             {value ||
                               selectedSubCategory ||
                               t("selectSubCategory")}

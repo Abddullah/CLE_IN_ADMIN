@@ -168,6 +168,9 @@ function page() {
     }
   };
 
+  window.onpopstate = function () {
+    localStorage.removeItem("editService");
+  };
   const handleEditClick = async (job: any) => {
     console.log("Editing job ID:", job.serviceId);
     try {
