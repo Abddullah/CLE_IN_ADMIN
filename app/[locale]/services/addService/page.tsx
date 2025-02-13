@@ -238,11 +238,27 @@ function page() {
     setSubCategories(subCat?.subCategories);
   };
 
-  useEffect(() => {
-    const data: any = localStorage.getItem("fixRates");
 
-    setFixRate(JSON.parse(data));
-  }, []);
+
+
+ 
+   useEffect(()=>{
+    const fetchFixRates = async () => {
+      try {
+        const querySnapshot = await getDocs(collection(db, "fixRates"));
+        const rates = querySnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setFixRate(rates.sort((a:any, b:any) => a.rate - b.rate))
+      } catch (error) {
+        console.error("Error fetching fixRates:", error);
+      }
+    };
+
+    fetchFixRates();
+   } , [])
+ 
 
   const description = useRef<HTMLTextAreaElement>(null);
 
@@ -276,25 +292,83 @@ function page() {
     }
   };
 
+  // useEffect(() => {
+  //   const data = localStorage.getItem("tax");
+
+  //   const tax = data ? JSON.parse(data) : 0;
+
+
+  //   const fetchTax = async () => {
+  //         try {
+  //           const querySnapshot = await getDocs(collection(db, "payments"));
+  //           const taxData = querySnapshot.docs.map((doc: any) => ({
+  //             id: doc.id,
+  //             ...doc.data(),
+  //           }));
+    
+  //           const taxArray = taxData.flatMap((item) => item.tax || []);
+    
+  //           setPaymentSummary(taxArray as any);
+  //         } catch (error) {
+  //           console.error("Error fetching tax data:", error);
+  //         }
+  //       };
+    
+  //       fetchTax();
+
+  //   // Check if tax is an array
+  //   if (Array.isArray(tax)) {
+  //     const totalPercentage = tax
+  //       .map((item) => Number(item.percentage))
+  //       .reduce((sum, percentage) => sum + percentage, 0);
+  //     const totalWithTaxRate = Number(
+  //       (Number(selectedRateValue) * (1 + totalPercentage / 100)).toFixed(1)
+  //     );
+  //     setValue("totalWithTax", totalWithTaxRate);
+  //   } else {
+  //     console.log("No valid tax data found.");
+  //     setValue("totalWithTax", Number(selectedRateValue));
+  //   }
+  // }, [Number(selectedRateValue)]);
+
+  
   useEffect(() => {
-    const data = localStorage.getItem("tax");
-
-    const tax = data ? JSON.parse(data) : 0;
-
-    // Check if tax is an array
-    if (Array.isArray(tax)) {
-      const totalPercentage = tax
-        .map((item) => Number(item.percentage))
-        .reduce((sum, percentage) => sum + percentage, 0);
-      const totalWithTaxRate = Number(
-        (Number(selectedRateValue) * (1 + totalPercentage / 100)).toFixed(1)
-      );
-      setValue("totalWithTax", totalWithTaxRate);
-    } else {
-      console.log("No valid tax data found.");
-      setValue("totalWithTax", Number(selectedRateValue));
-    }
+    const fetchTax = async () => {
+      try {
+        const querySnapshot = await getDocs(collection(db, "payments"));
+        const taxData = querySnapshot.docs.map((doc: any) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+  
+        const taxArray = taxData.flatMap((item) => item.tax || []);
+  
+        
+        // Check if taxArray is an array
+        if (Array.isArray(taxArray) && taxArray.length > 0) {
+          const totalPercentage = taxArray
+            .map((item) => Number(item.percentage))
+            .reduce((sum, percentage) => sum + percentage, 0);
+          const totalWithTaxRate = Number(
+            (Number(selectedRateValue) * (1 + totalPercentage / 100)).toFixed(1)
+          );
+          setValue("totalWithTax", totalWithTaxRate);
+        } else {
+          console.log("No valid tax data found.");
+          setValue("totalWithTax", Number(selectedRateValue));
+        }
+      } catch (error) {
+        console.error("Error fetching tax data:", error);
+      }
+    };
+  
+    fetchTax();
   }, [Number(selectedRateValue)]);
+  
+
+
+
+
 
   function formatTime(timestamp: any) {
     const date = new Date(timestamp);

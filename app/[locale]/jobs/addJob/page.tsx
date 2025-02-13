@@ -207,30 +207,39 @@ function page() {
   //get tax data from local storage and add the tax amount to the tax state
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      const taxData = localStorage.getItem("tax");
+    const fetchTaxFromFirebase = async () => {
+      try {
+        const querySnapshot = await getDocs(collection(db, "payments"));
+        const taxData = querySnapshot.docs.map((doc: any) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
   
-      if (taxData) {
-        try {
-          const taxArray = JSON.parse(taxData);
-          if (Array.isArray(taxArray)) {
-            const totalTax = taxArray.reduce(
-              (sum: number, item: { percentage: number }) => {
-                return sum + (Number(item.percentage) || 0);
-              },
-              0
-            );
-            setTax(totalTax);
-            return;
-          }
-        } catch (error) {
-          console.error("Invalid tax data in localStorage", error);
+        const taxArray = taxData.flatMap((item) => item.tax || []);
+  
+        if (Array.isArray(taxArray) && taxArray.length > 0) {
+          const totalTax = taxArray.reduce(
+            (sum: number, item: { percentage: number }) => {
+              return sum + (Number(item.percentage) || 0);
+            },
+            0
+          );
+          setTax(totalTax);
+        } else {
+          setTax(0); // Default value agar Firebase se data na mile
         }
+      } catch (error) {
+        console.error("Error fetching tax data from Firebase:", error);
+        setTax(0);
       }
+    };
   
-      setTax(0); // Default value agar data nahi mila ya invalid hai
-    }
+    fetchTaxFromFirebase();
   }, []);
+  
+  
+
+
   
 
   useEffect(() => {

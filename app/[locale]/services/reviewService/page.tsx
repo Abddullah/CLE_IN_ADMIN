@@ -12,6 +12,7 @@ import {
   serverTimestamp,
   updateDoc,
   getDoc,
+  getDocs,
 } from "firebase/firestore";
 import { db } from "../../config/Firebase/FirebaseConfig";
 import moment from "moment";
@@ -39,15 +40,26 @@ function page() {
       }
     }
   }, []);
-  console.log(editData, "edit wala data state my set hogya");
 
   useEffect(() => {
-    const data = localStorage.getItem("tax");
+    const fetchTax = async () => {
+      try {
+        const querySnapshot = await getDocs(collection(db, "payments"));
+        const taxData = querySnapshot.docs.map((doc: any) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
 
-    const tax = data ? JSON.parse(data) : 0;
+        const taxArray = taxData.flatMap((item) => item.tax || []);
 
-    setPaymentSummary(tax);
-  }, [Number(reviewServiceData?.fixRate)]);
+        setPaymentSummary(taxArray as any);
+      } catch (error) {
+        console.error("Error fetching tax data:", error);
+      }
+    };
+
+    fetchTax();
+  }, []);
 
   useEffect(() => {
     const data = localStorage.getItem("addService");
@@ -219,22 +231,23 @@ function page() {
 
                 {/* Map over reviewData to display name and percentage */}
                 {paymentSummary.length > 0 &&
-  paymentSummary.map(
-    (item: any, index: any) =>
-      item.name &&
-      item.percentage && (
-        <div
-          key={index}
-          className="flex justify-between items-center py-4 border-b border-gray-200"
-        >
-          <span className="text-lg text-gray-700">{item.name}</span>
-          <span className="text-xl text-gray-900 font-semibold">
-            {item.percentage}%
-          </span>
-        </div>
-      )
-  )}
-
+                  paymentSummary.map(
+                    (item: any, index: any) =>
+                      item.name &&
+                      item.percentage && (
+                        <div
+                          key={index}
+                          className="flex justify-between items-center py-4 border-b border-gray-200"
+                        >
+                          <span className="text-lg text-gray-700">
+                            {item.name}
+                          </span>
+                          <span className="text-xl text-gray-900 font-semibold">
+                            {item.percentage}%
+                          </span>
+                        </div>
+                      )
+                  )}
 
                 <div className="flex justify-between items-center pt-6">
                   <span className="text-xl font-bold text-gray-900">Total</span>

@@ -61,7 +61,7 @@ function Page() {
     // Create a query to fetch only active jobs
     const jobsQuery = query(
       collection(db, "jobs"),
-      where("addStatus", "==", "pending")
+      where("addStatus", "==", "active")
     );
 
     // Set up real-time listener for the filtered collection
@@ -239,7 +239,7 @@ function Page() {
           time={`${moment(job.bookingStart).format("hh:mm A")} - ${moment(job.bookingEnd).format("hh:mm A")}`}
           imageUrl={job.imageUrl || "/assets/servicesIcons/cardImage.svg"}
           status={job.addStatus || "Inactive"}
-          statusTextColor={"yellow-400"}
+          statusTextColor={"green-500"}
           detailOpen={() => handleJobClick(job)}
           date={`Date: ${moment(job.bookingDate).isValid() ? moment(job.bookingDate).format("MMM -D -YYYY") : "Invalid Date"}`}
           createdAt={moment(job.createdAt).fromNow()}

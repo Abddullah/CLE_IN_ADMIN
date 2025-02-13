@@ -29,8 +29,8 @@ function JobTab() {
   useEffect(() => {
     if (path.includes("moderate")) {
       setActive("moderate");
-    } else if (path.includes("pending")) {
-      setActive("pending");
+    } else if (path.includes("active")) {
+      setActive("active");
     } else if (path.includes("jobs") || path.includes("services")) {
       setActive("jobs");
     }
@@ -49,20 +49,22 @@ function JobTab() {
               : "text-white bg-[#859090] hover:bg-[#859090]"
           }`}
         >
-          {t("active")}
+          {/* {t("active")} */}
+          {t("Pending")}
         </button>
 
         <button
           onClick={() => {
-            router.push(`/${pathName}/pending`);
+            router.push(`/${pathName}/active`);
           }}
           className={`w-full py-3 text-center rounded-lg transition-all duration-200 ${
-            active === "pending"
+            active === "active"
               ? "text-white bg-[#00BFFF] hover:bg-[#00BFFF]"
               : "text-white bg-[#859090] hover:bg-[#859090]"
           }`}
         >
-          {t("Pending")}
+          {/* {t("Pending")} */}
+           {t("active")}
         </button>
 
         <button

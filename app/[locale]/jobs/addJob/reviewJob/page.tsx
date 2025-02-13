@@ -59,18 +59,32 @@ function Page() {
     const service = localStorage.getItem("scheduleService");
     const serviceData = service ? JSON.parse(service) : null;
 
-    const tax = localStorage.getItem("tax");
-    const taxData = tax ? JSON.parse(tax) : null;
 
-    //push the get data from local storage to the state array
+     const fetchTax = async () => {
+          try {
+            const querySnapshot = await getDocs(collection(db, "payments"));
+            const taxData = querySnapshot.docs.map((doc: any) => ({
+              id: doc.id,
+              ...doc.data(),
+            }));
+    
+            const taxArray = taxData.flatMap((item) => item.tax || []);
+    
+            setPaymentSummary(taxArray as any);
+          } catch (error) {
+            console.error("Error fetching tax data:", error);
+          }
+        };
+    
+        fetchTax();
+
+  
 
     reviewData.push(jobData, addressData, serviceData);
 
     setReviewData([...reviewData]);
 
-    //push the payemet data in the payment summary state
-
-    setPaymentSummary(taxData);
+  
   }, []);
 
   const timeStart = moment(reviewData[2]?.startTime, "HH:mm").format("hh:mm A");

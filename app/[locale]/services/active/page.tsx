@@ -81,7 +81,7 @@ function page() {
     // Create a query to fetch only active jobs
     const jobsQuery = query(
       collection(db, "service"),
-      where("addStatus", "==", "pending") // Filter for active jobs
+      where("addStatus", "==", "active") // Filter for active jobs
     );
 
     // Set up real-time listener for the filtered collection
@@ -236,7 +236,7 @@ function page() {
                   }
                   status={job.addStatus || "Inactive"}
                   createdAt={moment(job.createdAt).fromNow()}
-                  statusTextColor={"yellow-400"}
+                  statusTextColor={"green-500"}
                   dotsIcon="/assets/categoriesIcons/dots.svg"
                   detailOpen={() => handleJobClick(job)}
                   onEdit={() => {

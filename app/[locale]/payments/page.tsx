@@ -126,7 +126,6 @@ const Payments = () => {
       const updatedTax = prevService.tax.map((tax: any, i: number) =>
         i === index ? { ...tax, [field]: value } : tax
       );
-      localStorage.setItem('tax', JSON.stringify(updatedTax));
 
       return { ...prevService, tax: updatedTax };
 
@@ -150,7 +149,6 @@ const Payments = () => {
     try {
       await deleteDoc(doc(db, "payments", id));
       setServices(services.filter((service) => service.id !== id));
-      localStorage.removeItem('tax')
     } catch (error) {
       console.error("Error deleting service:", error);
     }

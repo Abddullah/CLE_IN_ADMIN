@@ -52,7 +52,6 @@ function Page() {
           ...doc.data(),
         })) as Service[];
         setServices(servicesList.sort((a:any, b:any) => a.rate - b.rate));
-        localStorage.setItem("fixRates" , JSON.stringify(servicesList))
       } catch (error: any) {
         const errorCode = error.code;
         const errorMessage = await getFirebaseErrorMessage(errorCode, lang);

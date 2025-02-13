@@ -64,7 +64,7 @@ function Page() {
     // Create a query to fetch only active jobs
     const jobsQuery = query(
       collection(db, "jobs"),
-      where("addStatus", "==", "active") // Filter for active jobs
+      where("addStatus", "==", "pending") // Filter for active jobs
     );
 
     // Set up real-time listener for the filtered collection
@@ -199,7 +199,7 @@ const handleEditClick = async (job:any) => {
 
   const handleStatusChange = (e:any) => {
     setStatus(e.target.value);
-    console.log(status , 'modal ki value')
+   
     
   };
 
@@ -258,7 +258,7 @@ const handleEditClick = async (job:any) => {
           time={`${moment(job.bookingStart).format("hh:mm A")} - ${moment(job.bookingEnd).format("hh:mm A")}`}
           imageUrl={job.imageUrl || "/assets/servicesIcons/cardImage.svg"}
           status={job.addStatus || "Inactive"}
-          statusTextColor={"green-500"}
+          statusTextColor={"yellow-400"}
           detailOpen={() => handleJobClick(job)}
           date={`Date: ${moment(job.bookingDate).isValid() ? moment(job.bookingDate).format("MMM -D -YYYY") : "Invalid Date"}`}
           createdAt={moment(job.createdAt).fromNow()}
