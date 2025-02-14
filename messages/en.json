@@ -269,7 +269,27 @@
   "pending": "Pending",
  
   "save": "Save",
-  "Status":"Status"
+  "Status":"Status",
+
+
+
+  "Close": "Close",
+  "Room Image": "Room Image",
+  "Price": "Price",
+  "Professionals": "Professionals",
+  "Work Frequency": "Work Frequency",
+  "Hours": "Hours",
+  "Date": "Date",
+  "Time Slot": "Time Slot",
+  "Customer Info": "Customer Info",
+  "Customer info": "Customer info",
+  "Customer Information": "Customer Information",
+  "Full Name": "Full Name",
+  "Phone No": "Phone No",
+  "Email Address": "Email Address",
+  "Date of Birth": "Date of Birth",
+  "Gender": "Gender",
+  "Apply": "Apply"
   
   },
   "Jobs":{

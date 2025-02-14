@@ -103,137 +103,242 @@ const BookingModal = ({ bookingData, handleClose}:Props) => {
   }, []);
 
   return (
-    <div className="fixed inset-0 flex justify-center items-center bg-gray-900 bg-opacity-50 z-50 ">
-      <div className="w-full max-w-4xl sm:max-w-xl mx-auto bg-white rounded-lg shadow-lg p-6 relative max-h-[95vh] overflow-auto">
-        <div className="flex justify-end">
-          <button onClick={handleClose}>
-            <Image src="/assets/bookingsIcon/closeIcon.svg" alt="Close" width={16} height={16} />
-          </button>
-        </div>
+//     <div className="fixed inset-0 flex justify-center items-center bg-gray-900 bg-opacity-50 z-50 ">
+//       <div className="w-full max-w-4xl sm:max-w-xl mx-auto bg-white rounded-lg shadow-lg p-6 relative max-h-[95vh] overflow-auto">
+//         <div className="flex justify-end">
+//           <button onClick={handleClose}>
+//             <Image src="/assets/bookingsIcon/closeIcon.svg" alt="Close" width={16} height={16} />
+//           </button>
+//         </div>
 
-        <div className="space-y-4 z-10 relative">
-          <div className="flex justify-center items-center mt-5 w-full">
-            <div className="w-full max-w-xl">
-              <Image
-                src={"/assets/bookingsIcon/room.svg"}
-                alt="Room Image"
-                width={300}
-                height={100}
-                className="w-full h-[200px] object-cover rounded-md shadow-lg"
-              />
-            </div>
-          </div>
+//         <div className="space-y-4 z-10 relative">
+//           <div className="flex justify-center items-center mt-5 w-full">
+//             <div className="w-full max-w-xl">
+//               <Image
+//                 src={"/assets/bookingsIcon/room.svg"}
+//                 alt="Room Image"
+//                 width={300}
+//                 height={100}
+//                 className="w-full h-[200px] object-cover rounded-md shadow-lg"
+//               />
+//             </div>
+//           </div>
 
-          <h3 className="text-gray-600 text-sm sm:text-lg font-semibold">
-            {bookingData?.category} / {bookingData?.subCategory}
-          </h3>
+//           <h3 className="text-gray-600 text-sm sm:text-lg font-semibold">
+//             {bookingData?.category} / {bookingData?.subCategory}
+//           </h3>
         
 
-          {/* Price, Cleaners, etc. */}
-          <div className="max-w-full w-full bg-white shadow-lg rounded-lg p-6 mt-4 border border-gray-200">
-            <div className="flex justify-between items-center py-2 border-b">
-              <span className="text-gray-600">Price</span>
-              <span className="text-gray-800 font-medium">€ {bookingData?.totalPriceWithTax}</span>
-            </div>
-            <div className="flex justify-between items-center py-2 border-b">
-              <span className="text-gray-600">Professionals</span>
-              <span className="text-gray-800 font-medium">{bookingData?.
-howManyProfessionalDoYouNeed
-}</span>
-            </div>
-            <div className="flex justify-between items-center py-2 border-b">
-              <span className="text-gray-600">Work Frequency</span>
-              <span className="text-gray-800 font-medium">{bookingData?.repeateService}</span>
-            </div>
-            <div className="flex justify-between items-center py-2 border-b">
-              <span className="text-gray-600">Hours</span>
-              <span className="text-gray-800 font-medium">{bookingData?.howManyHourDoYouNeed}</span>
-            </div>
-            <div className="flex justify-between items-center py-2 border-b">
-              <span className="text-gray-600">Date</span>
-              <span className="text-gray-800 font-medium">{moment(bookingData?.bookingDate).format('DD-MM-YYYY')}</span>
-            </div>
-            <div className="flex justify-between items-center py-2">
-              <span className="text-gray-600">Time Slot</span>
-              <span className="text-gray-800 font-medium">{`${moment(bookingData?.bookingStart).format("hh:mm A")} - ${moment(
-                              bookingData?.bookingEnd
-                            ).format("hh:mm A")}`}</span>
-            </div>
-          </div>
+//           {/* Price, Cleaners, etc. */}
+//           <div className="max-w-full w-full bg-white shadow-lg rounded-lg p-6 mt-4 border border-gray-200">
+//             <div className="flex justify-between items-center py-2 border-b">
+//               <span className="text-gray-600">Price</span>
+//               <span className="text-gray-800 font-medium">€ {bookingData?.totalPriceWithTax}</span>
+//             </div>
+//             <div className="flex justify-between items-center py-2 border-b">
+//               <span className="text-gray-600">Professionals</span>
+//               <span className="text-gray-800 font-medium">{bookingData?.
+// howManyProfessionalDoYouNeed
+// }</span>
+//             </div>
+//             <div className="flex justify-between items-center py-2 border-b">
+//               <span className="text-gray-600">Work Frequency</span>
+//               <span className="text-gray-800 font-medium">{bookingData?.repeateService}</span>
+//             </div>
+//             <div className="flex justify-between items-center py-2 border-b">
+//               <span className="text-gray-600">Hours</span>
+//               <span className="text-gray-800 font-medium">{bookingData?.howManyHourDoYouNeed}</span>
+//             </div>
+//             <div className="flex justify-between items-center py-2 border-b">
+//               <span className="text-gray-600">Date</span>
+//               <span className="text-gray-800 font-medium">{moment(bookingData?.bookingDate).format('DD-MM-YYYY')}</span>
+//             </div>
+//             <div className="flex justify-between items-center py-2">
+//               <span className="text-gray-600">Time Slot</span>
+//               <span className="text-gray-800 font-medium">{`${moment(bookingData?.bookingStart).format("hh:mm A")} - ${moment(
+//                               bookingData?.bookingEnd
+//                             ).format("hh:mm A")}`}</span>
+//             </div>
+//           </div>
 
         
          
-          {/* Location */}
+//           {/* Location */}
   
 
-<div className="grid w-full items-center gap-1.5 mt-6">
-      <p className="text-lg mt-2">Location</p>
-      <div
-        className="mt-4 w-full h-[180px] relative overflow-hidden rounded-lg"
-        style={{ position: "relative" }}
-      >
-        <div ref={mapContainerRef} className="w-full h-full" />
-      </div>
-    </div>
-          {/* Customer Info Button */}
-          <div onClick={() => setCustomerInfoModal(!customerInfoModal)} className="flex items-center mt-6">
-            <button
-              className="flex items-center justify-center w-5 h-5 bg-blue-600 text-white rounded-full shadow-lg transition-all duration-300 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400"
-              aria-label="Customer Info"
-            >
-              <span className="text-xl font-bold">i</span>
-            </button>
-            <p className="ml-2 text-gray-700 cursor-pointer text-sm font-medium hover:text-blue-600 transition-all duration-300">
-              Customer info
-            </p>
-          </div>
+// <div className="grid w-full items-center gap-1.5 mt-6">
+//       <p className="text-lg mt-2">Location</p>
+//       <div
+//         className="mt-4 w-full h-[180px] relative overflow-hidden rounded-lg"
+//         style={{ position: "relative" }}
+//       >
+//         <div ref={mapContainerRef} className="w-full h-full" />
+//       </div>
+//     </div>
+//           {/* Customer Info Button */}
+//           <div onClick={() => setCustomerInfoModal(!customerInfoModal)} className="flex items-center mt-6">
+//             <button
+//               className="flex items-center justify-center w-5 h-5 bg-blue-600 text-white rounded-full shadow-lg transition-all duration-300 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400"
+//               aria-label="Customer Info"
+//             >
+//               <span className="text-xl font-bold">i</span>
+//             </button>
+//             <p className="ml-2 text-gray-700 cursor-pointer text-sm font-medium hover:text-blue-600 transition-all duration-300">
+//               Customer info
+//             </p>
+//           </div>
 
-          {customerInfoModal && (
+//           {customerInfoModal && (
  
-            <div className="max-w-full w-full bg-white shadow-lg rounded-lg overflow-hidden border border-gray-300">
-            <div className="px-6 py-4 border-b bg-[#00BFFF] text-white">
-              <h2 className="text-lg font-bold">Customer Information</h2>
-            </div>
-            <div className="p-6 space-y-4">
-              <div>
-                <h3 className="text-sm font-bold text-gray-500">Full Name</h3>
-                <p className="text-gray-700">{customerInfo.fullName}</p>
-              </div>
-              <div>
-                <h3 className="text-sm font-bold text-gray-500">Phone No</h3>
-                <p className="text-gray-700">{customerInfo.phone}</p>
-              </div>
-              <div>
-                <h3 className="text-sm font-bold text-gray-500">Email Address</h3>
-                <p className="text-gray-700">{customerInfo.email}</p>
-              </div>
-              <div>
-                <h3 className="text-sm font-bold text-gray-500">Date of Birth</h3>
-                <p className="text-gray-700">{ moment(customerInfo.dob).format('DD/MM/YYYY')}</p>
-              </div>
-              <div>
-                <h3 className="text-sm font-bold text-gray-500">Gender</h3>
-                <p className="text-gray-700">{customerInfo.gender}</p>
-              </div>
+//             <div className="max-w-full w-full bg-white shadow-lg rounded-lg overflow-hidden border border-gray-300">
+//             <div className="px-6 py-4 border-b bg-[#00BFFF] text-white">
+//               <h2 className="text-lg font-bold">Customer Information</h2>
+//             </div>
+//             <div className="p-6 space-y-4">
+//               <div>
+//                 <h3 className="text-sm font-bold text-gray-500">Full Name</h3>
+//                 <p className="text-gray-700">{customerInfo.fullName}</p>
+//               </div>
+//               <div>
+//                 <h3 className="text-sm font-bold text-gray-500">Phone No</h3>
+//                 <p className="text-gray-700">{customerInfo.phone}</p>
+//               </div>
+//               <div>
+//                 <h3 className="text-sm font-bold text-gray-500">Email Address</h3>
+//                 <p className="text-gray-700">{customerInfo.email}</p>
+//               </div>
+//               <div>
+//                 <h3 className="text-sm font-bold text-gray-500">Date of Birth</h3>
+//                 <p className="text-gray-700">{ moment(customerInfo.dob).format('DD/MM/YYYY')}</p>
+//               </div>
+//               <div>
+//                 <h3 className="text-sm font-bold text-gray-500">Gender</h3>
+//                 <p className="text-gray-700">{customerInfo.gender}</p>
+//               </div>
               
               
-            </div>
+//             </div>
            
-          </div>
+//           </div>
     
-          )}
+//           )}
 
          
 
-          {/* Apply Button */}
-          <div className="flex mt-6 justify-center">
-            <button className="px-6 py-2 border-2 w-[250px] rounded-md max-w-xs border-[#00BFFF] text-[#00BFFF] hover:bg-[#00BFFF] hover:text-white transition mt-3">
-              Apply
-            </button>
-          </div>
+          
+         
+//         </div>
+//       </div>
+//     </div>
+
+
+<div className="fixed inset-0 flex justify-center items-center bg-gray-900 bg-opacity-50 z-50 ">
+  <div className="w-full max-w-4xl sm:max-w-xl mx-auto bg-white rounded-lg shadow-lg p-6 relative max-h-[95vh] overflow-auto">
+    <div className="flex justify-end">
+      <button onClick={handleClose}>
+        <Image src="/assets/bookingsIcon/closeIcon.svg" alt={t("Close")} width={16} height={16} />
+      </button>
+    </div>
+
+    <div className="space-y-4 z-10 relative">
+      <div className="flex justify-center items-center mt-5 w-full">
+        <div className="w-full max-w-xl">
+          <Image
+            src={"/assets/bookingsIcon/room.svg"}
+            alt={t("Room Image")}
+            width={300}
+            height={100}
+            className="w-full h-[200px] object-cover rounded-md shadow-lg"
+          />
         </div>
       </div>
+
+      <h3 className="text-gray-600 text-sm sm:text-lg font-semibold">
+        {bookingData?.category} / {bookingData?.subCategory}
+      </h3>
+
+      {/* Price, Cleaners, etc. */}
+      <div className="max-w-full w-full bg-white shadow-lg rounded-lg p-6 mt-4 border border-gray-200">
+        <div className="flex justify-between items-center py-2 border-b">
+          <span className="text-gray-600">{t("Price")}</span>
+          <span className="text-gray-800 font-medium">€ {bookingData?.totalPriceWithTax}</span>
+        </div>
+        <div className="flex justify-between items-center py-2 border-b">
+          <span className="text-gray-600">{t("Professionals")}</span>
+          <span className="text-gray-800 font-medium">{bookingData?.howManyProfessionalDoYouNeed}</span>
+        </div>
+        <div className="flex justify-between items-center py-2 border-b">
+          <span className="text-gray-600">{t("Work Frequency")}</span>
+          <span className="text-gray-800 font-medium">{bookingData?.repeateService}</span>
+        </div>
+        <div className="flex justify-between items-center py-2 border-b">
+          <span className="text-gray-600">{t("Hours")}</span>
+          <span className="text-gray-800 font-medium">{bookingData?.howManyHourDoYouNeed}</span>
+        </div>
+        <div className="flex justify-between items-center py-2 border-b">
+          <span className="text-gray-600">{t("Date")}</span>
+          <span className="text-gray-800 font-medium">{moment(bookingData?.bookingDate).format('DD-MM-YYYY')}</span>
+        </div>
+        <div className="flex justify-between items-center py-2">
+          <span className="text-gray-600">{t("Time Slot")}</span>
+          <span className="text-gray-800 font-medium">{`${moment(bookingData?.bookingStart).format("hh:mm A")} - ${moment(bookingData?.bookingEnd).format("hh:mm A")}`}</span>
+        </div>
+      </div>
+
+      {/* Location */}
+      <div className="grid w-full items-center gap-1.5 mt-6">
+        <p className="text-lg mt-2">{t("Location")}</p>
+        <div className="mt-4 w-full h-[180px] relative overflow-hidden rounded-lg" style={{ position: "relative" }}>
+          <div ref={mapContainerRef} className="w-full h-full" />
+        </div>
+      </div>
+
+      {/* Customer Info Button */}
+      <div onClick={() => setCustomerInfoModal(!customerInfoModal)} className="flex items-center mt-6">
+        <button
+          className="flex items-center justify-center w-5 h-5 bg-blue-600 text-white rounded-full shadow-lg transition-all duration-300 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400"
+          aria-label={t("Customer Info")}
+        >
+          <span className="text-xl font-bold">i</span>
+        </button>
+        <p className="ml-2 text-gray-700 cursor-pointer text-sm font-medium hover:text-blue-600 transition-all duration-300">
+          {t("Customer info")}
+        </p>
+      </div>
+
+      {customerInfoModal && (
+        <div className="max-w-full w-full bg-white shadow-lg rounded-lg overflow-hidden border border-gray-300">
+          <div className="px-6 py-4 border-b bg-[#00BFFF] text-white">
+            <h2 className="text-lg font-bold">{t("Customer Information")}</h2>
+          </div>
+          <div className="p-6 space-y-4">
+            <div>
+              <h3 className="text-sm font-bold text-gray-500">{t("Full Name")}</h3>
+              <p className="text-gray-700">{customerInfo.fullName}</p>
+            </div>
+            <div>
+              <h3 className="text-sm font-bold text-gray-500">{t("Phone No")}</h3>
+              <p className="text-gray-700">{customerInfo.phone}</p>
+            </div>
+            <div>
+              <h3 className="text-sm font-bold text-gray-500">{t("Email Address")}</h3>
+              <p className="text-gray-700">{customerInfo.email}</p>
+            </div>
+            <div>
+              <h3 className="text-sm font-bold text-gray-500">{t("Date of Birth")}</h3>
+              <p className="text-gray-700">{moment(customerInfo.dob).format('DD/MM/YYYY')}</p>
+            </div>
+            <div>
+              <h3 className="text-sm font-bold text-gray-500">{t("Gender")}</h3>
+              <p className="text-gray-700">{customerInfo.gender}</p>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
+  </div>
+</div>
+
   );
 };
 

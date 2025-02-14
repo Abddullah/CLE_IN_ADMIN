@@ -270,7 +270,24 @@
   "pending": "In attesa",
   
   "save": "Salva",
-  "Status":"Stato"
+  "Status":"Stato",
+  "Close": "Chiudi",
+  "Room Image": "Immagine della stanza",
+  "Price": "Prezzo",
+  "Professionals": "Professionisti",
+  "Work Frequency": "Frequenza di lavoro",
+  "Hours": "Ore",
+  "Date": "Data",
+  "Time Slot": "Fascia oraria",
+  "Customer Info": "Informazioni sul cliente",
+  "Customer info": "Informazioni cliente",
+  "Customer Information": "Informazioni sul cliente",
+  "Full Name": "Nome completo",
+  "Phone No": "Numero di telefono",
+  "Email Address": "Indirizzo email",
+  "Date of Birth": "Data di nascita",
+  "Gender": "Genere",
+  "Apply": "Applica"
 
 
 
