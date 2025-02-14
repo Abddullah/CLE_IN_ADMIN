@@ -1,3 +1,4 @@
+"use client"
 import { createSlice } from "@reduxjs/toolkit";
 
 // Local Storage se initial state set karna

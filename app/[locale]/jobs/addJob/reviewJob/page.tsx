@@ -222,7 +222,7 @@ function Page() {
           needCleaningMaterials: formatCleaningMaterials,
           address: reviewData[1]?.locationRequired,
           instructions: reviewData[1]?.instructionRequired,
-          postedBy: localStorage.getItem("JobPostUserId"),
+          postedBy: reviewData[1]?.postedBy,
         });
 
         console.log(`Document updated with ID:`, existingDocRef.id);
@@ -239,7 +239,7 @@ function Page() {
           howManyProfessionalDoYouNeed: reviewData[0]?.professional,
           subCategory: reviewData[0]?.subcategory,
           aditionalServices: additionalServices || [],
-          createdAt: new Date().getTime(),
+          createdAt: new  Date().getTime(),
           addStatus: "pending",
           addType: "job",
           geoPoint: geoPoint,

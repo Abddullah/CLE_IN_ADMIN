@@ -257,7 +257,7 @@ function page() {
 
   useEffect(() => {
     fetchUsers();
-    fetchCategories();
+    fetchCategories(); 
     fetchRoomSizes();
     fetchNumberOfRooms();
     fetchServicesAndPrices();
@@ -355,9 +355,8 @@ function page() {
     );
   
     if (selectedUser) {
-      dispatch(setUserId(selectedProvider)); // Redux aur Local Storage update karega
-      localStorage.setItem("JobPostUserId", selectedProvider); // Yeh zaroori nahi agr slice me hy
-  
+      dispatch(setUserId(selectedProvider)); 
+      localStorage.setItem("JobPostUserId", selectedProvider); 
       setHourPrice(Number(selectedUser.hourlyRate));
       setTotalPrice(
         selectedHour * Number(selectedUser.hourlyRate) * selectedProfessional
@@ -500,13 +499,13 @@ function page() {
         //   0 
         // );
 
-        let totalPriceAdditionalService = selectedServices.reduce((total, service) => {
-          if (!additionalServicePrice || !additionalServicePrice[service] || service) {
-            console.warn(`Service '${service}' is missing in additionalServicePrice`);
-            return total;
-          }
-          return total + additionalServicePrice[service];
-        }, 0);
+        // let totalPriceAdditionalService = selectedServices.reduce((total, service) => {
+        //   if (!additionalServicePrice || !additionalServicePrice[service] || service) {
+        //     console.warn(`Service '${service}' is missing in additionalServicePrice`);
+        //     return total;
+        //   }
+        //   return total + additionalServicePrice[service];
+        // }, 0);
          
         // total =
         //   value * selectedHour * hourPrice +
@@ -514,6 +513,14 @@ function page() {
         //   Number(findRoomSize.rate) +
         //   needCleaningMaterial +
         //   totalPriceAdditionalService;
+
+        let totalPriceAdditionalService = selectedServices.reduce(
+          (total, service) => {
+            return total + (additionalServicePrice?.[service] ?? 0);
+          },
+          0
+        );
+        
         total = 
   value * selectedHour * hourPrice +
   (findNoOfRooms ? Number(findNoOfRooms.price) : 0) +
