@@ -514,7 +514,7 @@ function page() {
         //   Number(findRoomSize.rate) +
         //   needCleaningMaterial +
         //   totalPriceAdditionalService;
-        total =
+        total = 
   value * selectedHour * hourPrice +
   (findNoOfRooms ? Number(findNoOfRooms.price) : 0) +
   (findRoomSize ? Number(findRoomSize.rate) : 0) +
