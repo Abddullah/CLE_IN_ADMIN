@@ -501,19 +501,26 @@ function page() {
         // );
 
         let totalPriceAdditionalService = selectedServices.reduce((total, service) => {
-          if (!additionalServicePrice || !additionalServicePrice[service]) {
+          if (!additionalServicePrice || !additionalServicePrice[service] || service) {
             console.warn(`Service '${service}' is missing in additionalServicePrice`);
             return total;
           }
           return total + additionalServicePrice[service];
         }, 0);
          
+        // total =
+        //   value * selectedHour * hourPrice +
+        //   Number(findNoOfRooms.price) +
+        //   Number(findRoomSize.rate) +
+        //   needCleaningMaterial +
+        //   totalPriceAdditionalService;
         total =
-          value * selectedHour * hourPrice +
-          Number(findNoOfRooms.price) +
-          Number(findRoomSize.rate) +
-          needCleaningMaterial +
-          totalPriceAdditionalService;
+  value * selectedHour * hourPrice +
+  (findNoOfRooms ? Number(findNoOfRooms.price) : 0) +
+  (findRoomSize ? Number(findRoomSize.rate) : 0) +
+  needCleaningMaterial +
+  totalPriceAdditionalService;
+
       } else {
         total = value * selectedHour * hourPrice;
       }
