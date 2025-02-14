@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, FormEvent } from "react";
+import { useState, FormEvent, useEffect } from "react";
 import Image from "next/image";
 import { Link } from "@/i18n/routing";
 import { usePathname, useRouter } from "next/navigation";
@@ -18,10 +18,16 @@ const LoginScreen = () => {
   const t = useTranslations("loginPage");
   const router = useRouter();
   const path = usePathname();
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
+  let [email, setEmail] = useState<string>("");
+  let [password, setPassword] = useState<string>("");
   const [error, setError] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
+
+  //only for development
+  useEffect(() => {
+    setEmail("admin@puliziedicasa.com");
+    setPassword("12345678");
+  }, []);
 
   const handleLogin = async (e: FormEvent) => {
     e.preventDefault();
@@ -37,12 +43,11 @@ const LoginScreen = () => {
       const user = userCredential.user;
       const userDocRef = doc(db, "users", user.uid);
       const userDocSnap = await getDoc(userDocRef);
-      
 
       if (userDocSnap.exists()) {
         const userData = userDocSnap.data() as UserData;
-       localStorage.setItem('currentUser' , JSON.stringify(userData))
-        
+        localStorage.setItem("currentUser", JSON.stringify(userData));
+
         if (userData.role === "admin") {
           router.push("/en/dashboard");
         } else {
@@ -50,10 +55,9 @@ const LoginScreen = () => {
         }
       }
     } catch (error: any) {
-     
       const errorCode = error.code;
-      const languageCode = path.replace('/', '');
-           const errorMessage = await getFirebaseErrorMessage(
+      const languageCode = path.replace("/", "");
+      const errorMessage = await getFirebaseErrorMessage(
         errorCode,
         languageCode
       );

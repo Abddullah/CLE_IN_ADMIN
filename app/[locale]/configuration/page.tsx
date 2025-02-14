@@ -136,10 +136,8 @@ function Page() {
   };
 
   return (
-    <div className="bg-[#F5F7FA] w-full  pt-8 overflow-y-auto">
+    <div className="bg-[#F5F7FA] w-full h-full overflow-hidden overflow-y-auto max-h-screen">
 
-
-      
       <ConfigurationTab />
 
       <div className="container mx-auto px-4 py-8">

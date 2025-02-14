@@ -22,6 +22,7 @@ import BookingModal from "../components/jobsComponent/JobDetailsCard";
 import ServiceDetails from "../components/servicesComponents/ServiceDetailComponent";
 import JobTab from "../components/JobTab";
 import { useSelector } from "react-redux";
+import { usePathname } from "next/navigation";
 
 function page() {
   const t = useTranslations("Services");
@@ -40,6 +41,8 @@ function page() {
   const [allServices, setAllServices] = useState<any[]>([]);
   const [StatusJob, setStatusJob] = useState();
   const [status, setStatus] = useState();
+
+  const pathname = usePathname()
   
   
 
@@ -173,6 +176,18 @@ function page() {
   window.onpopstate = function () {
     localStorage.removeItem("editService");
   };
+
+
+   const allowedRoutes = ["/addService", "/reviewService"];
+  
+  
+    useEffect(() => {
+      if (!allowedRoutes.includes(pathname)) {
+        localStorage.removeItem("editService");
+      }
+    }, [pathname]);
+
+
   const handleEditClick = async (job: any) => {
     console.log("Editing job ID:", job.serviceId);
     try {

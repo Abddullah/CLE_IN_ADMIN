@@ -21,6 +21,7 @@ import { Link, useRouter } from "@/i18n/routing";
 import JobTab from "../components/JobTab";
 import BookingModal from "../components/jobsComponent/JobDetailsCard";
 import { useSelector } from "react-redux";
+import { usePathname } from "next/navigation";
 
 function Page() {
   const t = useTranslations("Jobs");
@@ -37,6 +38,7 @@ function Page() {
   const [StatusJob, setStatusJob] = useState();
 
   const router = useRouter();
+  const pathname = usePathname();
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -140,6 +142,15 @@ function Page() {
   window.onpopstate = function () {
     localStorage.removeItem("editJob");
   };
+
+  const allowedRoutes = ["/addJob", "/location", "/reviewJob" , '/scheduleService'];
+
+
+  useEffect(() => {
+    if (!allowedRoutes.includes(pathname)) {
+      localStorage.removeItem("editJob");
+    }
+  }, [pathname]);
 
   const handleEditClick = async (job: any) => {
     try {

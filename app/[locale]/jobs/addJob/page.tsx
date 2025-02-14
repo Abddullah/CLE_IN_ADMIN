@@ -204,7 +204,7 @@ function page() {
     }
     setMaterialSelectedOption(t("No"));
   }, [editData, users, selectedName, setSelectedName]);
-
+ 
   //get tax data from local storage and add the tax amount to the tax state
 
   useEffect(() => {
@@ -492,12 +492,22 @@ function page() {
         );
         let needCleaningMaterial =
           matererialSelectedOption === t("yes") ? 6 : 0;
-        let totalPriceAdditionalService = selectedServices.reduce(
-          (total, service) => {
-            return total + (additionalServicePrice[service] || 0);
-          },
-          0
-        );
+        // let totalPriceAdditionalService = selectedServices.reduce(
+        //   (total, service) => {
+        //     console.log(additionalServicePrice[service] , 'testing crash admin')
+        //     return total + (additionalServicePrice[service] || 0);
+        //   },
+        //   0 
+        // );
+
+        let totalPriceAdditionalService = selectedServices.reduce((total, service) => {
+          if (!additionalServicePrice || !additionalServicePrice[service]) {
+            console.warn(`Service '${service}' is missing in additionalServicePrice`);
+            return total;
+          }
+          return total + additionalServicePrice[service];
+        }, 0);
+         
         total =
           value * selectedHour * hourPrice +
           Number(findNoOfRooms.price) +
@@ -604,7 +614,7 @@ function page() {
 
   return (
     <>
-      <div className="bg-[#F5F7FA] min-h-screen w-full flex items-start justify-start relative">
+      <div className="bg-[#F5F7FA] min-h-screen w-full flex items-start justify-start relative mx-auto">
         <div className="flex items-center justify-center h-screen">
           <FrequencyModal />
         </div>
@@ -612,11 +622,11 @@ function page() {
         <div className="w-full mx-auto p-4 sm:p-6 lg:px-8">
           <form
             onSubmit={handleSubmit(onSubmit)}
-            className="w-full max-w-full px-4 sm:px-8 lg:px-12 mt-6 mb-0"
+            className="w-full max-w-6xl px-8 lg:px-16 mt-6 mx-auto"
           >
             <h1 className="text-2xl font-bold mt-2">{t("AddJobs")}</h1>
 
-            <div className="w-full flex items-start justify-start">
+            <div className="grid w-full items-center gap-1.5 mt-6 ">
               <Controller
                 name="provider"
                 control={control}
@@ -652,7 +662,7 @@ function page() {
             </div>
             {selectedName && (
               <>
-                <div className="flex flex-col mt-6 h-full">
+                <div className="grid w-full items-center gap-1.5 mt-3">
                   <h2 className="text-lg font-semibold text-gray-800">
                     {t("HowManyHours")}
                   </h2>
@@ -712,7 +722,7 @@ function page() {
                   )}
                 </div>
 
-                <div className="grid w-full items-center gap-1.5 mt-3">
+                <div className="grid w-full items-center gap-1.5 mt-4">
                   <p className="text-xl font-semibold mt-6 mb-4">
                     {t("SelectCategory")}
                   </p>
@@ -822,7 +832,7 @@ function page() {
                 {selectedCategory === "Cleaning and Hygiene Services" && (
                   <>
                     <div className="w-full">
-                      <div className="grid w-full items-center gap-1.5 mt-6">
+                      <div className="grid w-full items-center gap-1.5 mt-4">
                         <label
                           className="text-md font-semibold"
                           htmlFor="Room Area Size"
@@ -871,7 +881,7 @@ function page() {
                         )}
                       </div>
 
-                      <div className="grid w-full items-center gap-1.5 mt-6">
+                      <div className="grid w-full items-center gap-1.5 mt-4">
                         <label
                           className="text-md font-semibold"
                           htmlFor="NumberOfRoom"
@@ -922,7 +932,7 @@ function page() {
                     </div>
 
                     {/* Cleaning Material started */}
-                    <div className="grid w-full items-center gap-1.5 mt-6">
+                    <div className="grid w-full items-center gap-1.5 mt-4">
                       <p className="text-md font-semibold">
                         {t("NeedCleaningMaterials")}
                       </p>
