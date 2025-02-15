@@ -491,28 +491,7 @@ function page() {
         );
         let needCleaningMaterial =
           matererialSelectedOption === t("yes") ? 6 : 0;
-        // let totalPriceAdditionalService = selectedServices.reduce(
-        //   (total, service) => {
-        //     console.log(additionalServicePrice[service] , 'testing crash admin')
-        //     return total + (additionalServicePrice[service] || 0);
-        //   },
-        //   0 
-        // );
-
-        // let totalPriceAdditionalService = selectedServices.reduce((total, service) => {
-        //   if (!additionalServicePrice || !additionalServicePrice[service] || service) {
-        //     console.warn(`Service '${service}' is missing in additionalServicePrice`);
-        //     return total;
-        //   }
-        //   return total + additionalServicePrice[service];
-        // }, 0);
-         
-        // total =
-        //   value * selectedHour * hourPrice +
-        //   Number(findNoOfRooms.price) +
-        //   Number(findRoomSize.rate) +
-        //   needCleaningMaterial +
-        //   totalPriceAdditionalService;
+      
 
         let totalPriceAdditionalService = selectedServices.reduce(
           (total, service) => {

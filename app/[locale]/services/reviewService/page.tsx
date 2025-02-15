@@ -41,25 +41,32 @@ function page() {
     }
   }, []);
 
-  useEffect(() => {
-    const fetchTax = async () => {
+  const fetchTaxSummary = async (totalAmount: number) => {
       try {
         const querySnapshot = await getDocs(collection(db, "payments"));
-        const taxData = querySnapshot.docs.map((doc: any) => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
-
-        const taxArray = taxData.flatMap((item) => item.tax || []);
-
-        setPaymentSummary(taxArray as any);
+        
+        // Payments collection sy tax arrays extract karna
+        const taxData = querySnapshot.docs.flatMap((doc: any) => doc.data().tax || []);
+    
+        // Har tax ka alag se amount calculate karna
+        const taxSummary = taxData.map((item) => {
+          const percentage = parseFloat(item.percentage); // String ko number mein convert karna
+          if (isNaN(percentage)) return null; // Agar invalid value hai to ignore karna
+    
+          return {
+            name: item.name, // Tax ka naam
+            percentage: percentage, // Tax ka percentage
+            amount: (totalAmount * percentage) / 100, // Tax ka calculated amount
+          };
+        }).filter((tax) => tax !== null); // Undefined values remove karna
+    
+        return taxSummary; // Ye summary return karega
+    
       } catch (error) {
         console.error("Error fetching tax data:", error);
+        return [];
       }
     };
-
-    fetchTax();
-  }, []);
 
   useEffect(() => {
     const data = localStorage.getItem("addService");
@@ -171,6 +178,12 @@ function page() {
     }
   };
 
+  const totalForSummary = reviewServiceData?.fixRate;
+
+  fetchTaxSummary(totalForSummary).then((taxSummary) => {
+    setPaymentSummary(taxSummary as any)
+  });
+
   return (
     <>
       <div className="min-h-screen bg-gradient-to-b from-[#F5F7FA] to-white">
@@ -230,24 +243,22 @@ function page() {
                 </div>
 
                 {/* Map over reviewData to display name and percentage */}
-                {paymentSummary.length > 0 &&
-                  paymentSummary.map(
-                    (item: any, index: any) =>
-                      item.name &&
-                      item.percentage && (
-                        <div
-                          key={index}
-                          className="flex justify-between items-center py-4 border-b border-gray-200"
-                        >
-                          <span className="text-lg text-gray-700">
-                            {item.name}
-                          </span>
-                          <span className="text-xl text-gray-900 font-semibold">
-                            {item.percentage}%
-                          </span>
-                        </div>
-                      )
-                  )}
+                {paymentSummary !== null   &&
+  paymentSummary.map(
+    (item: any, index: any) =>
+      item.name &&
+      item.percentage && (
+        <div
+          key={index}
+          className="flex justify-between items-center py-4 border-b border-gray-200"
+        >
+          <span className="text-lg text-gray-700">{item.name} {`(${item.percentage}%)`}</span>
+          <span className="text-xl text-gray-900 font-semibold">
+          €{item.amount}
+          </span>
+        </div>
+      )
+  )}
 
                 <div className="flex justify-between items-center pt-6">
                   <span className="text-xl font-bold text-gray-900">Total</span>

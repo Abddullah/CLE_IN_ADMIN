@@ -41,7 +41,7 @@ function ConfigurationTab() {
           onClick={() => {
             router.push("/configuration/roomAreaSize");
           }}
-          className={`flex-1 py-4 rounded-md ${
+          className={`flex-1 py-6 rounded-md ${
             active === "roomAreaSize"
               ? "text-white bg-[#00BFFF] hover:bg-[#00BFFF]"
               : "text-white bg-[#859090] hover:bg-[#859090]"

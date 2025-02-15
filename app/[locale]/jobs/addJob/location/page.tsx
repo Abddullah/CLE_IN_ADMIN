@@ -49,7 +49,7 @@ function Page() {
   };
 
   return (
-    <div className="bg-[#F5F7FA] min-h-screen w-full flex items-start justify-start pt-2">
+    <div className="bg-[#F5F7FA] min-h-screen w-full flex justify-center pt-2">
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="w-full max-w-7xl px-8 lg:px-16 mt-6"
@@ -125,6 +125,8 @@ function Page() {
         </div>
       </form>
     </div>
+
+    
   );
 }
 

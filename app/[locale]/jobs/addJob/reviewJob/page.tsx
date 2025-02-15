@@ -60,25 +60,6 @@ function Page() {
     const serviceData = service ? JSON.parse(service) : null;
 
 
-     const fetchTax = async () => {
-          try {
-            const querySnapshot = await getDocs(collection(db, "payments"));
-            const taxData = querySnapshot.docs.map((doc: any) => ({
-              id: doc.id,
-              ...doc.data(),
-            }));
-    
-            const taxArray = taxData.flatMap((item) => item.tax || []);
-    
-            setPaymentSummary(taxArray as any);
-          } catch (error) {
-            console.error("Error fetching tax data:", error);
-          }
-        };
-    
-        fetchTax();
-
-  
 
     reviewData.push(jobData, addressData, serviceData);
 
@@ -87,6 +68,36 @@ function Page() {
   
   }, []);
 
+
+  const fetchTaxSummary = async (totalAmount: number) => {
+    try {
+      const querySnapshot = await getDocs(collection(db, "payments"));
+      
+      // Payments collection sy tax arrays extract karna
+      const taxData = querySnapshot.docs.flatMap((doc: any) => doc.data().tax || []);
+  
+      // Har tax ka alag se amount calculate karna
+      const taxSummary = taxData.map((item) => {
+        const percentage = parseFloat(item.percentage); // String ko number mein convert karna
+        if (isNaN(percentage)) return null; // Agar invalid value hai to ignore karna
+  
+        return {
+          name: item.name, // Tax ka naam
+          percentage: percentage, // Tax ka percentage
+          amount: (totalAmount * percentage) / 100, // Tax ka calculated amount
+        };
+      }).filter((tax) => tax !== null); // Undefined values remove karna
+  
+      return taxSummary; // Ye summary return karega
+  
+    } catch (error) {
+      console.error("Error fetching tax data:", error);
+      return [];
+    }
+  };
+
+ 
+
   const timeStart = moment(reviewData[2]?.startTime, "HH:mm").format("hh:mm A");
   const timeEnd = moment(reviewData[2]?.endTime, "HH:mm").format("hh:mm A");
 
@@ -94,26 +105,10 @@ function Page() {
 
   const [additionalService, setAdditionalService] = useState([]);
 
-  // const fetchAdditionalServices = async (titlesToMatch: any) => {
-  //   // Initialize Firestore
-  //   const servicesCollection = collection(db, "additionalServices");
-
-  //   try {
-  //     const querySnapshot = await getDocs(servicesCollection); // Fetch the data from the collection
-  //     const servicesList = querySnapshot.docs.map((doc) => doc.data()); // Extract the data from each document
-    
-
-  //     // Filter the services based on matching titles
-  //     const filteredServices = servicesList.filter((service) =>
-  //       titlesToMatch?.includes(service.title)
-  //     );
-  //     setAdditionalService(filteredServices as any);
-  //   } catch (error) {
-  //     console.error("Error fetching additional services: ", error);
-  //   }
-  // };
+     // Initialize Firestore
+  
   const fetchAdditionalServices = async (titlesToMatch: any) => {
-    let isMounted = true; // ✅ Track mount status
+    let isMounted = true; 
   
     const servicesCollection = collection(db, "additionalServices");
   
@@ -271,6 +266,15 @@ function Page() {
       setIsDisable(false);
     }
   };
+
+  const totalForSummary = Number(reviewData[0]?.total);
+  console.log(totalForSummary , 'checking total')
+
+  
+
+  fetchTaxSummary(totalForSummary).then((taxSummary) => {
+    setPaymentSummary(taxSummary as any)
+  });
   //edit data in the firebase
 
   return (
@@ -374,9 +378,9 @@ function Page() {
           key={index}
           className="flex justify-between items-center py-4 border-b border-gray-200"
         >
-          <span className="text-lg text-gray-700">{item.name}</span>
+          <span className="text-lg text-gray-700">{item.name} {`(${item.percentage}%)`}</span>
           <span className="text-xl text-gray-900 font-semibold">
-            {item.percentage}%
+          €{item.amount}
           </span>
         </div>
       )
